@@ -10,7 +10,7 @@ AI로 노래를 추천 받고, 유저들 간에 서로 노래를 추천해주면
 ### 🧑‍🤝‍🧑 팀원 구성 및 역할 분담
 - 팀장😄  : <a href="https://guco.tistory.com/">구민정</a>
 - 팀원😄1 : <a href="https://velog.io/@rlagurwns112">김혁준</a>
-- 팀원😄2 : <a href="https://codemte.tistory.com/">김광운</a>별점 기능
+- 팀원😄2 : <a href="https://codemte.tistory.com/">김광운</a>
 - 팀원😄3 : <a href="https://05-archives.tistory.com/">문영오</a>
 - 팀원😄4 : <a href="https://woongpang.tistory.com/">이기웅</a>
 

@@ -1,5 +1,6 @@
 console.log("signup.js 연결됨")
 
+// 회원가입 폼 다 쓰고 가입하기 눌렀을 때 실행되는 함수
 async function handleSignupBtn() {
     const response = await handleSignin();
     if (response.status == 201) {

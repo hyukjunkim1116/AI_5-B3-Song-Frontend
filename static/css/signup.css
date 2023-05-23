@@ -1,0 +1,7 @@
+.container {
+    background: rgba(45, 176, 217, 0.3);
+}
+
+select option[value=""][disabled] {
+    display: none;
+}

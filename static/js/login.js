@@ -24,3 +24,15 @@ async function handleLoginBtn() {
 }
 
 checkLogin();
+
+// 카카오 로그인 버튼 클릭 시 kakao auth에 코드 요청
+async function kakaoLoginBtn() {
+    const response = await fetch(`${backend_base_url}/api/users/kakao/`, { method: 'GET' })
+    kakao_id = await response.json()
+    const redirect_uri = `${frontend_base_url}/index.html`
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao_id}&redirect_uri=${redirect_uri}&response_type=code&scope=profile_nickname,profile_image,account_email,gender`
+}
+
+
+
+

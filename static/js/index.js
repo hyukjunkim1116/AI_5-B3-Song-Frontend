@@ -36,3 +36,18 @@ async function getKakaoToken(code) {
     }
 }
 
+//메인페이지 좋아요순 댓글, 최신순 게시글 가져오기
+window.onload = async function () {
+    const like_comments = await fetch(`${backend_base_url}/api/articles/comments/`)
+    const main_like_comments = await like_comments.json()
+    main_like_comments.sort((x, y) => y.like_count - x.like_count);
+
+    const recently_articles = await fetch(`${backend_base_url}/api/articles/`)
+    const main_recently_articles = await recently_articles.json()
+
+    const comments_list = document.getElementById("most-like-comment")
+    commentList(main_like_comments.slice(0, 10), comments_list)
+
+    const article_list = document.getElementById("recently-article")
+    articleList(main_recently_articles.slice(0, 10), article_list)
+}

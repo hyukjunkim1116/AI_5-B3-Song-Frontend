@@ -5,3 +5,20 @@
 select option[value=""][disabled] {
     display: none;
 }
+
+.social-login {
+    display: flex;
+    justify-content: space-around;
+    margin: 2em 2em;
+}
+
+.social-btn {
+    background-color: transparent;
+    border: none;
+}
+
+.social-btn-img {
+    background-color: transparent;
+    width: 50px;
+    height: auto;
+}

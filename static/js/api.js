@@ -191,3 +191,12 @@ async function postArticle() {
 		alert(response.status);
 	}
 }
+
+// 댓글 전체 목록 불러오기
+async function getComments() {
+	const response = await fetch(`${backend_base_url}/api/articles/comments/`, {
+		method: "GET"
+	});
+	response_json = await response.json();
+	return response_json;
+}

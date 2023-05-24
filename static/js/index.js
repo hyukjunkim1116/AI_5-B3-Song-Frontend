@@ -1,6 +1,6 @@
 // 로그인 되어있다면(localstorage에 kakao토큰이 있다면) if문에서 아무일도 없음.
 // 토큰이 없고, url에 파라미터가 있다면, 해당 값을 가지고 getKakaoToken()으로  
-if (localStorage.getItem("kakao")) {
+if (localStorage.getItem("payload")) {
 } else if (location.href.split('=')[1]) {
     const kakao_code = location.href.split('=')[1]
     getKakaoToken(kakao_code)
@@ -28,7 +28,7 @@ async function getKakaoToken(code) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
 
-        localStorage.setItem("kakao", jsonPayload);
+        localStorage.setItem("payload", jsonPayload);
         window.location.reload();
     } else {
         alert(response_json['error']);

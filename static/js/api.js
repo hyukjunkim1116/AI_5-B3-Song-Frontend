@@ -95,7 +95,6 @@ async function getUser() {
 		alert(response.statusText);
 	}
 }
-
 // 아티클 사진 백엔드로 업로드
 async function createArticlePhoto(realFileURL, article_id) {
 	const token = localStorage.getItem("access");

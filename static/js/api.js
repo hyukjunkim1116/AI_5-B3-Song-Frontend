@@ -96,19 +96,24 @@ async function getUser() {
 	}
 }
 
-// 아티클 사진 백엔드로 업로드 >> 테스트 예정 // + article_id
-async function createArticlePhoto(realFileURL) {
-	const response = await fetch(`${backend_base_url}/api/articles/2/photos/`, {
-		headers: {
-			// "X-CSRFToken": Cookie.get("csrftoken") || "",
-			// Authorization: `Bearer ${token}`
-		},
-		body: JSON.stringify({
-			file: file
-		}),
-		method: "POST"
-	});
-	console.log(response);
+// 아티클 사진 백엔드로 업로드
+async function createArticlePhoto(realFileURL, article_id) {
+	const token = localStorage.getItem("access");
+	const response = await fetch(
+		`${backend_base_url}/api/articles/${article_id}/photos/`,
+		{
+			headers: {
+				// "X-CSRFToken": Cookie.get("csrftoken") || "",
+				Authorization: `Bearer ${token}`,
+				"content-type": "application/json"
+			},
+			body: JSON.stringify({
+				file: realFileURL
+			}),
+			method: "POST"
+		}
+	);
+	window.location.replace(`${frontend_base_url}/`);
 	return response;
 }
 
@@ -123,6 +128,7 @@ async function uploadArticlePhoto(data, article_id) {
 	});
 	const results = await response.json();
 	const realFileURL = results.result.variants[0];
+	console.log(article_id);
 	return createArticlePhoto(realFileURL, article_id);
 }
 
@@ -144,6 +150,53 @@ async function getArticleUploadURL(article_id) {
 }
 
 // 사진 업로드 버튼 누르면 1회용 URL얻는 함수 실행
-const handleArticlePhotoUploadBtn = (article_id) => {
-	getArticleUploadURL(article_id);
+const handleArticlePhotoUploadBtn = () => {
+	let getParams = window.location.search;
+	let articleParams = getParams.split("=")[1];
+	getArticleUploadURL(articleParams);
 };
+
+// index.html 아티클 불러오기
+async function getArticles() {
+	const response = await fetch(`${backend_base_url}/api/articles`, {
+		method: "GET"
+	});
+	response_json = await response.json();
+	return response_json;
+}
+
+//아티클 생성하기
+async function postArticle() {
+	const token = localStorage.getItem("access");
+	const title = document.getElementById("article_title").value;
+	const content = document.getElementById("article_content").value;
+
+	const formdata = new FormData();
+
+	formdata.append("title", title);
+	formdata.append("content", content);
+
+	const response = await fetch(`${backend_base_url}/api/articles/`, {
+		headers: {
+			Authorization: `Bearer ${token}`
+		},
+		body: formdata,
+		method: "POST"
+	});
+
+	if (response.status == 200) {
+		alert("글작성 완료!");
+		window.location.replace(`${frontend_base_url}/`);
+	} else {
+		alert(response.status);
+	}
+}
+
+// 댓글 전체 목록 불러오기
+async function getComments() {
+	const response = await fetch(`${backend_base_url}/api/articles/comments/`, {
+		method: "GET"
+	});
+	response_json = await response.json();
+	return response_json;
+}

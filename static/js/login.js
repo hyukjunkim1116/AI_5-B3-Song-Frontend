@@ -43,3 +43,12 @@ async function googleLoginBtn() {
     const param = `scope=${scope}&include_granted_scopes=true&response_type=token&state=pass-through value&prompt=consent&client_id=${google_id}&redirect_uri=${redirect_uri}`
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${param}`
 }
+
+async function naverLoginBtn() {
+    const response = await fetch(`${backend_base_url}/api/users/naver/`, { method: 'GET' });
+    const naver_id = await response.json();
+    console.log(naver_id)
+    const redirect_uri = `${frontend_base_url}/index.html`;
+    const state = new Date().getTime().toString(36);
+    window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naver_id}&redirect_uri=${redirect_uri}&state=${state}`;
+}

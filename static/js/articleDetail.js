@@ -2,78 +2,12 @@ console.log("articleDetail.js 로드됨");
 let article_id = new URLSearchParams(window.location.search).get("article_id");
 const token = localStorage.getItem("access");
 
-//아티클 업데이트 하기
-async function updateArticle() {
-	const token = localStorage.getItem("access");
-	const title = document.getElementById("article_title").value;
-	const content = document.getElementById("article_content").value;
-
-	const formdata = new FormData();
-
-	formdata.append("title", title);
-	formdata.append("content", content);
-
-	const response = await fetch(
-		`${backend_base_url}/api/articles/${article_id}/`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`
-			},
-			body: formdata,
-			method: "PUT"
-		}
-	);
-
-	if (response.status == 200) {
-		alert("글 수정 완료!");
-		window.location.replace(`${frontend_base_url}/`);
-	} else {
-		alert("글 수정 실패!");
-		window.location.replace(`${frontend_base_url}/`);
-	}
-}
 // 글 수정 페이지 이동
 function articleUpdate(article_id) {
 	window.location.href = `${frontend_base_url}/articles/update_article.html?article_id=${article_id}`;
 }
-// 아티클 사진 삭제
-async function articlePhotoDelete(photo_id) {
-	console.log(photo_id);
-	const response = await fetch(
-		`${backend_base_url}/api/medias/photos/${photo_id}`,
-		{
-			method: "DELETE",
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		}
-	);
-	if (response.status == 200) {
-		alert("사진이 삭제되었습니다!");
-	} else {
-		alert("사진 삭제 권한이 없습니다.");
-	}
-	location.reload();
-}
-// 게시글 삭제
-async function articleDelete(article_id) {
-	const response = await fetch(
-		`${backend_base_url}/api/articles/${article_id}/`,
-		{
-			method: "DELETE",
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		}
-	);
-	if (response.status == 204) {
-		alert("게시글이 삭제되었습니다!");
-	} else {
-		alert("게시글 삭제 권한이 없습니다.");
-	}
-	window.location.replace("/");
-}
 
+// 게시글 상세보기 페이지가 로드될 때 실행되는 함수
 window.onload = async function () {
 	const login_user = await getUser();
 	// 게시글 받아오기

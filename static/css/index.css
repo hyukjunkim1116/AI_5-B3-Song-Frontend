@@ -7,7 +7,15 @@
 }
 
 @media(min-width: 600px) {
-    .col {
+    #most-like-comment {
+        display: flex;
+        flex-wrap: wrap;
+        /* 넘치는 카드 아래로 넘기기 */
+        margin: 0 -1rem;
+        /* 카드 바깥 쪽 공간 없애기 */
+    }
+
+    #recently-article {
         display: flex;
         flex-wrap: wrap;
         /* 넘치는 카드 아래로 넘기기 */
@@ -28,9 +36,4 @@
         width: 33.33333%;
         /* 카드 3단 배치 */
     }
-}
-
-.col {
-    border-radius: 3px;
-    border-color: blue;
 }

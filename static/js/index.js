@@ -1,28 +1,40 @@
-// 로그인 되어있다면(localstorage에 kakao토큰이 있다면) if문에서 아무일도 없음.
-// 토큰이 없고, url에 파라미터가 있다면, 해당 값을 가지고 getKakaoToken()으로
-if (localStorage.getItem("payload")) {
-} else if (location.href.split('=')[1]) {
+// 로그인 되어있다면(localstorage에 토큰이 있다면) 로그인 되어있으므로 pass
+// 토큰이 없고, url에 파라미터가 있다면, 해당 값을 판별해서 해당하는 함수를 호출합니다
+if (localStorage.getItem("payload")) { }
+else if (location.href.split('=')[1]) {
     let code = new URLSearchParams(window.location.search).get('code');
     let state = new URLSearchParams(window.location.search).get('state');
     if (code) {
-        if (state) { //네이버 로그인 들어갈 자리 
-            getNaverToken(code, state);
-        }
-        else {
-            getKakaoToken(code)
-        }
+        if (state) { getNaverToken(code, state); }
+        else { getKakaoToken(code); }
     }
     else {
         let hashParams = new URLSearchParams(window.location.hash.substr(1));
         let google_token = hashParams.get("access_token");
-        console.log(google_token);
         getGoogleToken(google_token);
     }
 }
 
-// url의 코드를 백엔드로 보내서 userdata를 확인
-// 해당 유저가 이미 있다면 토큰만 , 없다면 유저를 생성 후 토큰 발급
-// 해당 토큰을 로컬 스토리지에 저장
+// 받아온 토큰을 로컬 스토리지에 저장
+// 에러 발생 시, 에러 문구를 띄워주고 이전 페이지(로그인페이지)로 돌아갑니다
+function setLocalStorage(response) {
+    if (response.status === 200) {
+        localStorage.setItem("access", response_json.access);
+        localStorage.setItem("refresh", response_json.refresh);
+        const base64Url = response_json.access.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        localStorage.setItem("payload", jsonPayload);
+        window.location.reload();
+    } else {
+        alert(response_json['error']);
+        window.history.back();
+    }
+}
+
+// 각각 해당하는 url로 데이터를 실어서 요청을 보내고 액세스 토큰을 받아오는 함수
 async function getKakaoToken(kakao_code) {
     const response = await fetch(`${backend_base_url}/api/users/kakao/`, {
         method: "POST",
@@ -32,31 +44,10 @@ async function getKakaoToken(kakao_code) {
         body: JSON.stringify({ code: kakao_code })
     });
     response_json = await response.json();
-    if (response.status === 200) {
-        localStorage.setItem("access", response_json.access);
-        localStorage.setItem("refresh", response_json.refresh);
-
-        const base64Url = response_json.access.split(".")[1];
-        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        const jsonPayload = decodeURIComponent(
-            atob(base64)
-                .split("")
-                .map(function (c) {
-                    return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-                })
-                .join("")
-        );
-
-        localStorage.setItem("payload", jsonPayload);
-        window.location.reload();
-    } else {
-        alert(response_json["error"]);
-        window.history.back();
-    }
+    setLocalStorage(response);
 }
 
 async function getGoogleToken(google_token) {
-    console.log(google_token)
     const response = await fetch(`${backend_base_url}/api/users/google/`, {
         method: 'POST',
         headers: {
@@ -65,26 +56,10 @@ async function getGoogleToken(google_token) {
         body: JSON.stringify({ "access_token": google_token }),
     })
     response_json = await response.json();
-    if (response.status === 200) {
-        localStorage.setItem("access", response_json.access);
-        localStorage.setItem("refresh", response_json.refresh);
-
-        const base64Url = response_json.access.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        localStorage.setItem("payload", jsonPayload);
-        window.location.reload();
-    } else {
-        alert(response_json['error']);
-        window.history.back();
-    }
+    setLocalStorage(response);
 }
 
 async function getNaverToken(naver_code, state) {
-    console.log(naver_code);
     const response = await fetch(`${backend_base_url}/api/users/naver/`, {
         method: 'POST',
         headers: {
@@ -93,23 +68,7 @@ async function getNaverToken(naver_code, state) {
         body: JSON.stringify({ "naver_code": naver_code, "state": state }),
     })
     response_json = await response.json();
-
-    if (response.status === 200) {
-        localStorage.setItem("access", response_json.access);
-        localStorage.setItem("refresh", response_json.refresh);
-
-        const base64Url = response_json.access.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        localStorage.setItem("payload", jsonPayload);
-        window.location.reload();
-    } else {
-        alert(response_json['error']);
-        window.history.back();
-    }
+    setLocalStorage(response);
 }
 
 
@@ -130,3 +89,4 @@ window.onload = async function () {
     const article_list = document.getElementById("recently-article")
     articleList(recently_articles.slice(0, 9), article_list)
 }
+

@@ -32,9 +32,9 @@
     <form>
         <div class="mx-auto input-group mt-5">
             <div class="mx-auto d-flex">
-                <input name="query" type="text" class="form-control" style="width: 40vw;" placeholder="검색어 입력"
+                <input id="query" type="text" class="form-control" style="width: 40vw;" placeholder="검색어 입력"
                     aria-label="search" aria-describedby="button-addon2">
-                <button class="btn btn-primary" type="submit" id="button-addon2">검색</button>
+                <button class="btn btn-primary" type="button" id="button-addon2" onclick="handleSearch()">검색</button>
             </div>
         </div>
     </form>

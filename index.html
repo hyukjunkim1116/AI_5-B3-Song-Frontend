@@ -16,8 +16,8 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 
-    <script src="/static/js/loader.js"></script>
     <script src="/static/js/api.js"></script>
+    <script src="/static/js/loader.js"></script>
     <script src="/static/js/index.js"></script>
 
     <title>띵곡맛집 | Home</title>
@@ -34,14 +34,20 @@
             </div>
         </div>
     </form>
-    <div class="container text-center mt-5">
+    <div class="container mt-5 mb-5">
         <div class="row gap-5">
-            <div class="col pt-3 pb-3" id="most-like-comment" style="background-color:aqua">
-                좋아요를 가장 많이 받은 댓글
+            <div class="col pt-3" style="background-color:blue; color:aliceblue;">
+                좋아요를 많이 받은 댓글 확인하기!
             </div>
-            <div class="col pt-3 pb-3" id="recently-article" style="background-color:aqua">
-                최근에 올라온 게시글
+            <div class="col pt-3" style="background-color:blue; color:aliceblue;">
+                최근 올라온 게시물 확인하기!
             </div>
+        </div>
+        <div class="row gap-5">
+            <ul class="col pt-3" id="most-like-comment" style="background-color:aqua; list-style: none;">
+            </ul>
+            <ul class="col pt-3" id="recently-article" style="background-color:aqua; list-style: none;">
+            </ul>
         </div>
     </div>
 </body>

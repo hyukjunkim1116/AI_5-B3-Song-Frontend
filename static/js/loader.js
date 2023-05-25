@@ -56,14 +56,13 @@ injectNavbar();
 // 게시글 목록 UI
 function articleList(articles, list_div) {
     articles.forEach(article => {
-        const newCol = document.createElement("div");
-        newCol.setAttribute("class", "col")
-        newCol.setAttribute("onclick", `articleDetail(${article.pk})`)
+        const newCardBox = document.createElement("li")
+        newCardBox.setAttribute("class", "card-box")
 
         const newCard = document.createElement("div")
         newCard.setAttribute("class", "card h-100")
         newCard.setAttribute("id", article.pk)
-        newCol.appendChild(newCard)
+        newCardBox.appendChild(newCard)
 
         const articlePhoto = article.photos[0]?.file;
         const articleImage = document.createElement("img");
@@ -81,56 +80,58 @@ function articleList(articles, list_div) {
         newCardBody.setAttribute("onclick", `articleDetail(${article.pk})`)
         newCard.appendChild(newCardBody)
 
-        const newCardTile = document.createElement("h5")
+        const newCardTile = document.createElement("h6")
         newCardTile.setAttribute("class", "card-title")
         newCardTile.innerText = article.title
         newCardBody.appendChild(newCardTile)
 
         const newCardtime = document.createElement("p")
         newCardtime.setAttribute("class", "card-text")
-        newCardtime.innerText = `생성시간 : ${article.created_at}`
+        newCardtime.innerText = article.created_at
         newCardBody.appendChild(newCardtime)
 
-        list_div.appendChild(newCol)
+        list_div.appendChild(newCardBox)
     })
 }
 
 // 댓글 목록 UI
 function commentList(comments, list_div) {
-    comments.forEach(comment => {
-        const newCol = document.createElement("div");
-        newCol.setAttribute("class", "col")
-        newCol.setAttribute("onclick", `articleDetail(${comment.pk})`)
+    comments.forEach(async comment => {
+        const newCardBox = document.createElement("li")
+        newCardBox.setAttribute("class", "card-box")
 
         const newCard = document.createElement("div")
         newCard.setAttribute("class", "card h-100")
         newCard.setAttribute("id", comment.pk)
-        newCol.appendChild(newCard)
+        newCardBox.appendChild(newCard)
 
-        // 사진 가져오는 방식 알게 되면 추가함
-        // const articlePhoto = document.createElement("img")
-        // articlePhoto.setAttribute("class", "card-img-top")
-        // if (article.image) {
-        //     articlePhoto.setAttribute("src", `${backend_base_url}${article.image}`)
-        // } else {
-        //     articlePhoto.setAttribute("src", "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2")
-        // }
-        // newCard.appendChild(articlePhoto)
+        const post = await getArticle(comment.article)
+        const articlePhoto = post.photos[0]?.file;
+        const articleImage = document.createElement("img");
+        articleImage.setAttribute("class", "card-img-top")
+        if (articlePhoto) {
+            articleImage.setAttribute("src", `${articlePhoto}`);
+        } else {
+            articleImage.setAttribute("src", "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2")
+        }
+        articleImage.setAttribute("onclick", `uploadPhoto(${comment.article})`);
+        newCard.appendChild(articleImage)
 
         const newCardBody = document.createElement("div")
         newCardBody.setAttribute("class", "card-body")
+        newCardBody.setAttribute("onclick", `articleDetail(${comment.article})`)
         newCard.appendChild(newCardBody)
 
-        const newCardTile = document.createElement("h5")
+        const newCardTile = document.createElement("h6")
         newCardTile.setAttribute("class", "card-title")
         newCardTile.innerText = comment.comment
         newCardBody.appendChild(newCardTile)
 
         const newCardlike = document.createElement("p")
         newCardlike.setAttribute("class", "card-text")
-        newCardlike.innerText = `좋아요수 : ${comment.like_count}`
+        newCardlike.innerText = `좋아요 ${comment.like_count}개`
         newCardBody.appendChild(newCardlike)
 
-        list_div.appendChild(newCol)
+        list_div.appendChild(newCardBox)
     })
 }

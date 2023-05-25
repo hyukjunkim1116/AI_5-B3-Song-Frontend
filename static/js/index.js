@@ -1,22 +1,26 @@
 // 로그인 되어있다면(localstorage에 토큰이 있다면) 로그인 되어있으므로 pass
-// 토큰이 없고, url에 파라미터가 있다면, 해당 값을 판별해서 해당하는 함수를 호출합니다
+// 토큰이 없고, url에 파라미터가 있다면, 해당 값을 판별해서 해당하는 함수를 호출
 if (localStorage.getItem("payload")) { }
 else if (location.href.split('=')[1]) {
     let code = new URLSearchParams(window.location.search).get('code');
     let state = new URLSearchParams(window.location.search).get('state');
+    let hashParams = new URLSearchParams(window.location.hash.substr(1));
+    let google_token = hashParams.get("access_token");
     if (code) {
-        if (state) { getNaverToken(code, state); }
-        else { getKakaoToken(code); }
+        if (state) {
+            getNaverToken(code, state);
+        }
+        else {
+            getKakaoToken(code);
+        }
     }
-    else {
-        let hashParams = new URLSearchParams(window.location.hash.substr(1));
-        let google_token = hashParams.get("access_token");
+    else if (google_token) {
         getGoogleToken(google_token);
     }
 }
 
 // 받아온 토큰을 로컬 스토리지에 저장
-// 에러 발생 시, 에러 문구를 띄워주고 이전 페이지(로그인페이지)로 돌아갑니다
+// 에러 발생 시, 에러 문구를 띄워주고 이전 페이지(로그인페이지)로
 function setLocalStorage(response) {
     if (response.status === 200) {
         localStorage.setItem("access", response_json.access);

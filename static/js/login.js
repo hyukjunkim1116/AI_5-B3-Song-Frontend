@@ -25,7 +25,7 @@ async function handleLoginBtn() {
 
 checkLogin();
 
-// 카카오 로그인 버튼 클릭 시 kakao auth에 코드 요청
+// 로그인 버튼 클릭 시 해당 auth에 코드 요청, redirect_uri로 URL 파라미터와 함께 이동
 async function kakaoLoginBtn() {
     const response = await fetch(`${backend_base_url}/api/users/kakao/`, { method: 'GET' })
     const kakao_id = await response.json()

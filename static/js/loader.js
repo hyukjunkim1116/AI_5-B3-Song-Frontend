@@ -14,6 +14,10 @@ async function injectNavbar() {
     let data = await navbarHtml.text();
     document.querySelector("header").innerHTML = data;
 
+    let footerHtml = await fetch("/footer.html")
+    let footerdata = await footerHtml.text()
+    document.querySelector("footer").innerHTML = footerdata;
+
     const payload = localStorage.getItem("payload")
     if (payload) {
         const login_user = await getUser();

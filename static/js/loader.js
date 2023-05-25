@@ -132,6 +132,8 @@ async function mainArticleList(articles, list_div) {
         list_div.appendChild(newCardBox);
     });
 }
+
+// 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수
 function articleDetail(article_id) {
     window.location.href = `${frontend_base_url}/articles/article_detail.html?article_id=${article_id}`;
 }

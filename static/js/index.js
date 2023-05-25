@@ -125,8 +125,8 @@ window.onload = async function () {
     const recently_articles = await getArticles()
 
     const comments_list = document.getElementById("most-like-comment")
-    commentList(like_comments.slice(0, 10), comments_list)
+    commentList(like_comments.slice(0, 9), comments_list)
 
     const article_list = document.getElementById("recently-article")
-    articleList(recently_articles.slice(0, 10), article_list)
+    articleList(recently_articles.slice(0, 9), article_list)
 }

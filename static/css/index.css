@@ -37,3 +37,8 @@
         /* 카드 3단 배치 */
     }
 }
+
+i:hover {
+    cursor: pointer;
+    color: tomato;
+}

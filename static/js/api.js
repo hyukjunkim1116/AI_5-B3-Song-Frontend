@@ -89,13 +89,11 @@ async function getUser() {
 	);
 	if (response.status == 200) {
 		response_json = await response.json();
-		console.log(response_json);
 		return response_json;
 	} else {
 		alert(response.statusText);
 	}
 }
-
 // 아티클 사진 백엔드로 업로드
 async function createArticlePhoto(realFileURL, article_id) {
 	const token = localStorage.getItem("access");
@@ -155,6 +153,9 @@ const handleArticlePhotoUploadBtn = () => {
 	let articleParams = getParams.split("=")[1];
 	getArticleUploadURL(articleParams);
 };
+function uploadPhoto(article_id) {
+	window.location.href = `${frontend_base_url}/upload_photo.html?article_id=${article_id}`;
+}
 
 // 모든 게시글 불러오기
 async function getArticles() {
@@ -167,9 +168,12 @@ async function getArticles() {
 
 // 특정 게시글 불러오기
 async function getArticle(article_id) {
-	const response = await fetch(`${backend_base_url}/api/articles/${article_id}/`, {
-		method: "GET"
-	});
+	const response = await fetch(
+		`${backend_base_url}/api/articles/${article_id}/`,
+		{
+			method: "GET"
+		}
+	);
 	response_json = await response.json();
 	return response_json;
 }

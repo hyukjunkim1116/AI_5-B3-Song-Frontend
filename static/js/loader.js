@@ -119,7 +119,6 @@ async function mainArticleList(articles, list_div) {
         newCardBody.appendChild(newCardtime);
 
         if (login_user.id === article.owner) {
-            console.log(login_user.id, article.owner);
             const icon = document.createElement("i");
             icon.setAttribute("class", "fas fa-camera");
             icon.setAttribute("onclick", `uploadPhoto(${article.pk})`);

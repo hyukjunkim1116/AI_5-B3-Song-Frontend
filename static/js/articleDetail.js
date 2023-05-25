@@ -78,7 +78,6 @@ window.onload = async function () {
 	const login_user = await getUser();
 	// 게시글 받아오기
 	const article = await getArticle(article_id);
-	console.log(article);
 
 	// 내용 가져오기
 	document.getElementById("detail-title").innerText = article.title;
@@ -102,7 +101,6 @@ window.onload = async function () {
 		);
 	}
 	document.getElementById("detail-img").append(imageBox);
-	console.log(login_user.id, article.owner.id);
 	if (login_user.id === article.owner.id) {
 		const articleButtons = document.getElementById("btns");
 		const updateButton = document.createElement("button");

@@ -4,13 +4,17 @@ if (localStorage.getItem("payload")) { }
 else if (location.href.split('=')[1]) {
     let code = new URLSearchParams(window.location.search).get('code');
     let state = new URLSearchParams(window.location.search).get('state');
+    let hashParams = new URLSearchParams(window.location.hash.substr(1));
+    let google_token = hashParams.get("access_token");
     if (code) {
-        if (state) { getNaverToken(code, state); }
-        else { getKakaoToken(code); }
+        if (state) {
+            getNaverToken(code, state);
+        }
+        else {
+            getKakaoToken(code);
+        }
     }
-    else {
-        let hashParams = new URLSearchParams(window.location.hash.substr(1));
-        let google_token = hashParams.get("access_token");
+    else if (google_token) {
         getGoogleToken(google_token);
     }
 }

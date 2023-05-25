@@ -28,11 +28,18 @@ checkLogin();
 // 카카오 로그인 버튼 클릭 시 kakao auth에 코드 요청
 async function kakaoLoginBtn() {
     const response = await fetch(`${backend_base_url}/api/users/kakao/`, { method: 'GET' })
-    kakao_id = await response.json()
+    const kakao_id = await response.json()
     const redirect_uri = `${frontend_base_url}/index.html`
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao_id}&redirect_uri=${redirect_uri}&response_type=code&scope=profile_nickname,profile_image,account_email,gender`
+    const scope = 'profile_nickname,profile_image,account_email,gender'
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao_id}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}`
 }
 
-
-
-
+async function googleLoginBtn() {
+    console.log("google")
+    const response = await fetch(`${backend_base_url}/api/users/google/`, { method: 'GET' })
+    const google_id = await response.json()
+    const redirect_uri = `${frontend_base_url}/index.html`
+    const scope = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+    const param = `scope=${scope}&include_granted_scopes=true&response_type=token&state=pass-through value&prompt=consent&client_id=${google_id}&redirect_uri=${redirect_uri}`
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${param}`
+}

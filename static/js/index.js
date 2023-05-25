@@ -76,16 +76,26 @@ function uploadPhoto(article_id) {
     window.location.href = `${frontend_base_url}/upload_photo.html?article_id=${article_id}`;
 }
 
+async function handleSearch() {
+    const query = document.getElementById("query").value
+    if (query) {
+        window.location.href = `${frontend_base_url}/articles/articles_list.html?query=${query}`;
+    } else {
+        alert("검색어를 입력해 주세요!")
+    }
+}
+
 //메인페이지 좋아요순 댓글, 최신순 게시글 가져오기
 window.onload = async function () {
-	const like_comments = await getComments();
-	like_comments.sort((x, y) => y.like_count - x.like_count);
+    const like_comments = await getComments();
+    like_comments.sort((x, y) => y.like_count - x.like_count);
 
-	const recently_articles = await getArticles();
+    const recently_articles = await getArticles();
 
-	const comments_list = document.getElementById("most-like-comment");
-	commentList(like_comments.slice(0, 9), comments_list);
+    const comments_list = document.getElementById("most-like-comment");
+    commentList(like_comments.slice(0, 9), comments_list);
 
-	const article_list = document.getElementById("recently-article");
-	articleList(recently_articles.slice(0, 9), article_list);
-};
+    const article_list = document.getElementById("recently-article")
+    mainArticleList(recently_articles.slice(0, 9), article_list)
+}
+

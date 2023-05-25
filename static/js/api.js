@@ -213,3 +213,12 @@ async function getComments() {
 	response_json = await response.json();
 	return response_json;
 }
+
+// 검색 결과물 백엔드에서 가져오기
+async function getQueryArticles(query) {
+	const response = await fetch(`${backend_base_url}/api/articles/search/${query}/`, {
+		method: "GET"
+	});
+
+	return response
+}

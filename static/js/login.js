@@ -1,5 +1,8 @@
 console.log("login.js 연결됨")
 
+checkLogin();
+
+// 로그인 폼 다 쓰고 로그인 눌렀을 때 실행되는 함수
 async function handleLoginBtn() {
     const response = await handleLogin();
 
@@ -23,9 +26,8 @@ async function handleLoginBtn() {
     }
 }
 
-checkLogin();
 
-// 카카오 로그인 버튼 클릭 시 kakao auth에 코드 요청
+// 로그인 버튼 클릭 시 해당 auth에 코드 요청, redirect_uri로 URL 파라미터와 함께 이동
 async function kakaoLoginBtn() {
     const response = await fetch(`${backend_base_url}/api/users/kakao/`, { method: 'GET' })
     const kakao_id = await response.json()

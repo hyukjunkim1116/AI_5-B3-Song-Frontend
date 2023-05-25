@@ -1,6 +1,7 @@
 console.log("articles_list 연결됨")
 
 // 글 목록 가져오기
+// 글목록 버튼을 누른 경우랑 검색 버튼을 누른 경우 결과값을 다르게 가져옴
 window.onload = async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get("query");

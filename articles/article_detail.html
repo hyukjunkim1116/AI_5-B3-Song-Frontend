@@ -23,35 +23,26 @@
     <script src="/static/js/api.js"></script>
     <script src="/static/js/loader.js"></script>
     <script src="/static/js/index.js"></script>
+    <script src="/static/js/articleDetail.js"></script>
 
-    <title>띵곡맛집 | Home</title>
+    <title>띵곡맛집</title>
 </head>
 
 <body>
     <header></header>
-    <form>
-        <div class="mx-auto input-group mt-5">
-            <div class="mx-auto d-flex">
-                <input id="query" type="text" class="form-control" style="width: 40vw;" placeholder="검색어 입력"
-                    aria-label="search" aria-describedby="button-addon2">
-                <button class="btn btn-primary" type="button" id="button-addon2" onclick="handleSearch()">검색</button>
-            </div>
+    <div class="container w-50 mt-3">
+        <h2 class="text-center">상세 게시글 보기</h2>
+        <div id="detail-img">
         </div>
-    </form>
-    <div class="container mt-5 mb-5">
-        <div class="row gap-5">
-            <div class="col text-center border border-primary p-1">
-                좋아요를 많이 받은 댓글
-            </div>
-            <div class="col text-center border border-primary p-1">
-                최근 올라온 게시물
-            </div>
+        <div id="detail-title">
         </div>
-        <div class="row gap-5">
-            <ul class="col pt-3" id="most-like-comment">
-            </ul>
-            <ul class="col pt-3" id="recently-article">
-            </ul>
+        <div id="detail-user">
+        </div>
+        <div id="detail-time">
+        </div>
+        <div id="detail-content">
+        </div>
+        <div id="btns">
         </div>
     </div>
 </body>

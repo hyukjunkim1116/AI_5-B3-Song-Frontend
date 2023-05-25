@@ -1,0 +1,36 @@
+.card-box {
+    display: flex;
+    /* 부모요소에 플랙스 적용, 가로정렬 됨 */
+    flex-direction: column;
+    /* 방향을 세로로 바꾸고 */
+    margin-bottom: 1rem;
+}
+
+@media(min-width: 600px) {
+    .col {
+        display: flex;
+        flex-wrap: wrap;
+        /* 넘치는 카드 아래로 넘기기 */
+        margin: 0 -1rem;
+        /* 카드 바깥 쪽 공간 없애기 */
+    }
+
+    .card-box {
+        width: 50%;
+        /* 카드 2단 배치 */
+        padding: 0 1rem;
+        /* 카드 사이 간격 */
+    }
+}
+
+@media(min-width: 1200px) {
+    .card-box {
+        width: 33.33333%;
+        /* 카드 3단 배치 */
+    }
+}
+
+.col {
+    border-radius: 3px;
+    border-color: blue;
+}

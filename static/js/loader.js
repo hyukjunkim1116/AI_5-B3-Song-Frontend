@@ -92,7 +92,7 @@ async function mainArticleList(articles, list_div) {
 
         const newCard = document.createElement("div");
         newCard.setAttribute("class", "card h-100");
-        newCard.setAttribute("id", article.pk);
+        newCard.setAttribute("id", `article-${article.pk}`);
         newCardBox.appendChild(newCard);
 
         const articlePhoto = article.photos[0]?.file;
@@ -144,7 +144,7 @@ function commentList(comments, list_div) {
 
         const newCard = document.createElement("div");
         newCard.setAttribute("class", "card h-100");
-        newCard.setAttribute("id", comment.pk);
+        newCard.setAttribute("id", `comment-${comment.id}`);
         newCardBox.appendChild(newCard);
 
         const post = await getArticle(comment.article);

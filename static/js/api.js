@@ -155,9 +155,18 @@ const handleArticlePhotoUploadBtn = () => {
 	getArticleUploadURL(articleParams);
 };
 
-// index.html 아티클 불러오기
+// 모든 게시글 불러오기
 async function getArticles() {
 	const response = await fetch(`${backend_base_url}/api/articles`, {
+		method: "GET"
+	});
+	response_json = await response.json();
+	return response_json;
+}
+
+// 특정 게시글 불러오기
+async function getArticle(article_id) {
+	const response = await fetch(`${backend_base_url}/api/articles/${article_id}/`, {
 		method: "GET"
 	});
 	response_json = await response.json();

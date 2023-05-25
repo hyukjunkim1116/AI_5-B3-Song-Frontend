@@ -6,13 +6,13 @@ window.onload = async function () {
     const query = urlParams.get("query");
 
     if (query) {
-        articles = await getQueryArticles(query)
-        if (articles.status == 200) {
-            articles = await articles.json();
-        } else if (articles.status == 204) {
+        q_articles = await getQueryArticles(query)
+        if (q_articles.status == 200) {
+            articles = await q_articles.json();
+        } else if (q_articles.status == 204) {
             alert("해당 검색어가 포함된 게시글을 찾을 수 없습니다!")
+            articles = await getArticles()
         }
-        articles = await getArticles()
     } else {
         articles = await getArticles()
     }

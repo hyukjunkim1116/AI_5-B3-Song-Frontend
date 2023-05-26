@@ -52,6 +52,8 @@ header {
 
 .dropdown-menu {
     position: fixed;
+    background-color: #161414;
+
 }
 
 .dropdown-item {
@@ -60,9 +62,15 @@ header {
     color: aliceblue;
 }
 
+.dropdown-item {
+    text-align: center;
+    color: aliceblue
+}
+
 #intro {
     text-align: center;
     padding: 10px 0;
+    cursor: pointer;
 }
 
 .hd-login-only {

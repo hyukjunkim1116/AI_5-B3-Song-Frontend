@@ -117,6 +117,7 @@ function commentList(comments, list_div) {
         const newCard = document.createElement("div");
         newCard.setAttribute("class", "card h-100");
         newCard.setAttribute("id", `comment-${comment.id}`);
+        newCard.setAttribute("onclick", `location.href='${frontend_base_url}/articles/article_detail.html?article_id=${comment.article}#comment-${comment.id}'`);
         newCardBox.appendChild(newCard);
 
         const post = await getArticle(comment.article);
@@ -131,12 +132,10 @@ function commentList(comments, list_div) {
                 "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
             );
         }
-        articleImage.setAttribute("onclick", `uploadPhoto(${comment.article})`);
         newCard.appendChild(articleImage);
 
         const newCardBody = document.createElement("div");
         newCardBody.setAttribute("class", "card-body");
-        newCardBody.setAttribute("onclick", `articleDetail(${comment.article})`);
         newCard.appendChild(newCardBody);
 
         const newCardTitle = document.createElement("h6");

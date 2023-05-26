@@ -47,6 +47,7 @@
 
 .right-container {
     padding: 25px;
+    min-width: 560px;
     max-width: 750px;
     background-color: rgb(156, 135, 109);
 }

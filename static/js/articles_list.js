@@ -7,7 +7,7 @@ async function paginationView(articles) {
 
     const numOfContent = articles.length;
     const maxContent = 10;
-    const maxButton = 3;
+    const maxButton = 10;
     const maxPage = Math.ceil(numOfContent / maxContent);
     let page = 1;
 
@@ -45,7 +45,7 @@ async function paginationView(articles) {
         }
         // 글의 최대 개수를 넘지 않는 선에서, 화면에 최대 10개의 글 생성
         for (let id = (page - 1) * maxContent + 1; id <= page * maxContent && id <= numOfContent; id++) {
-            contents.appendChild(makeContent(id));
+            contents.appendChild(makeContent(id - 1));
         }
     };
 

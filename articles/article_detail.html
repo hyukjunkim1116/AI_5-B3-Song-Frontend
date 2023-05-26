@@ -30,6 +30,7 @@
 <body>
     <header></header>
     <main>
+<<<<<<< HEAD
         <div class="detail-box">
             <div class="left-container dt-content-box">
                 <!-- <h2 class="text-center">상세 게시글 보기</h2> -->
@@ -79,6 +80,43 @@
                             </div>
                         </div>
                     </div>
+=======
+        <h2 class="text-center mt-3">상세 게시글 보기</h2>
+        <div class="container w-50 mt-3 border border-dark bg-light text-dark rounded">
+
+            <div class="container d-flex pt-2 p-0">
+                <div class="flex-grow-1 text-start" id="detail-title">
+                </div>
+                <div class=" text-center pe-2" id="detail-user">
+                </div>
+                <div class=" text-center" id="detail-time">
+                </div>
+            </div>
+            <div class="text-end" id="detail-time">
+            </div>
+            <div class="d-flex justify-content-center m-2" id="detail-img">
+            </div>
+            <div class="container m-0 mt-1 mb-2 p-1 rounded">
+                <div id="detail-content">
+                </div>
+                <div class="text-end p-0" id="btns">
+                </div>
+            </div>
+
+
+        </div>
+        <div class="container w-50 mt-3 p-0">
+            <h2 class="text-center">댓글 보기</h2>
+            <ul class="list-unstyled" id="comments-list"></ul>
+            <div class="row mt-5 mb-5 m-auto align-items-center">
+                <div class="col-11 p-0">
+                    <input type="text" id="new-comment" class="form-control" placeholder="please comment(Limit 100byte)"
+                        maxlength="100">
+                </div>
+                <div class="col d-grid gap-0 d-md-flex justify-content-md-end p-0">
+                    <button type="button" class="btn btn-outline-secondary btn-sm text-nowrap"
+                        onclick="submitComment()">등록</button>
+>>>>>>> main
                 </div>
             </div>
         </div>

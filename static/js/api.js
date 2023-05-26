@@ -477,3 +477,32 @@ async function likeClick(comment_id) {
 		clickDislike.setAttribute("style", "display:flex;")
 	}
 }
+
+// 북마크 누르기
+async function bookmarkClick(article_id) {
+	const article = await getArticle(article_id);
+
+	let token = localStorage.getItem("access")
+	let clickBookmark = document.getElementById(`bookmark-${article_id}`)
+	let clickUnbookmark = document.getElementById(`unbookmark-${article_id}`)
+
+	const response = await fetch(`${backend_base_url}/api/articles/bookmark/${article_id}/`, {
+		method: 'POST',
+		headers: {
+			"Authorization": `Bearer ${token}`
+		},
+	})
+	if (response.status == 401) {
+		alert("로그인한 사용자만 북마크 할 수 있습니다")
+	}
+	const response_json = await response.json()
+
+	//좋아요 하트 색 및 개수 변경
+	if (response_json == "bookmark") {
+		clickUnbookmark.setAttribute("style", "display:flex;")
+		clickBookmark.setAttribute("style", "display:none;")
+	} else if (response_json == "unbookmark") {
+		clickUnbookmark.setAttribute("style", "display:none;")
+		clickBookmark.setAttribute("style", "display:flex;")
+	}
+}

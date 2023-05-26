@@ -156,7 +156,35 @@ window.onload = async function () {
 		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
 		articleButtons.appendChild(updateButton);
 		articleButtons.appendChild(deleteButton);
+	} else if (login_user) {
+		const articleButtons = document.getElementById("btns");
+		const bookmarkButton = document.createElement("button");
+		const unbookmarkButton = document.createElement("button");
+		bookmarkButton.setAttribute("class", "btn p-0");
+		bookmarkButton.setAttribute("type", "button");
+		bookmarkButton.setAttribute("id", `bookmark-${article_id}`);
+		bookmarkButton.innerText = "북마크 하기!";
+		bookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
+		unbookmarkButton.setAttribute("class", "btn p-0");
+		unbookmarkButton.setAttribute("type", "button");
+		unbookmarkButton.setAttribute("id", `unbookmark-${article_id}`);
+		unbookmarkButton.setAttribute("style", "display:none;");
+		unbookmarkButton.innerText = "북마크 취소..";
+		unbookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
+		articleButtons.appendChild(bookmarkButton);
+		articleButtons.appendChild(unbookmarkButton);
 	}
+
+	// 북마크 버튼 세팅
+	console.log(login_user)
+	let bookmark = document.getElementById(`bookmark-${article_id}`)
+	let unbookmark = document.getElementById(`unbookmark-${article_id}`)
+	login_user.bookmarks.forEach((obj) => {
+		if (article_id == obj.id) {
+			unbookmark.setAttribute("style", "display:flex;")
+			bookmark.setAttribute("style", "display:none;")
+		}
+	});
 
 	// 댓글을 화면에 표시하기
 	await loadComments(article_id);

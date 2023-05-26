@@ -111,3 +111,46 @@
         max-width: 500px;
     }
 }
+
+/* like */
+.like-i {
+    display: flex;
+    flex-direction: row;
+    overflow: visible;
+    margin-top: 4px;
+    padding: 0;
+}
+
+.like-i2 {
+    display: inline-block;
+}
+
+.like-i3 {
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    margin: 0;
+}
+
+.bi-heart2 {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    animation-duration: 0.45s;
+    animation-name: like-button-animation;
+    animation-timing-function: ease-in-out;
+    transform: scale(1);
+}
+
+.bi-heart2 svg {
+    display: block;
+    position: relative;
+    height: 24;
+    width: 24;
+
+    overflow: hidden;
+}

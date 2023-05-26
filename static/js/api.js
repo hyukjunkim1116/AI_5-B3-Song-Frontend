@@ -90,6 +90,22 @@ async function getAllUser() {
 	}
 }
 
+// 특정 유저 정보 조회
+async function getOtherUser(user_id) {
+	const response = await fetch(
+		`${backend_base_url}/api/users/profile/${user_id}/`,
+		{
+			method: "GET"
+		}
+	);
+	if (response.status == 200) {
+		response_json = await response.json();
+		return response_json;
+	} else {
+		alert(response.statusText);
+	}
+}
+
 // 로그인 한 로그인 한 유저 정보 조회
 async function getLoginUser() {
 	const payload = localStorage.getItem("payload");
@@ -103,6 +119,43 @@ async function getLoginUser() {
 		);
 		if (response.status == 200) {
 			response_json = await response.json();
+			return response_json;
+		} else {
+			alert(response.statusText);
+		}
+	}
+
+	// 로그인 한 유저 정보 수정
+	async function putUser() {
+		const payload = localStorage.getItem("payload");
+		const payload_parse = JSON.parse(payload);
+		let token = localStorage.getItem("access");
+
+		update_body = {}
+
+		const password = document.getElementById("password_update").value;
+		// const passwordCheck = document.getElementById("password-check").value
+		const nickname = document.getElementById("nickname_update").value;
+		const gender = document.getElementById("gender_update").value;
+		const age = document.getElementById("age_update").value;
+		// 변경사항이 있을 경우에만 추가
+		if (password) { update_body["password"] = password; }
+		if (nickname) { update_body["nickname"] = nickname; }
+		if (gender) { update_body["gender"] = gender; }
+		if (age) { update_body["age"] = age; }
+
+		const response = await fetch(
+			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				method: "PUT",
+				body: JSON.stringify(update_body),
+			}
+		);
+		if (response.status == 200) {
+			response_json = await response.json();
 			console.log(response_json);
 			return response_json;
 		} else {
@@ -110,86 +163,48 @@ async function getLoginUser() {
 		}
 	}
 
-// 로그인 한 유저 정보 수정
-async function putUser() {
-	const payload = localStorage.getItem("payload");
-	const payload_parse = JSON.parse(payload);
-	let token = localStorage.getItem("access");
 
-	update_body={}
 
-	const password = document.getElementById("password_update").value;
-	// const passwordCheck = document.getElementById("password-check").value
-	const nickname = document.getElementById("nickname_update").value;
-	const gender = document.getElementById("gender_update").value;
-	const age = document.getElementById("age_update").value;
-	// 변경사항이 있을 경우에만 추가
-	if (password){update_body["password"] = password;}
-	if (nickname){update_body["nickname"] = nickname;}
-	if (gender){update_body["gender"] = gender;}
-	if (age){update_body["age"] = age;}
 
-	const response = await fetch(
-		`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			method: "PUT",
-			body: JSON.stringify(update_body),
+
+	// 특정 유저 팔로잉하기
+	async function follow(user_id) {
+		let token = localStorage.getItem("access");
+
+		const response = await fetch(
+			`${backend_base_url}/api/users/follow/${user_id}/`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				method: "POST"
+			}
+		);
+		if (response.status == 200) {
+			response_json = await response.json();
+			console.log(response_json);
+			return response_json;
+		} else {
+			alert(response.statusText);
 		}
-	);
-	if (response.status == 200) {
-		response_json = await response.json();
-		console.log(response_json);
-		return response_json;
-	} else {
-		alert(response.statusText);
 	}
-}
 
-
-
-
-
-// 특정 유저 팔로잉하기
-async function follow(user_id) {
-	let token = localStorage.getItem("access");
-
-	const response = await fetch(
-		`${backend_base_url}/api/users/follow/${user_id}/`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			method: "POST"
+	// 특정 유저 팔로잉 목록보기
+	async function getFollowing(user_id) {
+		const response = await fetch(
+			`${backend_base_url}/api/users/follow/${user_id}/`,
+			{
+				method: "GET"
+			}
+		);
+		if (response.status == 200) {
+			response_json = await response.json();
+			console.log(response_json);
+			return response_json;
+		} else {
+			alert(response.statusText);
 		}
-	);
-	if (response.status == 200) {
-		response_json = await response.json();
-		console.log(response_json);
-		return response_json;
-	} else {
-		alert(response.statusText);
 	}
-}
-
-// 특정 유저 팔로잉 목록보기
-async function getFollowing(user_id) {
-	const response = await fetch(
-		`${backend_base_url}/api/users/follow/${user_id}/`,
-		{
-			method: "GET"
-		}
-	);
-	if (response.status == 200) {
-		response_json = await response.json();
-		console.log(response_json);
-		return response_json;
-	} else {
-		alert(response.statusText);
-	}
-}
 	if (payload) {
 		const payload_parse = JSON.parse(payload);
 		const response = await fetch(
@@ -350,7 +365,7 @@ async function createComment(article_id, comment) {
 	const response = await fetch(`${backend_base_url}/api/articles/${article_id}/comments/`, {
 		method: "POST",
 		headers: {
-		Authorization: `Bearer ${token}`
+			Authorization: `Bearer ${token}`
 		},
 		body: formdata
 	});
@@ -364,57 +379,57 @@ async function createComment(article_id, comment) {
 
 // 댓글 수정
 async function modifyComment(comment_id, currentComment) {
-    let newComment = prompt("수정할 댓글을 입력하세요.", currentComment); // 수행할 댓글 수정 내용을 입력 받고, 기존 댓글 내용을 보여줍니다.
+	let newComment = prompt("수정할 댓글을 입력하세요.", currentComment); // 수행할 댓글 수정 내용을 입력 받고, 기존 댓글 내용을 보여줍니다.
 
-    if (newComment !== null) { // 수정 내용이 null 이 아닌 경우
-        let token = localStorage.getItem("access");
+	if (newComment !== null) { // 수정 내용이 null 이 아닌 경우
+		let token = localStorage.getItem("access");
 
-        const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                "comment": newComment
-            })
-        });
+		const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
+			method: 'PUT',
+			headers: {
+				'content-type': 'application/json',
+				"Authorization": `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				"comment": newComment
+			})
+		});
 
-        if (response.status == 200) {
-            alert("댓글 수정이 완료되었습니다!");
-            loadComments(article_id); // 댓글 목록을 다시 로드합니다.
-        } else {
-            alert(response.statusText);
-        }
-    } else { // 수정 내용이 null 인 경우
-        loadComments(article_id);
-    }
+		if (response.status == 200) {
+			alert("댓글 수정이 완료되었습니다!");
+			loadComments(article_id); // 댓글 목록을 다시 로드합니다.
+		} else {
+			alert(response.statusText);
+		}
+	} else { // 수정 내용이 null 인 경우
+		loadComments(article_id);
+	}
 }
 
 
 //댓글 삭제
 async function deleteComment(comment_id) {
-    if (confirm("정말 삭제하시겠습니까?")) {
-        let token = localStorage.getItem("access")
+	if (confirm("정말 삭제하시겠습니까?")) {
+		let token = localStorage.getItem("access")
 
-        const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                "id": comment_id,
-            })
-        })
+		const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
+			method: 'DELETE',
+			headers: {
+				'content-type': 'application/json',
+				"Authorization": `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				"id": comment_id,
+			})
+		})
 
-        if (response.status == 204) {
-            alert("댓글 삭제 완료!")
-            loadComments(article_id);
-        } else {
-            alert(response.statusText)
-        }
-    } else {
-        loadComments(article_id);
-    }
+		if (response.status == 204) {
+			alert("댓글 삭제 완료!")
+			loadComments(article_id);
+		} else {
+			alert(response.statusText)
+		}
+	} else {
+		loadComments(article_id);
+	}
 }

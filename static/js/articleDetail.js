@@ -9,7 +9,7 @@ function articleUpdate(article_id) {
 
 // 게시글 상세보기 페이지가 로드될 때 실행되는 함수
 window.onload = async function () {
-	const login_user = await getUser();
+	const login_user = await getLoginUser();
 	// 게시글 받아오기
 	const article = await getArticle(article_id);
 

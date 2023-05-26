@@ -21,12 +21,13 @@ async function loadComments(article_id) {
 
 	// 댓글안에 링크찾아다가 하이퍼링크로 바꿔주기
     function linkify(text) {
-        const urlRegex = /(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
-        return text.replace(urlRegex, function (url) {
-            const href = url.startsWith("http") ? url : "http://" + url;
-            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
-        });
-    }
+		const urlRegex = /(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
+		return text.replace(urlRegex, function (url) {
+			const href = url.startsWith("http") ? url : "http://" + url;
+			const linkName = "🔗";
+			return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="custom-link">${linkName}</a>`;
+		});
+	}
 
     response.forEach((comment) => {
         let buttons = '';
@@ -36,17 +37,18 @@ async function loadComments(article_id) {
 		console.log(comment)
         if (currentUserId === comment.user) {
             buttons = `
-            <div class="col d-grid gap-2 d-md-flex justify-content-end p-2">
-                <button type="button" class="btn btn-primary" onclick="modifyComment(${comment.id}, '${comment.comment}')">수정</button>
-                <button type="button" class="btn btn-primary" onclick="deleteComment(${comment.id})">삭제</button>
+            <div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap ">
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="modifyComment(${comment.id}, '${comment.comment}')">수정</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
             </div>
             `;
         }
 
         commentsList.innerHTML += `
-        <li class="media d-flex mt-2 mb-2 mr-2 border border-dark">
-            <img class="img-thumbnail" src="https://img.freepik.com/free-photo/cute-ai-generated-cartoon-bunny_23-2150288879.jpg" alt="profile img" width="50" height"50">
+        <li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
+		<img class="img-thumbnail rounded-circle" src="https://img.freepik.com/free-photo/cute-ai-generated-cartoon-bunny_23-2150288879.jpg" alt="profile img" width="50" height"50">
             <div class="media-body">
+			
                 <h6 class="mt-1 mb-1 ms-1 me-1">${comment.user}</h6>
                 <span class="mt-1 mb-1 ms-1 me-1">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
             </div>
@@ -63,9 +65,9 @@ window.onload = async function () {
 	const article = await getArticle(article_id);
 
 	// 내용 가져오기
-	document.getElementById("detail-title").innerText = article.title;
-	document.getElementById("detail-user").innerText = article.owner.nickname;
-	document.getElementById("detail-time").innerText = article.created_at.substr(
+	document.getElementById("detail-title").innerText = "제목 " + article.title;
+	document.getElementById("detail-user").innerText = "작성자 " + article.owner.nickname;
+	document.getElementById("detail-time").innerText = "작성일 " + article.created_at.substr(
 		0,
 		10
 	);
@@ -92,7 +94,7 @@ window.onload = async function () {
 		updateButton.setAttribute("type", "button");
 		updateButton.innerText = "수정하기";
 		updateButton.setAttribute("onclick", `articleUpdate(article_id)`);
-		deleteButton.setAttribute("class", "btn");
+		deleteButton.setAttribute("class", "btn p-0");
 		deleteButton.setAttribute("type", "button");
 		deleteButton.innerText = "삭제하기";
 		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);

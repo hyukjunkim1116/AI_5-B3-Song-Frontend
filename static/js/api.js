@@ -305,8 +305,14 @@ async function getArticle(article_id) {
 			method: "GET"
 		}
 	);
-	response_json = await response.json();
-	return response_json;
+	if (response.status == 200) {
+		response_json = await response.json();
+		return response_json;
+	} else if (response.status == 404) {
+		window.location.replace("/page_not_found.html");
+	} else {
+		alert(response.statusText)
+	}
 }
 
 // 아티클 삭제

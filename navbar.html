@@ -1,32 +1,37 @@
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse justify-content-start">
-                <ul class="navbar-nav mr-auto" id="navbar-left">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/articles/articles_list.html">글목록</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="nav justify-content-center">
-                <a class="navbar-brand" href="/">
-                    <img src="/static/image/free-icon-music-6599985.png" width="35" height="35" alt="">
-                </a>
-            </div>
-            <div class="collapse navbar-collapse justify-content-end" id="navbar-toggle">
-                <ul class="navbar-nav ml-auto" id="navbar-right">
-                    <li class="nav-item">
-                        <a class="nav-link" id="login-button" href="/users/login.html">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="intro"></a>
-                    </li>
-                </ul>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".collapse"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+<link rel="stylesheet" href="/static/css/header.css">
+<div class="header-wrap">
+    <div class="header-box">
+        <div class="dropdown header-left">
+            <button class="btn btn-secondary dropdown-toggle header-btn header-dropdown" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <img class="header-dropdown-icon" src="/static/image/dropdown_white.svg">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item hd-login-only" href="/articles/create_article.html">글쓰기</a></li>
+                <li><a class="dropdown-item" href="/articles/articles_list.html">글 목록</a></li>
+                <li><a class="dropdown-item" href="#">댓글 목록</a></li>
+            </ul>
+            <button onclick="location.href='/articles/articles_list.html'" class="header-btn btn btn-secondary"
+                type="button" aria-expanded="false">
+                글 목록
+            </button>
+            <button onclick="location.href='/articles/create_article.html'"
+                class="hd-login-only header-btn btn btn-secondary" type="button" aria-expanded="false">
+                글쓰기
             </button>
         </div>
-    </nav>
-</body>
+        <div>
+            <button onclick="location.href='/'">
+                로고 들어갈 곳
+            </button>
+        </div>
+        <div style="display: flex;">
+            <div id="intro" onclick="location.href='#'" class="header-btn">
+            </div>
+            <button onclick="location.href='/users/login.html'" id="login-switch"
+                class=" header-right header-btn btn btn-secondary" type="button" aria-expanded="false">
+                로그인
+            </button>
+        </div>
+    </div>
+</div>

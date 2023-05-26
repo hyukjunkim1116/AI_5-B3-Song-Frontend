@@ -299,3 +299,88 @@ async function getQueryArticles(query) {
 
 	return response;
 }
+async function getArticleComments(article_id) {
+	const response = await fetch(`${backend_base_url}/api/articles/${article_id}/comments/`, {
+		method: "GET"
+	});
+	response_json = await response.json();
+	return response_json;
+}
+
+// 댓글 작성
+async function createComment(article_id, comment) {
+	const token = localStorage.getItem("access");
+	const formdata = new FormData();
+
+	formdata.append("comment", comment);
+	const response = await fetch(`${backend_base_url}/api/articles/${article_id}/comments/`, {
+		method: "POST",
+		headers: {
+		Authorization: `Bearer ${token}`
+		},
+		body: formdata
+	});
+
+	if (response.status == 200) {
+		return await response.json();
+	} else {
+		throw new Error(`Failed to create comment: ${await response.text()}`);
+	}
+}
+
+// 댓글 수정
+async function modifyComment(comment_id, currentComment) {
+    let newComment = prompt("수정할 댓글을 입력하세요.", currentComment); // 수행할 댓글 수정 내용을 입력 받고, 기존 댓글 내용을 보여줍니다.
+
+    if (newComment !== null) { // 수정 내용이 null 이 아닌 경우
+        let token = localStorage.getItem("access");
+
+        const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "comment": newComment
+            })
+        });
+
+        if (response.status == 200) {
+            alert("댓글 수정이 완료되었습니다!");
+            loadComments(article_id); // 댓글 목록을 다시 로드합니다.
+        } else {
+            alert(response.statusText);
+        }
+    } else { // 수정 내용이 null 인 경우
+        loadComments(article_id);
+    }
+}
+
+
+//댓글 삭제
+async function deleteComment(comment_id) {
+    if (confirm("정말 삭제하시겠습니까?")) {
+        let token = localStorage.getItem("access")
+
+        const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "id": comment_id,
+            })
+        })
+
+        if (response.status == 204) {
+            alert("댓글 삭제 완료!")
+            loadComments(article_id);
+        } else {
+            alert(response.statusText)
+        }
+    } else {
+        loadComments(article_id);
+    }
+}

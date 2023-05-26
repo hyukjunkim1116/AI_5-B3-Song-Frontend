@@ -1,0 +1,16 @@
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 0px 20vw;
+}
+
+h1 {
+    position: relative;
+    align-self: center;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}

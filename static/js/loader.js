@@ -63,6 +63,8 @@ function mainArticleList(articles, list_div) {
 		const newCard = document.createElement("div");
 		newCard.setAttribute("class", "card h-100");
 		newCard.setAttribute("id", `article-${article.pk}`);
+		newCard.setAttribute("onclick", `articleDetail(${article.pk})`);
+		newCard.style.cursor = "pointer";
 		newCardBox.appendChild(newCard);
 
 		const articlePhoto = article.photos[0]?.file;
@@ -79,7 +81,7 @@ function mainArticleList(articles, list_div) {
 		newCard.appendChild(articleImage);
 		const newCardBody = document.createElement("div");
 		newCardBody.setAttribute("class", "card-body");
-		newCardBody.setAttribute("onclick", `articleDetail(${article.pk})`);
+
 		newCard.appendChild(newCardBody);
 
 		const newCardTile = document.createElement("h6");

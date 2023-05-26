@@ -25,6 +25,7 @@ async function articlePhotoDelete() {
 	}
 	location.reload();
 }
+//아티클 업데이트 페이지 들어가면 실행되는 함수. file input은 설정 불가
 window.onload = async function loadUpdatePost() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const articleId = urlParams.get("article_id");
@@ -37,6 +38,15 @@ window.onload = async function loadUpdatePost() {
 	updateContent.value = exist_post.content;
 };
 async function articleUpdate() {
+	const updateBtn = document.getElementById("submit-btn");
+	updateBtn.innerText = "";
+	const span = document.createElement("span");
+	span.setAttribute("id", "spinner-span");
+	span.setAttribute("class", "spinner-border spinner-border-sm");
+	span.setAttribute("role", "status");
+	span.setAttribute("aria-hidden", "true");
+	updateBtn.appendChild(span);
+
 	const urlParams = new URLSearchParams(window.location.search);
 	const articleId = urlParams.get("article_id");
 	const exist_post = await getArticle(articleId);
@@ -113,9 +123,8 @@ async function articleUpdate() {
 	}
 	if (response.status == 200) {
 		alert("글 수정 완료!");
-		window.location.replace(`${frontend_base_url}/`);
 	} else {
 		alert("글 수정 실패!");
-		window.location.replace(`${frontend_base_url}/`);
 	}
+	history.back();
 }

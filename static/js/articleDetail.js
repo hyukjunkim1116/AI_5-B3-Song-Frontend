@@ -71,8 +71,8 @@ async function loadComments(article_id) {
 			comment_user_avatar = "../static/image/free-icon-music-6599985.png"
 		}
 
-		// 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
-		if (response[0].user == comment.user) {
+		// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
+		if (currentUserId === comment.user && response[0].user == comment.user) {
 			buttons += `           
 			<div class="p-2" >
 				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>

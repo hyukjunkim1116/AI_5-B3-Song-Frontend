@@ -73,9 +73,123 @@ function handleLogout() {
 	window.location.replace(`${frontend_base_url}/`);
 }
 
-// 로그인 한 유저 정보 조회
+// 전체 유저 정보 조회 - 관리자용 (아직 권한제한 미구현)
+async function getAllUser() {
+	const response = await fetch(
+		`${backend_base_url}/api/users/`,
+		{
+			method: "GET"
+		}
+	);
+	if (response.status == 200) {
+		response_json = await response.json();
+		console.log(response_json);
+		return response_json;
+	} else {
+		alert(response.statusText);
+	}
+}
+
+// 로그인 한 로그인 한 유저 정보 조회
 async function getLoginUser() {
 	const payload = localStorage.getItem("payload");
+	if (payload) {
+		const payload_parse = JSON.parse(payload);
+		const response = await fetch(
+			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
+			{
+				method: "GET"
+			}
+		);
+		if (response.status == 200) {
+			response_json = await response.json();
+			console.log(response_json);
+			return response_json;
+		} else {
+			alert(response.statusText);
+		}
+	}
+
+// 로그인 한 유저 정보 수정
+async function putUser() {
+	const payload = localStorage.getItem("payload");
+	const payload_parse = JSON.parse(payload);
+	let token = localStorage.getItem("access");
+
+	update_body={}
+
+	const password = document.getElementById("password_update").value;
+	// const passwordCheck = document.getElementById("password-check").value
+	const nickname = document.getElementById("nickname_update").value;
+	const gender = document.getElementById("gender_update").value;
+	const age = document.getElementById("age_update").value;
+	// 변경사항이 있을 경우에만 추가
+	if (password){update_body["password"] = password;}
+	if (nickname){update_body["nickname"] = nickname;}
+	if (gender){update_body["gender"] = gender;}
+	if (age){update_body["age"] = age;}
+
+	const response = await fetch(
+		`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			method: "PUT",
+			body: JSON.stringify(update_body),
+		}
+	);
+	if (response.status == 200) {
+		response_json = await response.json();
+		console.log(response_json);
+		return response_json;
+	} else {
+		alert(response.statusText);
+	}
+}
+
+
+
+
+
+// 특정 유저 팔로잉하기
+async function follow(user_id) {
+	let token = localStorage.getItem("access");
+
+	const response = await fetch(
+		`${backend_base_url}/api/users/follow/${user_id}/`,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			method: "POST"
+		}
+	);
+	if (response.status == 200) {
+		response_json = await response.json();
+		console.log(response_json);
+		return response_json;
+	} else {
+		alert(response.statusText);
+	}
+}
+
+// 특정 유저 팔로잉 목록보기
+async function getFollowing(user_id) {
+	const response = await fetch(
+		`${backend_base_url}/api/users/follow/${user_id}/`,
+		{
+			method: "GET"
+		}
+	);
+	if (response.status == 200) {
+		response_json = await response.json();
+		console.log(response_json);
+		return response_json;
+	} else {
+		alert(response.statusText);
+	}
+}
 	if (payload) {
 		const payload_parse = JSON.parse(payload);
 		const response = await fetch(
@@ -95,6 +209,7 @@ async function getLoginUser() {
 		return
 	}
 }
+
 
 // 아티클 사진 백엔드로 업로드
 async function createArticlePhoto(realFileURL, article_id) {

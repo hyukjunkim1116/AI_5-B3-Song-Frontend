@@ -343,6 +343,15 @@ async function getComments() {
 	return response_json;
 }
 
+// 특정 댓글 불러오기
+async function getComment(comment_id) {
+	const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
+		method: "GET"
+	});
+	response_json = await response.json();
+	return response_json;
+}
+
 // 검색 결과물 백엔드에서 가져오기
 async function getQueryArticles(query) {
 	const response = await fetch(
@@ -437,5 +446,34 @@ async function deleteComment(comment_id) {
 		}
 	} else {
 		loadComments(article_id);
+	}
+}
+
+// 좋아요 누르기
+async function likeClick(comment_id) {
+	const comment = await getComment(comment_id);
+
+	let token = localStorage.getItem("access")
+	let clickLike = document.getElementById(`like-${comment_id}`)
+	let clickDislike = document.getElementById(`dislike-${comment_id}`)
+
+	const response = await fetch(`${backend_base_url}/api/articles/like/${comment_id}/`, {
+		method: 'POST',
+		headers: {
+			"Authorization": `Bearer ${token}`
+		},
+	})
+	if (response.status == 401) {
+		alert("로그인한 사용자만 좋아요를 누를 수 있습니다")
+	}
+	const response_json = await response.json()
+
+	//좋아요 하트 색 및 개수 변경
+	if (response_json == "like") {
+		clickLike.setAttribute("style", "display:flex;")
+		clickDislike.setAttribute("style", "display:none;")
+	} else if (response_json == "dislike") {
+		clickLike.setAttribute("style", "display:none;")
+		clickDislike.setAttribute("style", "display:flex;")
 	}
 }

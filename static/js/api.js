@@ -73,25 +73,26 @@ function handleLogout() {
 	window.location.replace(`${frontend_base_url}/`);
 }
 
-// 유저 정보 조회
-async function getUser() {
+// 로그인 한 유저 정보 조회
+async function getLoginUser() {
 	const payload = localStorage.getItem("payload");
-	const payload_parse = JSON.parse(payload);
-	let token = localStorage.getItem("access");
-	const response = await fetch(
-		`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`
-			},
-			method: "GET"
+	if (payload) {
+		const payload_parse = JSON.parse(payload);
+		const response = await fetch(
+			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
+			{
+				method: "GET"
+			}
+		);
+		if (response.status == 200) {
+			response_json = await response.json();
+			return response_json;
+		} else {
+			alert(response.statusText);
 		}
-	);
-	if (response.status == 200) {
-		response_json = await response.json();
-		return response_json;
-	} else {
-		alert(response.statusText);
+	}
+	else {
+		return
 	}
 }
 

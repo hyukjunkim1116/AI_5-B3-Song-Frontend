@@ -1,6 +1,31 @@
 //아티클 업데이트 하기
 console.log("articleUpdate.js 로드됨");
-
+// 아티클 사진 삭제
+async function articlePhotoDelete() {
+	const urlParams = new URLSearchParams(window.location.search);
+	const articleId = urlParams.get("article_id");
+	const exist_post = await getArticle(articleId);
+	if (exist_post.photos[0]) {
+		const response = await fetch(
+			`${backend_base_url}/api/medias/photos/${exist_post.photos[0]?.pk}`,
+			{
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+		);
+		if (response.status == 200) {
+			alert("사진이 삭제되었습니다!");
+		} else {
+			alert("사진 삭제 권한이 없습니다.");
+		}
+	} else {
+		alert("등록된 사진이 없습니다!");
+	}
+	location.reload();
+}
+//아티클 업데이트 페이지 들어가면 실행되는 함수. file input은 설정 불가
 window.onload = async function loadUpdatePost() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const articleId = urlParams.get("article_id");
@@ -13,10 +38,19 @@ window.onload = async function loadUpdatePost() {
 	updateContent.value = exist_post.content;
 };
 async function articleUpdate() {
+	const updateBtn = document.getElementById("submit-btn");
+	updateBtn.innerText = "";
+	const span = document.createElement("span");
+	span.setAttribute("id", "spinner-span");
+	span.setAttribute("class", "spinner-border spinner-border-sm");
+	span.setAttribute("role", "status");
+	span.setAttribute("aria-hidden", "true");
+	updateBtn.appendChild(span);
+
 	const urlParams = new URLSearchParams(window.location.search);
 	const articleId = urlParams.get("article_id");
 	const exist_post = await getArticle(articleId);
-	const token = localStorage.getItem("access");
+
 	const title = document.getElementById("article_title").value;
 	const content = document.getElementById("article_content").value;
 
@@ -89,9 +123,8 @@ async function articleUpdate() {
 	}
 	if (response.status == 200) {
 		alert("글 수정 완료!");
-		window.location.replace(`${frontend_base_url}/`);
 	} else {
 		alert("글 수정 실패!");
-		window.location.replace(`${frontend_base_url}/`);
 	}
+	history.back();
 }

@@ -6,7 +6,6 @@ async function paginationView(articles) {
     const buttons = document.getElementById("buttons-kmj");
 
     const numOfContent = articles.length;
-    console.log(numOfContent)
     const maxContent = 10;
     const maxButton = 3;
     const maxPage = Math.ceil(numOfContent / maxContent);
@@ -95,8 +94,6 @@ async function paginationView(articles) {
         renderButton(page);
     };
     render(page);
-
-
 }
 
 // 글 목록 가져오기
@@ -118,6 +115,5 @@ window.onload = async function () {
     }
     articles.sort((x, y) => y.pk - x.pk)
 
-    // articleList(articles)
     paginationView(articles)
 }

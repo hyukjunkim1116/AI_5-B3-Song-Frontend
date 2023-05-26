@@ -28,32 +28,6 @@ async function injectNavbar() {
 
 injectNavbar();
 
-// 게시글 목록 UI
-function articleList(articles) {
-    articles.forEach(async (article) => {
-        const tBody = document.getElementById("article-list-kmj");
-        const newTr = document.createElement("tr");
-        newTr.setAttribute("onclick", `articleDetail(${article.pk})`);
-        tBody.appendChild(newTr);
-
-        const newThNo = document.createElement("th");
-        newThNo.innerHTML = article.pk;
-        newTr.appendChild(newThNo);
-
-        const newTdTitle = document.createElement("td");
-        newTdTitle.innerHTML = article.title;
-        newTr.appendChild(newTdTitle);
-
-        const newTdOwner = document.createElement("td");
-        newTdOwner.innerHTML = article.nickname;
-        newTr.appendChild(newTdOwner);
-
-        const newTdTime = document.createElement("td");
-        newTdTime.innerHTML = article.created_at;
-        newTr.appendChild(newTdTime);
-    });
-}
-
 // 메인 게시글 목록 UI
 function mainArticleList(articles, list_div) {
     articles.forEach(async (article) => {
@@ -108,7 +82,7 @@ function articleDetail(article_id) {
     window.location.href = `${frontend_base_url}/articles/article_detail.html?article_id=${article_id}`;
 }
 
-// 댓글 목록 UI
+// 메인 댓글 목록 UI
 function commentList(comments, list_div) {
     comments.forEach(async (comment) => {
         const newCardBox = document.createElement("li");

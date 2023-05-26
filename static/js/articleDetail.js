@@ -27,9 +27,8 @@ async function loadComments(article_id) {
 			return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="custom-link">${linkName}</a>`;
 		});
 	}
-	console.log(response)
+
 	response.forEach(async (comment) => {
-		console.log(comment)
 		let buttons = `
 		<div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap ">
 		<section class="like-i">
@@ -176,7 +175,6 @@ window.onload = async function () {
 	}
 
 	// 북마크 버튼 세팅
-	console.log(login_user)
 	let bookmark = document.getElementById(`bookmark-${article_id}`)
 	let unbookmark = document.getElementById(`unbookmark-${article_id}`)
 	login_user.bookmarks.forEach((obj) => {

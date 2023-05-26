@@ -497,7 +497,7 @@ async function bookmarkClick(article_id) {
 	}
 	const response_json = await response.json()
 
-	//좋아요 하트 색 및 개수 변경
+	// 북마크 버튼 변경
 	if (response_json == "bookmark") {
 		clickUnbookmark.setAttribute("style", "display:flex;")
 		clickBookmark.setAttribute("style", "display:none;")

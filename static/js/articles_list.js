@@ -7,7 +7,7 @@ async function paginationView(articles) {
 
     const numOfContent = articles.length;
     const maxContent = 10;
-    const maxButton = 10;
+    const maxButton = 5;
     const maxPage = Math.ceil(numOfContent / maxContent);
     let page = 1;
 

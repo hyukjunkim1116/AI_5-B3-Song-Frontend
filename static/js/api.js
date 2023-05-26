@@ -197,44 +197,46 @@ async function postArticle() {
 		body: formdata,
 		method: "POST"
 	});
-
-	if (response.status == 200) {
-		alert("글작성 완료!");
-		window.location.replace(`${frontend_base_url}/`);
-	} else {
-		alert(response.status);
-	}
-}
-
-//아티클 업데이트 하기
-async function updateArticle() {
-	const token = localStorage.getItem("access");
-	const title = document.getElementById("article_title").value;
-	const content = document.getElementById("article_content").value;
-
-	const formdata = new FormData();
-
-	formdata.append("title", title);
-	formdata.append("content", content);
-
-	const response = await fetch(
-		`${backend_base_url}/api/articles/${article_id}/`,
+	const responseData = await response.json();
+	console.log(responseData.id);
+	const responseURL = await fetch(
+		`${backend_base_url}/api/medias/photos/get-url/`,
 		{
 			headers: {
-				Authorization: `Bearer ${token}`
+				// "X-CSRFToken": Cookie.get("csrftoken") || "",
+				// Authorization: `Bearer ${token}`
 			},
-			body: formdata,
-			method: "PUT"
+			method: "POST"
 		}
 	);
-
-	if (response.status == 200) {
-		alert("글 수정 완료!");
-		window.location.replace(`${frontend_base_url}/`);
-	} else {
-		alert("글 수정 실패!");
-		window.location.replace(`${frontend_base_url}/`);
-	}
+	const dataURL = await responseURL.json();
+	console.log(dataURL["uploadURL"]);
+	//실제로 클라우드플레어에 업로드
+	const file = document.getElementById("file").files[0];
+	const formData = new FormData();
+	formData.append("file", file);
+	const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
+		body: formData,
+		method: "POST"
+	});
+	const results = await responseRealURL.json();
+	const realFileURL = results.result.variants[0];
+	// 아티클 사진 백엔드로 업로드
+	const responseUpload = await fetch(
+		`${backend_base_url}/api/articles/${responseData.id}/photos/`,
+		{
+			headers: {
+				// "X-CSRFToken": Cookie.get("csrftoken") || "",
+				Authorization: `Bearer ${token}`,
+				"content-type": "application/json"
+			},
+			body: JSON.stringify({
+				file: realFileURL
+			}),
+			method: "POST"
+		}
+	);
+	window.location.replace(`${frontend_base_url}/`);
 }
 
 // 아티클 사진 삭제
@@ -287,9 +289,12 @@ async function getComments() {
 
 // 검색 결과물 백엔드에서 가져오기
 async function getQueryArticles(query) {
-	const response = await fetch(`${backend_base_url}/api/articles/search/${query}/`, {
-		method: "GET"
-	});
+	const response = await fetch(
+		`${backend_base_url}/api/articles/search/${query}/`,
+		{
+			method: "GET"
+		}
+	);
 
-	return response
+	return response;
 }

@@ -94,6 +94,7 @@ async function getUser() {
 		alert(response.statusText);
 	}
 }
+
 // 아티클 사진 백엔드로 업로드
 async function createArticlePhoto(realFileURL, article_id) {
 	const token = localStorage.getItem("access");
@@ -203,6 +204,76 @@ async function postArticle() {
 	} else {
 		alert(response.status);
 	}
+}
+
+//아티클 업데이트 하기
+async function updateArticle() {
+	const token = localStorage.getItem("access");
+	const title = document.getElementById("article_title").value;
+	const content = document.getElementById("article_content").value;
+
+	const formdata = new FormData();
+
+	formdata.append("title", title);
+	formdata.append("content", content);
+
+	const response = await fetch(
+		`${backend_base_url}/api/articles/${article_id}/`,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`
+			},
+			body: formdata,
+			method: "PUT"
+		}
+	);
+
+	if (response.status == 200) {
+		alert("글 수정 완료!");
+		window.location.replace(`${frontend_base_url}/`);
+	} else {
+		alert("글 수정 실패!");
+		window.location.replace(`${frontend_base_url}/`);
+	}
+}
+
+// 아티클 사진 삭제
+async function articlePhotoDelete(photo_id) {
+	console.log(photo_id);
+	const response = await fetch(
+		`${backend_base_url}/api/medias/photos/${photo_id}`,
+		{
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+	);
+	if (response.status == 200) {
+		alert("사진이 삭제되었습니다!");
+	} else {
+		alert("사진 삭제 권한이 없습니다.");
+	}
+	location.reload();
+}
+
+// 아티클 삭제
+async function articleDelete(article_id) {
+	const response = await fetch(
+		`${backend_base_url}/api/articles/${article_id}/`,
+		{
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+	);
+	if (response.status == 204) {
+		alert("게시글이 삭제되었습니다!");
+	} else {
+		alert("게시글 삭제 권한이 없습니다.");
+	}
+	window.location.replace("/");
 }
 
 // 댓글 전체 목록 불러오기

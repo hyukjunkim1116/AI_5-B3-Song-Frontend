@@ -101,7 +101,7 @@ async function mainArticleList(articles, list_div) {
 
         const newCard = document.createElement("div");
         newCard.setAttribute("class", "card h-100");
-        newCard.setAttribute("id", article.pk);
+        newCard.setAttribute("id", `article-${article.pk}`);
         newCardBox.appendChild(newCard);
 
         const articlePhoto = article.photos[0]?.file;
@@ -141,6 +141,8 @@ async function mainArticleList(articles, list_div) {
         list_div.appendChild(newCardBox);
     });
 }
+
+// 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수
 function articleDetail(article_id) {
     window.location.href = `${frontend_base_url}/articles/article_detail.html?article_id=${article_id}`;
 }
@@ -153,7 +155,7 @@ function commentList(comments, list_div) {
 
         const newCard = document.createElement("div");
         newCard.setAttribute("class", "card h-100");
-        newCard.setAttribute("id", comment.pk);
+        newCard.setAttribute("id", `comment-${comment.id}`);
         newCardBox.appendChild(newCard);
 
         const post = await getArticle(comment.article);

@@ -75,11 +75,13 @@ async function getNaverToken(naver_code, state) {
     setLocalStorage(response);
 }
 
-
+// 사진 아이콘 클릭 시 해당 게시글 id를 가지고 사진 업로드 페이지로 이동하는 함수
 function uploadPhoto(article_id) {
     window.location.href = `${frontend_base_url}/upload_photo.html?article_id=${article_id}`;
 }
 
+
+// 검색 버튼 클릭 시 검색어를 가지고 게시글 목록으로 이동하는 함수
 async function handleSearch() {
     const query = document.getElementById("query").value
     if (query) {

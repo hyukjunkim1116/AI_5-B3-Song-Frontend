@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/main.css">
     <!-- Font Awesome Import -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
     <!-- CSS only -->
@@ -26,31 +27,34 @@
 
 <body>
     <header></header>
-    <form>
-        <div class="mx-auto input-group mt-5">
-            <div class="mx-auto d-flex">
-                <input id="query" type="text" class="form-control" style="width: 40vw;" placeholder="검색어 입력"
-                    aria-label="search" aria-describedby="button-addon2">
-                <button class="btn btn-primary" type="button" id="button-addon2" onclick="handleSearch()">검색</button>
+    <main>
+        <form>
+            <div class="mx-auto input-group mt-5">
+                <div class="mx-auto d-flex">
+                    <input id="query" type="text" class="form-control" style="width: 40vw;" placeholder="검색어 입력"
+                        aria-label="search" aria-describedby="button-addon2">
+                    <button class="btn btn-primary" type="button" id="button-addon2"
+                        onclick="handleSearch()">검색</button>
+                </div>
+            </div>
+        </form>
+        <div class="container mt-5 mb-5">
+            <div class="row gap-5">
+                <div class="col text-center border border-primary p-1">
+                    좋아요를 많이 받은 댓글
+                </div>
+                <div class="col text-center border border-primary p-1">
+                    최근 올라온 게시물
+                </div>
+            </div>
+            <div class="row gap-5">
+                <ul class="col pt-3" id="most-like-comment">
+                </ul>
+                <ul class="col pt-3" id="recently-article">
+                </ul>
             </div>
         </div>
-    </form>
-    <div class="container mt-5 mb-5">
-        <div class="row gap-5">
-            <div class="col text-center border border-primary p-1">
-                좋아요를 많이 받은 댓글
-            </div>
-            <div class="col text-center border border-primary p-1">
-                최근 올라온 게시물
-            </div>
-        </div>
-        <div class="row gap-5">
-            <ul class="col pt-3" id="most-like-comment">
-            </ul>
-            <ul class="col pt-3" id="recently-article">
-            </ul>
-        </div>
-    </div>
+    </main>
     <footer></footer>
 </body>
 

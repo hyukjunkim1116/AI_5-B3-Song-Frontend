@@ -25,6 +25,7 @@ async function postArticle() {
 		method: "POST"
 	});
 	const responseData = await response.json();
+
 	const file = document.getElementById("file").files[0];
 	if (file) {
 		const responseURL = await fetch(
@@ -70,5 +71,7 @@ async function postArticle() {
 	} else {
 		alert("작성 실패!");
 	}
-	window.location.replace(`${frontend_base_url}/`);
+	window.location.replace(
+		`${frontend_base_url}/articles/article_detail.html?article_id=${responseData.id}`
+	);
 }

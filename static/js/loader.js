@@ -18,10 +18,8 @@ async function injectNavbar() {
     let footerdata = await footerHtml.text()
     document.querySelector("footer").innerHTML = footerdata;
 
-    const payload = localStorage.getItem("payload")
-    if (payload) {
-        const login_user = await getUser();
-
+    const login_user = await getLoginUser();
+    if (login_user) {
         const intro = document.getElementById("intro");
         intro.innerText = `${login_user.nickname}님 오셨군요!`;
 
@@ -93,9 +91,8 @@ function articleList(articles) {
 }
 
 // 메인 게시글 목록 UI
-async function mainArticleList(articles, list_div) {
-    const login_user = await getUser();
-    articles.forEach(article => {
+function mainArticleList(articles, list_div) {
+    articles.forEach(async article => {
         const newCardBox = document.createElement("li")
         newCardBox.setAttribute("class", "card-box")
 
@@ -131,11 +128,14 @@ async function mainArticleList(articles, list_div) {
         newCardtime.innerText = article.created_at;
         newCardBody.appendChild(newCardtime);
 
-        if (login_user.id === article.owner) {
-            const icon = document.createElement("i");
-            icon.setAttribute("class", "fas fa-camera");
-            icon.setAttribute("onclick", `uploadPhoto(${article.pk})`);
-            newCard.appendChild(icon);
+        const login_user = await getLoginUser();
+        if (login_user) {
+            if (login_user.id === article.owner) {
+                const icon = document.createElement("i");
+                icon.setAttribute("class", "fas fa-camera");
+                icon.setAttribute("onclick", `uploadPhoto(${article.pk})`);
+                newCard.appendChild(icon);
+            }
         }
 
         list_div.appendChild(newCardBox);

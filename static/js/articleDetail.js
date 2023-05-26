@@ -27,9 +27,8 @@ async function loadComments(article_id) {
 			return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="custom-link">${linkName}</a>`;
 		});
 	}
-	console.log(response)
+
 	response.forEach(async (comment) => {
-		console.log(comment)
 		let buttons = `
 		<div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap ">
 		<section class="like-i">
@@ -92,7 +91,7 @@ async function loadComments(article_id) {
 
 		commentsList.innerHTML += `
         <li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
-		<img class="img-thumbnail rounded-circle" src=${comment_user_avatar} alt="profile img" width="50" height"50">
+		<img class="img-thumbnail rounded-circle" src=${comment_user_avatar} alt="profile img" width="50" style="height:50px!important">
 		<div class="media-body">
 			<h6 class="mt-1 mb-1 ms-1 me-1">${comment.user}</h6>
 			<span class="mt-1 mb-1 ms-1 me-1" style="word-break: break-all; white-space: pre-line;">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
@@ -156,7 +155,34 @@ window.onload = async function () {
 		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
 		articleButtons.appendChild(updateButton);
 		articleButtons.appendChild(deleteButton);
+	} else if (login_user) {
+		const articleButtons = document.getElementById("btns");
+		const bookmarkButton = document.createElement("button");
+		const unbookmarkButton = document.createElement("button");
+		bookmarkButton.setAttribute("class", "btn p-0");
+		bookmarkButton.setAttribute("type", "button");
+		bookmarkButton.setAttribute("id", `bookmark-${article_id}`);
+		bookmarkButton.innerText = "북마크 하기!";
+		bookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
+		unbookmarkButton.setAttribute("class", "btn p-0");
+		unbookmarkButton.setAttribute("type", "button");
+		unbookmarkButton.setAttribute("id", `unbookmark-${article_id}`);
+		unbookmarkButton.setAttribute("style", "display:none;");
+		unbookmarkButton.innerText = "북마크 취소..";
+		unbookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
+		articleButtons.appendChild(bookmarkButton);
+		articleButtons.appendChild(unbookmarkButton);
 	}
+
+	// 북마크 버튼 세팅
+	let bookmark = document.getElementById(`bookmark-${article_id}`)
+	let unbookmark = document.getElementById(`unbookmark-${article_id}`)
+	login_user.bookmarks.forEach((obj) => {
+		if (article_id == obj.id) {
+			unbookmark.setAttribute("style", "display:flex;")
+			bookmark.setAttribute("style", "display:none;")
+		}
+	});
 
 	// 댓글을 화면에 표시하기
 	await loadComments(article_id);

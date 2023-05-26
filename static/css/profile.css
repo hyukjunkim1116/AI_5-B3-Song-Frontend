@@ -1,0 +1,84 @@
+.box1 {
+    border:5px ridge;
+    background-color: aquamarine;
+    max-width: 450px;
+    max-height: 900px;
+    width: 40vw;
+    height: 81vh;
+    text-align: center;
+}
+
+.box4{
+    width: 1000px;
+}
+
+.box4>div{
+    border:5px ridge;
+    background-color: rgb(238, 151, 180);
+    max-width: 800px;
+    max-height: 300px;
+    width: 50vw;
+    height: 27vh;
+
+}
+
+.div-one{
+    margin-top: 3%;
+    display:flex;
+    justify-content:center;
+}
+.profile_img{
+    width: 50%;
+    height: 50%;
+    max-width: 200px;
+    max-height: 200px;
+    margin-top: 30px;
+}
+
+.profile_text{
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: xx-large;
+}
+
+.genre{
+    display: inline-block;
+    font-size: small;
+    border: 2px black solid;
+    border-radius: 20px;
+}
+
+#following{
+    display: inline-block;
+    font-size:large;
+}
+
+#follower{
+    display: inline-block;
+    font-size:large;
+
+}
+
+
+.card-box {
+    display:flex;
+    flex-direction: row;
+    margin-bottom: 2rem;
+    width: 96%;
+    /* 카드 2단 배치 */
+    padding: 0 1rem;
+    height: 80%;
+    max-height: 200px;
+    overflow-x: auto;
+}
+.card-box::-webkit-scrollbar{
+    display: none;
+}
+
+.card{
+    width: 33%;
+    height: 100%;
+    margin: 0 10px 0 10px;
+    /* 카드 사이 간격 */
+    flex: none;
+}

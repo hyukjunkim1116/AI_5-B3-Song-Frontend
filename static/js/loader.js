@@ -86,11 +86,13 @@ function mainArticleList(articles, list_div) {
 
         const newCardTitle = document.createElement("h6");
         newCardTitle.setAttribute("class", "card-title");
+        const newStrong = document.createElement("strong");
         if (article.title.length > 10) {
-            newCardTitle.innerText = `${article.title.substr(0, 10)} ···`;
+            newStrong.innerText = `${article.title.substr(0, 10)} ···`;
         } else {
-            newCardTitle.innerText = article.title
+            newStrong.innerText = article.title
         }
+        newCardTitle.appendChild(newStrong);
         newCardBody.appendChild(newCardTitle);
 
         const newCardtime = document.createElement("p");
@@ -148,7 +150,9 @@ function commentList(comments, list_div) {
 
         const newCardlike = document.createElement("p");
         newCardlike.setAttribute("class", "card-text");
-        newCardlike.innerText = `좋아요 ${comment.like_count}개`;
+        const newStrong = document.createElement("strong");
+        newStrong.innerText = `좋아요 ${comment.like_count}개`;
+        newCardlike.appendChild(newStrong);
         newCardBody.appendChild(newCardlike);
 
         list_div.appendChild(newCardBox);

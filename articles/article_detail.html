@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/static/css/main.css">
     <!-- Font Awesome Import -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <link rel="stylesheet" href="/static/css/detail.css">
+
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -28,33 +30,59 @@
 <body>
     <header></header>
     <main>
-        <div class="container w-50 mt-3">
-            <h2 class="text-center">상세 게시글 보기</h2>
-            <div id="detail-img">
+        <div class="detail-box">
+            <div class="left-container dt-content-box">
+                <!-- <h2 class="text-center">상세 게시글 보기</h2> -->
+                <div class="dt-title-bar">
+                    <div id="detail-title">
+                    </div>
+                    <div class="dt-user-bar">
+                        <div id="detail-user">
+                        </div>
+                        <div id="detail-time">
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div id="detail-img">
+                </div>
+                <div id="detail-content">
+                </div>
+                <div id="btns">
+                </div>
+                <hr>
+                <div>유튜브 URL? 들어가는 곳</div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/tKCgIw3-LHQ"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+                <div>
+                    <div class="yt-title">(노래제목)</div>
+                    <div class="yt-artist">(가수)</div>
+                    <div class="yt-tag">(관련태그?)</div>
+                </div>
             </div>
-            <div id="detail-title">
-            </div>
-            <div id="detail-user">
-            </div>
-            <div id="detail-time">
-            </div>
-            <div id="detail-content">
-            </div>
-            <div id="btns">
+            <div class="right-container dt-content-box">
+                <!-- <div class="container w-50 mt-3"> -->
+                    <div id="comment-box">
+                        <div class="container">
+                            <h2 class="text-center">댓글 보기</h2>
+                            <ul class="list-unstyled" id="comments-list"></ul>
+                            <div class="row mt-5 mb-5 m-auto">
+                                <div class="col-11 p-0">
+                                    <input type="text" id="new-comment" class="form-control"
+                                        placeholder="please comment">
+                                </div>
+                                <div class="col d-grid gap-2 d-md-flex justify-content-md-end p-0">
+                                    <button type="button" class="btn btn-primary" onclick="submitComment()">등록</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="container w-50 mt-3">
-            <h2 class="text-center">댓글 보기</h2>
-            <ul class="list-unstyled" id="comments-list"></ul>
-            <div class="row mt-5 mb-5 m-auto">
-                <div class="col-11 p-0">
-                    <input type="text" id="new-comment" class="form-control" placeholder="please comment">
-                </div>
-                <div class="col d-grid gap-2 d-md-flex justify-content-md-end p-0">
-                    <button type="button" class="btn btn-primary" onclick="submitComment()">등록</button>
-                </div>
-            </div>
-        </div>
+
         <footer></footer>
 </body>
 

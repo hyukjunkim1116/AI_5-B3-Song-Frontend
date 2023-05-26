@@ -90,9 +90,8 @@ async function getLoginUser() {
 		} else {
 			alert(response.statusText);
 		}
-	}
-	else {
-		return
+	} else {
+		return;
 	}
 }
 
@@ -199,67 +198,49 @@ async function postArticle() {
 		method: "POST"
 	});
 	const responseData = await response.json();
-	console.log(responseData.id);
-	const responseURL = await fetch(
-		`${backend_base_url}/api/medias/photos/get-url/`,
-		{
-			headers: {
-				// "X-CSRFToken": Cookie.get("csrftoken") || "",
-				// Authorization: `Bearer ${token}`
-			},
-			method: "POST"
-		}
-	);
-	const dataURL = await responseURL.json();
-	console.log(dataURL["uploadURL"]);
-	//실제로 클라우드플레어에 업로드
 	const file = document.getElementById("file").files[0];
-	const formData = new FormData();
-	formData.append("file", file);
-	const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
-		body: formData,
-		method: "POST"
-	});
-	const results = await responseRealURL.json();
-	const realFileURL = results.result.variants[0];
-	// 아티클 사진 백엔드로 업로드
-	const responseUpload = await fetch(
-		`${backend_base_url}/api/articles/${responseData.id}/photos/`,
-		{
-			headers: {
-				// "X-CSRFToken": Cookie.get("csrftoken") || "",
-				Authorization: `Bearer ${token}`,
-				"content-type": "application/json"
-			},
-			body: JSON.stringify({
-				file: realFileURL
-			}),
+	if (file) {
+		const responseURL = await fetch(
+			`${backend_base_url}/api/medias/photos/get-url/`,
+			{
+				headers: {
+					// "X-CSRFToken": Cookie.get("csrftoken") || "",
+					// Authorization: `Bearer ${token}`
+				},
+				method: "POST"
+			}
+		);
+		const dataURL = await responseURL.json();
+		console.log(dataURL["uploadURL"]);
+		//실제로 클라우드플레어에 업로드
+
+		const formData = new FormData();
+		formData.append("file", file);
+		const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
+			body: formData,
 			method: "POST"
-		}
-	);
+		});
+		const results = await responseRealURL.json();
+		const realFileURL = results.result.variants[0];
+		// 아티클 사진 백엔드로 업로드
+		const responseUpload = await fetch(
+			`${backend_base_url}/api/articles/${responseData.id}/photos/`,
+			{
+				headers: {
+					// "X-CSRFToken": Cookie.get("csrftoken") || "",
+					Authorization: `Bearer ${token}`,
+					"content-type": "application/json"
+				},
+				body: JSON.stringify({
+					file: realFileURL
+				}),
+				method: "POST"
+			}
+		);
+	}
+
 	window.location.replace(`${frontend_base_url}/`);
 }
-
-// 아티클 사진 삭제
-async function articlePhotoDelete(photo_id) {
-	console.log(photo_id);
-	const response = await fetch(
-		`${backend_base_url}/api/medias/photos/${photo_id}`,
-		{
-			method: "DELETE",
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		}
-	);
-	if (response.status == 200) {
-		alert("사진이 삭제되었습니다!");
-	} else {
-		alert("사진 삭제 권한이 없습니다.");
-	}
-	location.reload();
-}
-
 // 아티클 삭제
 async function articleDelete(article_id) {
 	const response = await fetch(

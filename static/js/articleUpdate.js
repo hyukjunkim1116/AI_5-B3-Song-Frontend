@@ -1,6 +1,30 @@
 //아티클 업데이트 하기
 console.log("articleUpdate.js 로드됨");
-
+// 아티클 사진 삭제
+async function articlePhotoDelete() {
+	const urlParams = new URLSearchParams(window.location.search);
+	const articleId = urlParams.get("article_id");
+	const exist_post = await getArticle(articleId);
+	if (exist_post.photos[0]) {
+		const response = await fetch(
+			`${backend_base_url}/api/medias/photos/${exist_post.photos[0]?.pk}`,
+			{
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+		);
+		if (response.status == 200) {
+			alert("사진이 삭제되었습니다!");
+		} else {
+			alert("사진 삭제 권한이 없습니다.");
+		}
+	} else {
+		alert("등록된 사진이 없습니다!");
+	}
+	location.reload();
+}
 window.onload = async function loadUpdatePost() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const articleId = urlParams.get("article_id");
@@ -16,7 +40,7 @@ async function articleUpdate() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const articleId = urlParams.get("article_id");
 	const exist_post = await getArticle(articleId);
-	const token = localStorage.getItem("access");
+
 	const title = document.getElementById("article_title").value;
 	const content = document.getElementById("article_content").value;
 

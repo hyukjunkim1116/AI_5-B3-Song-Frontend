@@ -62,9 +62,7 @@
 }
 
 #new-comment {
-    width: 90%;
-    margin: 0;
-    display: inline;
+    width: 100%;
 }
 
 .yt-content {
@@ -73,9 +71,42 @@
     width: 100%
 }
 
+@media(max-width: 1180px) {
+    .detail-box {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .left-container {
+        width: 750px;
+        margin: 1em auto;
+    }
+
+    .right-container {
+        width: 750px;
+        margin: 1em auto;
+    }
+
+    .dt-content-box>iframe {
+        width: 700px;
+    }
+}
+
 /* #comment-box { }*/
 @media(max-width: 760px) {
-    .detail-box{
+    .detail-box {
         flex-direction: column;
+    }
+
+    .left-container {
+        width: 550px;
+    }
+
+    .right-container {
+        width: 550px;
+    }
+
+    .dt-content-box>iframe {
+        max-width: 500px;
     }
 }

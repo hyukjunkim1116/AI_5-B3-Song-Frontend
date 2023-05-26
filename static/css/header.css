@@ -1,3 +1,8 @@
+header {
+    position: relative;
+    z-index: 999;
+}
+
 .header-wrap {
     width: 100%;
     display: flex;
@@ -45,8 +50,12 @@
     display: flex;
 }
 
+.dropdown-menu {
+    position: fixed;
+}
 
 .dropdown-item {
+    position: relative;
     text-align: center;
     color: aliceblue;
 }

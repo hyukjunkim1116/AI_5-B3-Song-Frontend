@@ -2,17 +2,17 @@ console.log("loader.js 로드됨");
 // navbar.html을 가져옴
 // 로그인 되지 않은 상태에서는 글쓰기가 안 보이고, 로그인 된 상태라면 로그인이 안 보이고 로그아웃 버튼이 생김
 async function injectNavbar() {
-    fetch("/navbar.html")
-        .then((response) => {
-            return response.text();
-        })
-        .then((data) => {
-            document.querySelector("header").innerHTML = data;
-        });
+    // fetch("/navbar.html")
+    //     .then((response) => {
+    //         return response.text();
+    //     })
+    //     .then((data) => {
+    //         document.querySelector("header").innerHTML = data;
+    //     });
 
     let navbarHtml = await fetch("/navbar.html");
-    let data = await navbarHtml.text();
-    document.querySelector("header").innerHTML = data;
+    let headerdata = await navbarHtml.text();
+    document.querySelector("header").innerHTML = headerdata;
 
     let footerHtml = await fetch("/footer.html")
     let footerdata = await footerHtml.text()

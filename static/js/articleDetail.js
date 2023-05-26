@@ -88,7 +88,6 @@ window.onload = async function () {
 		const articleButtons = document.getElementById("btns");
 		const updateButton = document.createElement("button");
 		const deleteButton = document.createElement("button");
-		const updatePhotoButton = document.createElement("button");
 		updateButton.setAttribute("class", "btn");
 		updateButton.setAttribute("type", "button");
 		updateButton.innerText = "수정하기";
@@ -97,16 +96,8 @@ window.onload = async function () {
 		deleteButton.setAttribute("type", "button");
 		deleteButton.innerText = "삭제하기";
 		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
-		updatePhotoButton.setAttribute("class", "btn");
-		updatePhotoButton.setAttribute("type", "button");
-		updatePhotoButton.innerText = "사진 삭제하기";
-		updatePhotoButton.setAttribute(
-			"onclick",
-			`articlePhotoDelete(${article.photos[0]?.pk})`
-		);
 		articleButtons.appendChild(updateButton);
 		articleButtons.appendChild(deleteButton);
-		articleButtons.appendChild(updatePhotoButton);
 	}
 
 	// 댓글을 화면에 표시하기

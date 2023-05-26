@@ -25,35 +25,44 @@ async function injectNavbar() {
         const intro = document.getElementById("intro");
         intro.innerText = `${login_user.nickname}님 오셨군요!`;
 
-        let navbarLeft = document.getElementById("navbar-left");
-        let postLi = document.createElement("li");
-        postLi.setAttribute("class", "nav-item");
+        const loginswitch = document.getElementById("login-switch")
+        loginswitch.innerText = "로그아웃"
+        loginswitch.setAttribute("onclick", "handleLogout()");
 
-        let postLink = document.createElement("a");
-        postLink.setAttribute("href", "/articles/create_article.html");
-        postLink.setAttribute("class", "nav-link");
-        postLink.innerHTML = "글쓰기";
-
-        postLi.appendChild(postLink);
-        navbarLeft.appendChild(postLi);
-
-        let navbarRight = document.getElementById("navbar-right");
-        let newLi = document.createElement("li");
-        newLi.setAttribute("class", "nav-item");
-
-        let logoutBtn = document.createElement("button");
-        logoutBtn.setAttribute("class", "nav-link btn");
-        logoutBtn.innerText = "로그아웃";
-        logoutBtn.setAttribute("onclick", "handleLogout()");
-
-        newLi.appendChild(logoutBtn);
-
-        navbarRight.appendChild(newLi);
-
-        let loginButton = document.getElementById("login-button");
-        loginButton.style.display = "none";
+        let loginOnlyElements = document.querySelectorAll(".hd-login-only")
+        loginOnlyElements.forEach(element => {
+            element.classList.remove("hd-login-only");
+        });
     }
 }
+
+// let navbarLeft = document.getElementById("navbar-left");
+// let postLi = document.createElement("li");
+// postLi.setAttribute("class", "nav-item");
+
+// let postLink = document.createElement("a");
+// postLink.setAttribute("href", "/articles/create_article.html");
+// postLink.setAttribute("class", "nav-link");
+// postLink.innerHTML = "글쓰기";
+
+// postLi.appendChild(postLink);
+// navbarLeft.appendChild(postLi);
+
+// let navbarRight = document.getElementById("navbar-right");
+// let newLi = document.createElement("li");
+// newLi.setAttribute("class", "nav-item");
+
+// let logoutBtn = document.createElement("button");
+// logoutBtn.setAttribute("class", "nav-link btn");
+// logoutBtn.innerText = "로그아웃";
+// logoutBtn.setAttribute("onclick", "handleLogout()");
+
+// newLi.appendChild(logoutBtn);
+
+// navbarRight.appendChild(newLi);
+
+// let loginButton = document.getElementById("login-button");
+// loginButton.style.display = "none";
 
 injectNavbar();
 

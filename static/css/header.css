@@ -1,0 +1,61 @@
+.header-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 2em 15%;
+    color: aliceblue;
+    opacity: 0.9;
+}
+
+.header-box {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-box-item {
+    margin: auto 5px;
+    cursor: pointer;
+}
+
+.header-btn {
+    margin-right: 1em;
+    background-color: #161414;
+    padding-bottom: 7px;
+    border: none;
+    height: 46.2px;
+}
+
+.header-dropdown {
+    height: 46.2px;
+    background-color: transparent;
+    padding: auto 0;
+}
+
+.header-dropdown-icon {
+    width: 2em;
+    margin-bottom: 1px;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.header-left {
+    display: flex;
+}
+
+
+.dropdown-item {
+    text-align: center;
+    color: aliceblue;
+}
+
+#intro {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.hd-login-only {
+    display: none;
+}

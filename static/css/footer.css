@@ -8,8 +8,8 @@ footer {
     display: flex;
     justify-content: space-around;
     padding: 2em 15%;
-    background-color: rgb(22, 20, 20);
     color: aliceblue;
+    background-color: rgb(22, 20, 20);
 }
 
 .footer-box {
@@ -58,6 +58,9 @@ footer {
 }
 
 @media(max-width: 860px) {
+    .footer-wrap {
+        padding: 1.3em 15%;
+    }
     .footer-middle {
         display: none;
     }

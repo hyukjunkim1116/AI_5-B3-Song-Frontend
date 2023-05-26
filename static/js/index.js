@@ -91,6 +91,110 @@ async function handleSearch() {
     }
 }
 
+// 메인 게시글 목록 UI
+function mainArticleList(articles, list_div) {
+    articles.forEach(async (article) => {
+        const newCardBox = document.createElement("li");
+        newCardBox.setAttribute("class", "card-box");
+
+        const newCard = document.createElement("div");
+        newCard.setAttribute("class", "card h-100");
+        newCard.setAttribute("id", `article-${article.pk}`);
+        newCard.setAttribute("onclick", `articleDetail(${article.pk})`);
+        newCard.style.cursor = "pointer";
+        newCardBox.appendChild(newCard);
+
+        const articlePhoto = article.photos[0]?.file;
+        const articleImage = document.createElement("img");
+        articleImage.setAttribute("class", "card-img-top");
+        if (articlePhoto) {
+            articleImage.setAttribute("src", `${articlePhoto}`);
+        } else {
+            articleImage.setAttribute(
+                "src",
+                "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
+            );
+        }
+        newCard.appendChild(articleImage);
+        const newCardBody = document.createElement("div");
+        newCardBody.setAttribute("class", "card-body");
+
+        newCard.appendChild(newCardBody);
+
+        const newCardTitle = document.createElement("h6");
+        newCardTitle.setAttribute("class", "card-title");
+        const newStrong = document.createElement("strong");
+        if (article.title.length > 10) {
+            newStrong.innerText = `${article.title.substr(0, 10)} ···`;
+        } else {
+            newStrong.innerText = article.title
+        }
+        newCardTitle.appendChild(newStrong);
+        newCardBody.appendChild(newCardTitle);
+
+        const newCardtime = document.createElement("p");
+        newCardtime.setAttribute("class", "card-text");
+        newCardtime.innerText = article.created_at;
+        newCardBody.appendChild(newCardtime);
+        list_div.appendChild(newCardBox);
+    });
+}
+
+// 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수
+function articleDetail(article_id) {
+    window.location.href = `${frontend_base_url}/articles/article_detail.html?article_id=${article_id}`;
+}
+
+// 메인 댓글 목록 UI
+function commentList(comments, list_div) {
+    comments.forEach(async (comment) => {
+        const newCardBox = document.createElement("li");
+        newCardBox.setAttribute("class", "card-box");
+
+        const newCard = document.createElement("div");
+        newCard.setAttribute("class", "card h-100");
+        newCard.setAttribute("id", `comment-${comment.id}`);
+        newCard.setAttribute("onclick", `location.href='${frontend_base_url}/articles/article_detail.html?article_id=${comment.article}#comment-${comment.id}'`);
+        newCardBox.appendChild(newCard);
+
+        const post = await getArticle(comment.article);
+        const articlePhoto = post.photos[0]?.file;
+        const articleImage = document.createElement("img");
+        articleImage.setAttribute("class", "card-img-top");
+        if (articlePhoto) {
+            articleImage.setAttribute("src", `${articlePhoto}`);
+        } else {
+            articleImage.setAttribute(
+                "src",
+                "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
+            );
+        }
+        newCard.appendChild(articleImage);
+
+        const newCardBody = document.createElement("div");
+        newCardBody.setAttribute("class", "card-body");
+        newCard.appendChild(newCardBody);
+
+        const newCardTitle = document.createElement("h6");
+        newCardTitle.setAttribute("class", "card-title");
+        if (comment.comment.length > 10) {
+            newCardTitle.innerText = `${comment.comment.substr(0, 10)} ···`;
+        } else {
+            newCardTitle.innerText = comment.comment;
+        }
+        newCardBody.appendChild(newCardTitle);
+
+        const newCardlike = document.createElement("p");
+        newCardlike.setAttribute("class", "card-text");
+        const newStrong = document.createElement("strong");
+        newStrong.innerText = `좋아요 ${comment.like_count}개`;
+        newCardlike.appendChild(newStrong);
+        newCardBody.appendChild(newCardlike);
+
+        list_div.appendChild(newCardBox);
+    });
+}
+
 //메인페이지 좋아요순 댓글, 최신순 게시글 가져오기
 window.onload = async function () {
     const like_comments = await getComments();

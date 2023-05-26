@@ -92,7 +92,7 @@ async function loadComments(article_id) {
 
 		commentsList.innerHTML += `
         <li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
-		<img class="img-thumbnail rounded-circle" src=${comment_user_avatar} alt="profile img" width="50" height"50">
+		<img class="img-thumbnail rounded-circle" src=${comment_user_avatar} alt="profile img" width="50" style="height:50px!important">
 		<div class="media-body">
 			<h6 class="mt-1 mb-1 ms-1 me-1">${comment.user}</h6>
 			<span class="mt-1 mb-1 ms-1 me-1" style="word-break: break-all; white-space: pre-line;">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->

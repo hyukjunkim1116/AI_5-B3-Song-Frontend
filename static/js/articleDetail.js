@@ -16,7 +16,8 @@ async function loadComments(article_id) {
 
 	// 댓글안에 링크찾아다가 하이퍼링크로 바꿔주기
 	function linkify(text) {
-		const urlRegex = /(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
+		const urlRegex =
+			/(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
 		return text.replace(urlRegex, function (url) {
 			const href = url.startsWith("http") ? url : "http://" + url;
 			const linkName = "🔗";
@@ -59,15 +60,18 @@ async function loadComments(article_id) {
 		</div>`;
 
 		// 프로필 사진 넣기 위한 부분(있으면 그대로 넣고 없으면 대체 이미지)
-		const comment_user = await getOtherUser(comment.user_id)
+		const comment_user = await getOtherUser(comment.user_id);
 		if (comment_user.avatar) {
-			comment_user_avatar = comment_user.avatar
+			comment_user_avatar = comment_user.avatar;
 		} else {
-			comment_user_avatar = "../static/image/free-icon-music-6599985.png"
+			comment_user_avatar = "../static/image/free-icon-music-6599985.png";
 		}
 
 		// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
-		if (payload.user_id === comment.user_id && response[0].user_id == comment.user_id) {
+		if (
+			payload.user_id === comment.user_id &&
+			response[0].user_id == comment.user_id
+		) {
 			buttons += `           
 			<div class="p-2" >
 				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
@@ -89,21 +93,26 @@ async function loadComments(article_id) {
         <li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
 		<img class="img-thumbnail rounded-circle" src=${comment_user_avatar} alt="profile img" width="50" style="height:50px!important">
 		<div class="media-body">
-			<h6 class="mt-1 mb-1 ms-1 me-1" style="cursor:pointer; width: fit-content;" onclick="location.href='${frontend_base_url}/users/profile.html?user_id=${comment_user.id}'" >${comment.user}</h6>
-			<span class="mt-1 mb-1 ms-1 me-1" style="word-break: break-all; white-space: pre-line;">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
+			<h6 class="mt-1 mb-1 ms-1 me-1" style="cursor:pointer; width: fit-content;" onclick="location.href='${frontend_base_url}/users/profile.html?user_id=${
+			comment_user.id
+		}'" >${comment.user}</h6>
+			<span class="mt-1 mb-1 ms-1 me-1" style="word-break: break-all; white-space: pre-line;">${linkify(
+				comment.comment
+			)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
 		</div>
+		<span>${comment.created_at}</span>
             ${buttons}
         </li >
 			`;
 
 		const login_user = await getLoginUser();
 		//좋아요 하트색 세팅
-		let like = document.getElementById(`like-${comment.id}`)
-		let dislike = document.getElementById(`dislike-${comment.id}`)
+		let like = document.getElementById(`like-${comment.id}`);
+		let dislike = document.getElementById(`dislike-${comment.id}`);
 		login_user.like_comments.forEach((obj) => {
 			if (comment.id == obj.id) {
-				like.setAttribute("style", "display:flex;")
-				dislike.setAttribute("style", "display:none;")
+				like.setAttribute("style", "display:flex;");
+				dislike.setAttribute("style", "display:none;");
 			}
 		});
 	});
@@ -117,13 +126,19 @@ window.onload = async function () {
 
 	// 내용 가져오기, 작성자 버튼 누르면 프로필페이지로 이동
 	document.getElementById("detail-title").innerText = "제목 " + article.title;
-	document.getElementById("detail-user").innerText = "작성자 " + article.owner.nickname;
-	document.getElementById("detail-user").setAttribute("onclick", `location.href='${frontend_base_url}/users/profile.html?user_id=${article.owner.id}'`);
-	document.getElementById("detail-user").setAttribute("style", "cursor:pointer;");
-	document.getElementById("detail-time").innerText = "작성일 " + article.created_at.substr(
-		0,
-		10
-	);
+	document.getElementById("detail-user").innerText =
+		"작성자 " + article.owner.nickname;
+	document
+		.getElementById("detail-user")
+		.setAttribute(
+			"onclick",
+			`location.href='${frontend_base_url}/users/profile.html?user_id=${article.owner.id}'`
+		);
+	document
+		.getElementById("detail-user")
+		.setAttribute("style", "cursor:pointer;");
+	document.getElementById("detail-time").innerText =
+		"작성일 " + article.created_at.substr(0, 10);
 	document.getElementById("detail-content").innerText = article.content;
 
 	const imageBox = document.createElement("img");
@@ -179,12 +194,12 @@ window.onload = async function () {
 	}
 
 	// 북마크 버튼 세팅
-	let bookmark = document.getElementById(`bookmark-${article_id}`)
-	let unbookmark = document.getElementById(`unbookmark-${article_id}`)
+	let bookmark = document.getElementById(`bookmark-${article_id}`);
+	let unbookmark = document.getElementById(`unbookmark-${article_id}`);
 	login_user.bookmarks.forEach((obj) => {
 		if (article_id == obj.id) {
-			unbookmark.setAttribute("style", "display:flex;")
-			bookmark.setAttribute("style", "display:none;")
+			unbookmark.setAttribute("style", "display:flex;");
+			bookmark.setAttribute("style", "display:none;");
 		}
 	});
 
@@ -196,10 +211,10 @@ window.onload = async function () {
 async function submitComment() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const article_id = urlParams.get("article_id");
-	const commentElement = document.getElementById("new-comment")
-	const newComment = commentElement.value
-	await createComment(article_id, newComment)
-	commentElement.value = ""
+	const commentElement = document.getElementById("new-comment");
+	const newComment = commentElement.value;
+	await createComment(article_id, newComment);
+	commentElement.value = "";
 
-	loadComments(article_id)
+	loadComments(article_id);
 }

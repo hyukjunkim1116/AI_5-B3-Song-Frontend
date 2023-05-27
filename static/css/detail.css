@@ -154,3 +154,7 @@
 
     overflow: hidden;
 }
+
+.img-thumbnail {
+    object-fit: cover;
+}

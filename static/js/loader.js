@@ -2,47 +2,47 @@ console.log("loader.js 로드됨");
 // navbar.html을 가져옴
 // 로그인 되지 않은 상태에서는 글쓰기가 안 보이고, 로그인 된 상태라면 로그인이 안 보이고 로그아웃 버튼이 생김
 async function injectNavbar() {
-	let headerHtml = await fetch("/header.html");
-	let headerdata = await headerHtml.text();
-	document.querySelector("header").innerHTML = headerdata;
+    let headerHtml = await fetch("/header.html");
+    let headerdata = await headerHtml.text();
+    document.querySelector("header").innerHTML = headerdata;
 
-	let footerHtml = await fetch("/footer.html");
-	let footerdata = await footerHtml.text();
-	document.querySelector("footer").innerHTML = footerdata;
+    let footerHtml = await fetch("/footer.html");
+    let footerdata = await footerHtml.text();
+    document.querySelector("footer").innerHTML = footerdata;
 
-	const login_user = await getLoginUser();
-	if (login_user) {
-		if (login_user.avatar !== "") {
-			const introAvatar = document.getElementsByClassName("intro-avatar")[0];
-			console.log(login_user.avatar);
-			introAvatar.setAttribute("src", `${login_user.avatar}`);
-			introAvatar.style.visibility = "visible";
-		}
-		const intro = document.getElementById("intro");
-		intro.innerText = `${login_user.nickname}님 오셨군요!`;
+    const login_user = await getLoginUser();
+    if (login_user) {
+        if (login_user.avatar !== "") {
+            const introAvatar = document.getElementsByClassName("intro-avatar")[0];
+            introAvatar.setAttribute("src", `${login_user.avatar}`);
+            introAvatar.style.visibility = "visible";
+        }
+        const intro = document.getElementById("intro");
+        intro.innerText = `${login_user.nickname}님 오셨군요!`;
 
-		const loginswitch = document.getElementById("login-switch");
-		loginswitch.innerText = "로그아웃";
-		loginswitch.setAttribute("onclick", "handleLogout()");
+        const loginswitch = document.getElementById("login-switch");
+        loginswitch.innerText = "로그아웃";
+        loginswitch.setAttribute("onclick", "handleLogout()");
 
-		let loginOnlyElements = document.querySelectorAll(".hd-login-only");
-		loginOnlyElements.forEach((element) => {
-			element.classList.remove("hd-login-only");
-		});
-	}
+        let loginOnlyElements = document.querySelectorAll(".hd-login-only");
+        loginOnlyElements.forEach((element) => {
+            element.classList.remove("hd-login-only");
+        });
+    }
 }
 
 injectNavbar();
 
 // 유저 프로필 정보 UI
 async function userProfile(user, list_div) {
-	// 프로필이미지가 없다면 기본 이미지로
-	if (user.avatar) {
-		user.avatar = user.avatar;
-	} else {
-		user.avatar =
-			"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
-	}
+    // 프로필이미지가 없다면 기본 이미지로
+    if (user.avatar) {
+        user.avatar = user.avatar;
+    } else {
+        user.avatar =
+            "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
+    }
+
 
 	// 팔로잉,팔로워 수 불러오기
 	following = user.followings.length;
@@ -60,17 +60,17 @@ async function userProfile(user, list_div) {
     <div id="updateBtn">
     </div>
     `;
-	// 장르가 있다면 추가로 생성
-	if (user.genre) {
-		const genreBox = document.getElementById("genre");
-		const newDiv = document.createElement("div");
-		newDiv.setAttribute("class", "genre");
-		newDiv.innerText = user.genre;
-		genreBox.appendChild(newDiv);
-	}
-	const payload = localStorage.getItem("payload");
-	const payload_parse = JSON.parse(payload);
-	user_id = payload_parse.user_id;
+    // 장르가 있다면 추가로 생성
+    if (user.genre) {
+        const genreBox = document.getElementById("genre");
+        const newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "genre");
+        newDiv.innerText = user.genre;
+        genreBox.appendChild(newDiv);
+    }
+    const payload = localStorage.getItem("payload");
+    const payload_parse = JSON.parse(payload);
+    user_id = payload_parse.user_id;
 
 	// 자신의 프로필이라면 프로필 수정버튼 보이기
 	if (user.id === user_id) {
@@ -101,24 +101,24 @@ async function userProfile(user, list_div) {
 
 // 로그인 한 유저 정보 수정
 async function putUser() {
-	// 프로필 수정완료버튼 확인창 뜨기
-	msg = confirm("프로필을 수정하시겠습니까?");
-	const payload = localStorage.getItem("payload");
-	const payload_parse = JSON.parse(payload);
+    // 프로필 수정완료버튼 확인창 뜨기
+    msg = confirm("프로필을 수정하시겠습니까?");
+    const payload = localStorage.getItem("payload");
+    const payload_parse = JSON.parse(payload);
 
-	if (msg === true) {
-		const updateBtn = document.getElementById("update-btn");
-		const updateBtnChildDiv = document.querySelector("#updateBtn div");
-		updateBtnChildDiv.innerText = "";
-		const span = document.createElement("span");
-		span.setAttribute("id", "spinner-span");
-		span.setAttribute("class", "spinner-border spinner-border-sm");
-		span.setAttribute("role", "status");
-		span.setAttribute("aria-hidden", "true");
-		updateBtnChildDiv.appendChild(span);
-		let token = localStorage.getItem("access");
+    if (msg === true) {
+        const updateBtn = document.getElementById("update-btn");
+        const updateBtnChildDiv = document.querySelector("#updateBtn div");
+        updateBtnChildDiv.innerText = "";
+        const span = document.createElement("span");
+        span.setAttribute("id", "spinner-span");
+        span.setAttribute("class", "spinner-border spinner-border-sm");
+        span.setAttribute("role", "status");
+        span.setAttribute("aria-hidden", "true");
+        updateBtnChildDiv.appendChild(span);
+        let token = localStorage.getItem("access");
 
-		update_body = {};
+        update_body = {};
 
 		const password = document.getElementById("password_update").value;
 		const passwordCheck = document.getElementById(
@@ -206,13 +206,13 @@ async function putUser() {
 
 // 유저 프로필 정보 수정하기 - 미완성
 function userProfileUpdate(user, list_div) {
-	// 프로필이미지가 없다면 기본 이미지로
-	if (user.avatar) {
-		user.avatar = user.avatar;
-	} else {
-		user.avatar =
-			"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
-	}
+    // 프로필이미지가 없다면 기본 이미지로
+    if (user.avatar) {
+        user.avatar = user.avatar;
+    } else {
+        user.avatar =
+            "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
+    }
 
 	list_div.innerHTML = "";
 	if (user.login_type == "normal"){
@@ -279,13 +279,13 @@ function userProfileUpdate(user, list_div) {
                 </div>`;
 	}
 
-	const update_box = document.getElementById("updateBtn");
-	const newdiv = document.createElement("div");
-	newdiv.setAttribute("class", "btn btn-secondary");
-	newdiv.setAttribute("style", "margin: 0 30% 0 35%;");
-	newdiv.setAttribute("onclick", "putUser()");
-	newdiv.innerText = "프로필 수정 »";
-	update_box.appendChild(newdiv);
+    const update_box = document.getElementById("updateBtn");
+    const newdiv = document.createElement("div");
+    newdiv.setAttribute("class", "btn btn-secondary");
+    newdiv.setAttribute("style", "margin: 0 30% 0 35%;");
+    newdiv.setAttribute("onclick", "putUser()");
+    newdiv.innerText = "프로필 수정 »";
+    update_box.appendChild(newdiv);
 }
 
 // 유저 게시글 목록 UI
@@ -300,19 +300,19 @@ function userArticleList(articles, list_div) {
         newCard.setAttribute("id", article.pk)
         newCardBox.appendChild(newCard)
 
-		const articlePhoto = article.photos[0]?.file;
-		const articleImage = document.createElement("img");
-		articleImage.setAttribute("class", "card-img-top");
-		if (articlePhoto) {
-			articleImage.setAttribute("src", `${articlePhoto}`);
-		} else {
-			articleImage.setAttribute(
-				"src",
-				"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
-			);
-		}
-		articleImage.setAttribute("onclick", `uploadPhoto(${article.pk})`);
-		newCard.appendChild(articleImage);
+        const articlePhoto = article.photos[0]?.file;
+        const articleImage = document.createElement("img");
+        articleImage.setAttribute("class", "card-img-top");
+        if (articlePhoto) {
+            articleImage.setAttribute("src", `${articlePhoto}`);
+        } else {
+            articleImage.setAttribute(
+                "src",
+                "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
+            );
+        }
+        articleImage.setAttribute("onclick", `uploadPhoto(${article.pk})`);
+        newCard.appendChild(articleImage);
 
         const newCardBody = document.createElement("div")
         newCardBody.setAttribute("class", "card-body")
@@ -329,46 +329,46 @@ function userArticleList(articles, list_div) {
         }
         newCardTitle.appendChild(newStrong);
         newCardBody.appendChild(newCardTitle)
+      
+        const newCardtime = document.createElement("p");
+        newCardtime.setAttribute("class", "card-text");
+        newCardtime.innerText = article.created_at;
+        newCardBody.appendChild(newCardtime);
 
-		const newCardtime = document.createElement("p");
-		newCardtime.setAttribute("class", "card-text");
-		newCardtime.innerText = article.created_at;
-		newCardBody.appendChild(newCardtime);
-
-		list_div.appendChild(newCardBox);
-	});
+        list_div.appendChild(newCardBox);
+    });
 }
 
 // 유저 댓글 목록 UI
 function userCommentList(comments, list_div) {
-	list_div.innerHTML = "";
-	const newCardBox = document.createElement("div");
-	newCardBox.setAttribute("class", "card-box");
-	comments.forEach(async (comment) => {
-		const newCard = document.createElement("div");
-		newCard.setAttribute("class", "card");
-		newCard.setAttribute("id", `comment-${comment.id}`);
-		newCardBox.appendChild(newCard);
+    list_div.innerHTML = "";
+    const newCardBox = document.createElement("div");
+    newCardBox.setAttribute("class", "card-box");
+    comments.forEach(async (comment) => {
+        const newCard = document.createElement("div");
+        newCard.setAttribute("class", "card");
+        newCard.setAttribute("id", `comment-${comment.id}`);
+        newCardBox.appendChild(newCard);
 
-		const post = await getArticle(comment.article);
-		const articlePhoto = post.photos[0]?.file;
-		const articleImage = document.createElement("img");
-		articleImage.setAttribute("class", "card-img-top");
-		if (articlePhoto) {
-			articleImage.setAttribute("src", `${articlePhoto}`);
-		} else {
-			articleImage.setAttribute(
-				"src",
-				"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
-			);
-		}
-		articleImage.setAttribute("onclick", `uploadPhoto(${comment.article})`);
-		newCard.appendChild(articleImage);
+        const post = await getArticle(comment.article);
+        const articlePhoto = post.photos[0]?.file;
+        const articleImage = document.createElement("img");
+        articleImage.setAttribute("class", "card-img-top");
+        if (articlePhoto) {
+            articleImage.setAttribute("src", `${articlePhoto}`);
+        } else {
+            articleImage.setAttribute(
+                "src",
+                "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
+            );
+        }
+        articleImage.setAttribute("onclick", `uploadPhoto(${comment.article})`);
+        newCard.appendChild(articleImage);
 
-		const newCardBody = document.createElement("div");
-		newCardBody.setAttribute("class", "card-body");
-		newCardBody.setAttribute("onclick", `articleDetail(${comment.article})`);
-		newCard.appendChild(newCardBody);
+        const newCardBody = document.createElement("div");
+        newCardBody.setAttribute("class", "card-body");
+        newCardBody.setAttribute("onclick", `articleDetail(${comment.article})`);
+        newCard.appendChild(newCardBody);
 
         const newCardTitle = document.createElement("h6");
         newCardTitle.setAttribute("class", "card-title");
@@ -379,13 +379,13 @@ function userCommentList(comments, list_div) {
         }
         newCardBody.appendChild(newCardTitle);
 
-		const newCardlike = document.createElement("p");
-		newCardlike.setAttribute("class", "card-text");
-		newCardlike.innerText = `좋아요 ${comment.like_count}개`;
-		newCardBody.appendChild(newCardlike);
+        const newCardlike = document.createElement("p");
+        newCardlike.setAttribute("class", "card-text");
+        newCardlike.innerText = `좋아요 ${comment.like_count}개`;
+        newCardBody.appendChild(newCardlike);
 
-		list_div.appendChild(newCardBox);
-	});
+        list_div.appendChild(newCardBox);
+    });
 }
 
 
@@ -413,5 +413,5 @@ async function goFollowList(){
 
 // 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수
 function articleDetail(article_id) {
-	window.location.href = `${frontend_base_url}/articles/article_detail.html?article_id=${article_id}`;
+    window.location.href = `${frontend_base_url}/articles/article_detail.html?article_id=${article_id}`;
 }

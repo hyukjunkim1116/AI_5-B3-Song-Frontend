@@ -29,10 +29,11 @@
 }
 .profile_img{
     width: 50%;
-    height: 50%;
+    height: auto;
     max-width: 200px;
     max-height: 200px;
     margin-top: 30px;
+    object-fit: cover;
 }
 
 .profile_text{

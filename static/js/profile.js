@@ -10,7 +10,10 @@ async function getOtherUser(user_id) {
 		response_json = await response.json();
 		console.log(response_json);
 		return response_json;
-	} else {
+	} else if (response.status == 404) {
+		window.location.replace("/page_not_found.html")
+	}
+	else {
 		alert(response.statusText);
 	}
 }
@@ -65,14 +68,14 @@ async function getOtherUserBookmarks(user_id) {
 }
 
 // 프로필 수정 버튼 누르면 수정용 HTML로 변형
-async function userUpdate(){
-    let getParams = window.location.search;
+async function userUpdate() {
+	let getParams = window.location.search;
 	let userParams = getParams.split("=")[1];
-    const user_id = userParams;
-    const user = await getOtherUser(user_id)
-    const profile_box = document.getElementById("profile_box")
+	const user_id = userParams;
+	const user = await getOtherUser(user_id)
+	const profile_box = document.getElementById("profile_box")
 
-    userProfileUpdate(user,profile_box)
+	userProfileUpdate(user, profile_box)
 }
 
 
@@ -88,36 +91,36 @@ async function userUpdate(){
 
 
 
-window.onload = async function() {
-    let getParams = window.location.search;
+window.onload = async function () {
+	let getParams = window.location.search;
 	let userParams = getParams.split("=")[1];
-    const user_id = userParams;
+	const user_id = userParams;
 
-    const user = await getOtherUser(user_id)
-    
-    const profile_box = document.getElementById("profile_box")
-    
-    userProfile(user,profile_box)
+	const user = await getOtherUser(user_id)
 
-    const myarticles = await getOtherUserArticles(user_id)
-    // 내 게시글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
-    myarticles.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
-    
-    const like_comments = await getOtherUserLikes(user_id)
-    // 좋아요 댓글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
-    like_comments.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
-    
-    const bookmark_articles = await getOtherUserBookmarks(user_id)
-    // 북마크 게시글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
-    bookmark_articles.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
-    
-    const article_list = document.getElementById("my_articles")
-    userArticleList(myarticles, article_list)
-    
-    const comments_list = document.getElementById("like_comments")
-    userCommentList(like_comments, comments_list)
-    
-    const bookmark_list = document.getElementById("bookmark_articles")
-    userArticleList(bookmark_articles, bookmark_list)
+	const profile_box = document.getElementById("profile_box")
+
+	userProfile(user, profile_box)
+
+	const myarticles = await getOtherUserArticles(user_id)
+	// 내 게시글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
+	myarticles.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+
+	const like_comments = await getOtherUserLikes(user_id)
+	// 좋아요 댓글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
+	like_comments.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+
+	const bookmark_articles = await getOtherUserBookmarks(user_id)
+	// 북마크 게시글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
+	bookmark_articles.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+
+	const article_list = document.getElementById("my_articles")
+	userArticleList(myarticles, article_list)
+
+	const comments_list = document.getElementById("like_comments")
+	userCommentList(like_comments, comments_list)
+
+	const bookmark_list = document.getElementById("bookmark_articles")
+	userArticleList(bookmark_articles, bookmark_list)
 
 }

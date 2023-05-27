@@ -10,13 +10,14 @@
                 <li><a class="dropdown-item hd-login-only" href="/articles/create_article.html">글쓰기</a></li>
                 <li><a class="dropdown-item" href="/articles/articles_list.html">글 목록</a></li>
                 <li><a class="dropdown-item" href="#">댓글 목록</a></li>
+                <li><a class="dropdown-item" href="#">마이 페이지</a></li>
             </ul>
-            <button onclick="location.href='/articles/articles_list.html'" class="header-btn btn btn-secondary"
-                type="button" aria-expanded="false">
+            <button onclick="location.href='/articles/articles_list.html'"
+                class="hd-m-toggle header-btn btn btn-secondary" type="button" aria-expanded="false">
                 글 목록
             </button>
             <button onclick="location.href='/articles/create_article.html'"
-                class="hd-login-only header-btn btn btn-secondary" type="button" aria-expanded="false">
+                class="hd-m-toggle hd-login-only header-btn btn btn-secondary" type="button" aria-expanded="false">
                 글쓰기
             </button>
         </div>
@@ -26,7 +27,7 @@
             </button>
         </div>
         <div style="display: flex;">
-            <div id="intro" onclick="goProfile()" class="header-btn">
+            <div id="intro" onclick="location.href='/users/profile.html'" class="hd-m-toggle header-btn">
             </div>
             <button onclick="location.href='/users/login.html'" id="login-switch"
                 class=" header-right header-btn btn btn-secondary" type="button" aria-expanded="false">

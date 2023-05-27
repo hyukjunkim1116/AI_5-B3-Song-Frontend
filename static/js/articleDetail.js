@@ -245,18 +245,21 @@ window.onload = async function () {
 
 	// 댓글을 화면에 표시하기
 	await loadComments(article_id);
+	if (!login_user) {
+		const newComment = document.getElementById("new-comment")
+		newComment.setAttribute("disabled", "true")
+		newComment.setAttribute("placeholder", "로그인 하지 않으면 댓글을 작성할 수 없습니다!")
+
+		const registerComment = document.getElementById("register-comment")
+		registerComment.setAttribute("disabled", "true")
+	}
 };
 
 // 댓글 등록 버튼
 async function submitComment() {
-	let login_user = await getLoginUser();
 	const urlParams = new URLSearchParams(window.location.search);
 	const article_id = urlParams.get("article_id");
 	const commentElement = document.getElementById("new-comment")
-	console.log(login_user)
-	if (!login_user) {
-		commentElement.setAttribute("disabled", "true")
-	}
 	const newComment = commentElement.value
 	await createComment(article_id, newComment)
 	commentElement.value = ""

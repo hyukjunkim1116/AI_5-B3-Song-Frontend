@@ -29,8 +29,9 @@ async function injectNavbar() {
 injectNavbar();
 
 
+
 // 유저 프로필 정보 UI
-function userProfile(user, list_div) {
+async function userProfile(user, list_div) {
     // 프로필이미지가 없다면 기본 이미지로
     if (user.avatar) {
         user.avatar = user.avatar
@@ -38,12 +39,23 @@ function userProfile(user, list_div) {
         user.avatar = "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
     }
 
+    // 팔로잉 수 불러오기
+    const response = await fetch(
+        `${backend_base_url}/api/users/follow/${user.id}/`,
+        {
+            method: "GET"
+        }
+    );
+    response_json = await response.json();
+    let following = response_json.length
+    follower = user.followings.length
+
     list_div.innerHTML = ""
     list_div.innerHTML += `<img class="profile_img" src="${user.avatar}" alt="profile">
     <div class="profile_text" id="profile_nickname">${user.nickname}</div>
     <div class="profile_text">
-        <div id="following">팔로잉 ${user.followings.length}명</div>
-        <div id="follower">팔로워 N명</div>
+        <div id="following">팔로잉 ${following}명</div>
+        <div id="follower">팔로워 ${follower}명</div>
     </div>
     <div class="profile_text" id="genre">
     </div>
@@ -70,6 +82,21 @@ function userProfile(user, list_div) {
         newdiv.setAttribute("style", "margin:15% 30% 0 35%;")
         newdiv.setAttribute("onclick", "userUpdate()")
         newdiv.innerText = "프로필 수정 »"
+        update_box.appendChild(newdiv)
+    }else{
+        const login_user = await getLoginUser();
+        const update_box = document.getElementById("updateBtn")
+        const newdiv = document.createElement("div")
+        newdiv.setAttribute("id", "followBtn")
+        newdiv.setAttribute("class", "btn btn-secondary")
+        newdiv.setAttribute("style", "margin:15% 30% 0 35%;")
+        newdiv.setAttribute("onclick", "follow()")
+        newdiv.innerText = "팔로우 »"
+        user.followings.forEach((obj) => {
+            if (login_user.id == obj){
+                newdiv.innerText = "언팔로우 »"
+            }
+        })
         update_box.appendChild(newdiv)
     }
 

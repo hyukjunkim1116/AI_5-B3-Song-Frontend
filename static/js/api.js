@@ -126,69 +126,55 @@ async function getLoginUser() {
 			alert(response.statusText);
 		}
 	}
+}
 
 
+// 특정 유저 팔로잉 목록보기
+async function getFollowing(user_id) {
+    const response = await fetch(
+        `${backend_base_url}/api/users/follow/${user_id}/`,
+        {
+            method: "GET"
+        }
+    );
+    if (response.status == 200) {
+        response_json = await response.json();
+        return response_json;
+    } else {
+        alert(response.statusText);
+    }
+}
 
+// 특정 유저 팔로잉하기
+async function follow() {
+	let token = localStorage.getItem("access");
+	let getParams = window.location.search;
+	let userParams = getParams.split("=")[1];
+    const user_id = userParams;
 
-
-
-
-	// 특정 유저 팔로잉하기
-	async function follow(user_id) {
-		let token = localStorage.getItem("access");
-
-		const response = await fetch(
-			`${backend_base_url}/api/users/follow/${user_id}/`,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				method: "POST"
-			}
-		);
-		if (response.status == 200) {
-			response_json = await response.json();
-			console.log(response_json);
-			return response_json;
-		} else {
-			alert(response.statusText);
+	const response = await fetch(
+		`${backend_base_url}/api/users/follow/${user_id}/`,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			method: "POST"
 		}
-	}
+	);
+	response_json = await response.json();
 
-	// 특정 유저 팔로잉 목록보기
-	async function getFollowing(user_id) {
-		const response = await fetch(
-			`${backend_base_url}/api/users/follow/${user_id}/`,
-			{
-				method: "GET"
-			}
-		);
-		if (response.status == 200) {
-			response_json = await response.json();
-			console.log(response_json);
-			return response_json;
-		} else {
-			alert(response.statusText);
-		}
-	}
-	if (payload) {
-		const payload_parse = JSON.parse(payload);
-		const response = await fetch(
-			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-			{
-				method: "GET"
-			}
-		);
-		if (response.status == 200) {
-			response_json = await response.json();
-			return response_json;
-		} else {
-			alert(response.statusText);
-		}
-	} else {
-		return;
+	// 팔로우 버튼 변경
+	if (response_json == "follow") {
+		const followBtn = document.getElementById("followBtn")
+		followBtn.innerText.replace("팔로우 »","언팔로우 »")
+		window.location.reload()
+	} else if (response_json == "unfollow") {
+		const followBtn = document.getElementById("followBtn")
+		followBtn.innerText.replace("언팔로우 »","팔로우 »")
+		window.location.reload()
 	}
 }
+
 
 
 // 아티클 사진 백엔드로 업로드

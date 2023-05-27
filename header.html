@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/static/css/header.css">
 <div class="header-wrap">
     <div class="header-box">
-        <div class="dropdown header-left">
+        <div class="dropdown header-items header-left">
             <button class="btn btn-secondary dropdown-toggle header-btn header-dropdown" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 <img class="header-dropdown-icon" src="/static/image/dropdown_white.svg">
@@ -9,8 +9,8 @@
             <ul class="dropdown-menu dropdown-menu-dark">
                 <li><a class="dropdown-item hd-login-only" href="/articles/create_article.html">글쓰기</a></li>
                 <li><a class="dropdown-item" href="/articles/articles_list.html">글 목록</a></li>
-                <li><a class="dropdown-item" href="#">댓글 목록</a></li>
-                <li><a class="dropdown-item" href="#">마이 페이지</a></li>
+                <li><a class="dropdown-item hd-login-only" onclick="goProfile()">마이 페이지</a></li>
+
             </ul>
             <button onclick="location.href='/articles/articles_list.html'"
                 class="hd-m-toggle header-btn btn btn-secondary" type="button" aria-expanded="false">
@@ -22,12 +22,12 @@
             </button>
         </div>
         <div>
-            <button onclick="location.href='/'">
-                로고 들어갈 곳
+            <button style="background-color: transparent; border: none;" onclick="location.href='/'">
+                <img id="hd-logo" src="/static/image/mainlogo.svg" alt="">
             </button>
         </div>
-        <div class="intro-box" style="display: flex;">
-            <img class="intro-avatar"/>
+        <div class="intro-box header-items" style="display: flex ;">
+            <img onclick="goProfile()" class="intro-avatar">
             <div id="intro" onclick="goProfile()" class="hd-m-toggle header-btn">
             </div>
             <button onclick="location.href='/users/login.html'" id="login-switch"

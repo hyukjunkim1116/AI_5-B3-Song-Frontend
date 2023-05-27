@@ -19,11 +19,6 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 
-    <script src="/static/js/api.js"></script>
-    <script src="/static/js/loader.js"></script>
-    <script src="/static/js/index.js"></script>
-    <script src="/static/js/articleDetail.js"></script>
-
     <title>띵곡맛집 | 상세페이지</title>
 </head>
 
@@ -52,22 +47,10 @@
                     <div id="btns">
                     </div>
                     <hr>
-                    <!-- <hr style="height: 10px;">
-                <div>유튜브 URL? 들어가는 곳</div> -->
-                    <hr>
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/tKCgIw3-LHQ"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
-                    <div>
-                        <hr>
-                        <div class="yt-title">(노래제목)</div>
-                        <hr>
-                        <div class="yt-artist">(가수)</div>
-                        <hr>
-                        <div class="yt-tag">(관련태그?)</div>
-                        <hr>
+                    <div id="youtube-container">
+                        <!-- 유튜브 URL? 들어가는 곳 -->
                     </div>
+                    <hr>
                 </div>
                 <div class="right-container dt-content-box">
                     <!-- <div class="container w-50 mt-3"> -->
@@ -81,7 +64,8 @@
                                         placeholder="please comment(Limit 100byte)" maxlength="100">
                                 </div>
                                 <div class="col d-grid gap-0 d-md-flex justify-content-md-end p-0">
-                                    <button type="button" class="btn btn-outline-secondary btn-sm text-nowrap"
+                                    <button id="register-comment" type="button"
+                                        class="btn btn-outline-secondary btn-sm text-nowrap"
                                         onclick="submitComment()">등록</button>
                                 </div>
                             </div>
@@ -92,6 +76,10 @@
         </div>
     </main>
     <footer></footer>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/loader.js"></script>
+    <script src="/static/js/index.js"></script>
+    <script src="/static/js/articleDetail.js"></script>
 </body>
 
 </html>

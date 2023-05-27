@@ -28,7 +28,7 @@ async function getOtherUserArticles(user_id) {
 	);
 	if (response.status == 200) {
 		response_json = await response.json();
-		return response_json;
+		return [response_json,response_json.length];
 	} else {
 		alert(response.statusText);
 	}
@@ -103,19 +103,19 @@ window.onload = async function () {
 	userProfile(user, profile_box)
 
 	const myarticles = await getOtherUserArticles(user_id)
-	// 내 게시글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
-	myarticles.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+	// 내 게시글 업데이트순 나열
+	myarticles.sort((x, y) => new Date(y.update_at) - new Date(x.update_at));
 
 	const like_comments = await getOtherUserLikes(user_id)
-	// 좋아요 댓글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
-	like_comments.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+	// 좋아요 댓글 업데이트순 나열
+	like_comments.sort((x, y) => new Date(y.update_at) - new Date(x.update_at));
 
 	const bookmark_articles = await getOtherUserBookmarks(user_id)
-	// 북마크 게시글 최신순 나열 - 백엔드 수정 후 update_at으로 변경해야함
-	bookmark_articles.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+	// 북마크 게시글 업데이트순 나열
+	bookmark_articles.sort((x, y) => new Date(y.update_at) - new Date(x.update_at));
 
 	const article_list = document.getElementById("my_articles")
-	userArticleList(myarticles, article_list)
+	userArticleList(myarticles[0], article_list)
 
 	const comments_list = document.getElementById("like_comments")
 	userCommentList(like_comments, comments_list)

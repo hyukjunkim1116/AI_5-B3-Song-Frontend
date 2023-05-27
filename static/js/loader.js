@@ -18,22 +18,21 @@ async function injectNavbar() {
 		toastTrigger.addEventListener("click", () => {
 			toastBootstrap.show();
 		});
-		const toastFaqTrigger = document.getElementById("liveToastFaqBtn");
-		const toastLiveFaq = document.getElementById("liveToastFaq");
+	}
+	const toastFaqTrigger = document.getElementById("liveToastFaqBtn");
+	const toastLiveFaq = document.getElementById("liveToastFaq");
 
-		if (toastFaqTrigger) {
-			const toastFaq = bootstrap.Toast.getOrCreateInstance(toastLiveFaq);
-			toastFaqTrigger.addEventListener("click", () => {
-				toastFaq.show();
-			});
-		}
+	if (toastFaqTrigger) {
+		const toastFaq = bootstrap.Toast.getOrCreateInstance(toastLiveFaq);
+		toastFaqTrigger.addEventListener("click", () => {
+			toastFaq.show();
+		});
 	}
 
 	const login_user = await getLoginUser();
 	if (login_user) {
 		if (login_user.avatar !== "") {
 			const introAvatar = document.getElementsByClassName("intro-avatar")[0];
-			console.log(login_user.avatar);
 			introAvatar.setAttribute("src", `${login_user.avatar}`);
 			introAvatar.style.visibility = "visible";
 		}
@@ -63,21 +62,14 @@ async function userProfile(user, list_div) {
 			"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
 	}
 
-	// 팔로잉 수 불러오기
-	const response = await fetch(
-		`${backend_base_url}/api/users/follow/${user.id}/`,
-		{
-			method: "GET"
-		}
-	);
-	response_json = await response.json();
-	let following = response_json.length;
-	follower = user.followings.length;
+	// 팔로잉,팔로워 수 불러오기
+	following = user.followings.length;
+	follower = user.followers.length;
 
 	list_div.innerHTML = "";
-	list_div.innerHTML += `<img class="profile_img" src="${user.avatar}" alt="profile">
+	list_div.innerHTML += `<img class="profile_img" style="background-image: url(${user.avatar});">
     <div class="profile_text" id="profile_nickname">${user.nickname}</div>
-    <div class="profile_text">
+    <div class="profile_text" onclick="goFollowList()" style="cursor:pointer;">
         <div id="following">팔로잉 ${following}명</div>
         <div id="follower">팔로워 ${follower}명</div>
     </div>
@@ -116,7 +108,7 @@ async function userProfile(user, list_div) {
 		newdiv.setAttribute("style", "margin:15% 30% 0 35%;");
 		newdiv.setAttribute("onclick", "follow()");
 		newdiv.innerText = "팔로우 »";
-		user.followings.forEach((obj) => {
+		user.followers.forEach((obj) => {
 			if (login_user.id == obj) {
 				newdiv.innerText = "언팔로우 »";
 			}
@@ -153,9 +145,17 @@ async function putUser() {
 		const nickname = document.getElementById("nickname_update").value;
 		const gender = document.getElementById("gender_update").value;
 		const age = document.getElementById("age_update").value;
+		console.log(payload_parse);
+		if (!password && payload_parse.login_type === "normal") {
+			return alert("비밀번호를 입력해주세요.");
+		}
 		// 변경사항이 있을 경우에만 추가
-		if (password & (password === passwordCheck)) {
-			update_body["password"] = password;
+		if (password) {
+			if (password === passwordCheck) {
+				update_body["password"] = password;
+			} else {
+				return alert("비밀번호가 일치하지 않습니다.");
+			}
 		}
 		if (nickname) {
 			update_body["nickname"] = nickname;
@@ -228,21 +228,52 @@ function userProfileUpdate(user, list_div) {
 	if (user.avatar) {
 		user.avatar = user.avatar;
 	} else {
-		user.avatar =
-			"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
+		user.avatar = "../static/image/free-icon-music-6599985.png";
 	}
 
 	list_div.innerHTML = "";
-	list_div.innerHTML += `
+	if (user.login_type == "normal") {
+		list_div.innerHTML += `
+	<div id="image_container"></div>
+	<input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+	<div class="mb-3">
+					<label for="Password" class="form-label">비밀번호</label>
+					<input type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
+				</div>
+				<div class="mb-3">
+					<label for="Password-check" class="form-label">비밀번호 확인</label>
+					<input type="password" class="form-control" name="password-check" id="password-check_update"
+						placeholder="비밀번호 확인">
+				</div>
+				<div class="mb-3">
+					<label for="Nickname" class="form-label">닉네임</label>
+					<input type="text" class="form-control" name="nickname" id="nickname_update" placeholder="닉네임">
+				</div>
+				<div class="mb-3">
+					<label for="Gender" class="form-label">성별</label>
+					<select class="form-select" name="gender" id="gender_update">
+						<option value="" disabled selected>성별을 선택하세요</option>
+						<option value="M">남자</option>
+						<option value="F">여자</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label for="Age" class="form-label">나이</label>
+					<input type="number" class="form-control" name="age" id="age_update" placeholder="나이">
+				</div>
+				<div id="updateBtn">
+				</div>`;
+	} else {
+		list_div.innerHTML += `
     <div id="image_container"></div>
     <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
     <div class="mb-3">
                     <label for="Password" class="form-label">비밀번호</label>
-                    <input type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
+                    <input disabled type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
                 </div>
                 <div class="mb-3">
                     <label for="Password-check" class="form-label">비밀번호 확인</label>
-                    <input type="password" class="form-control" name="password-check" id="password-check_update"
+                    <input disabled type="password" class="form-control" name="password-check" id="password-check_update"
                         placeholder="비밀번호 확인">
                 </div>
                 <div class="mb-3">
@@ -263,6 +294,7 @@ function userProfileUpdate(user, list_div) {
                 </div>
                 <div id="updateBtn">
                 </div>`;
+	}
 
 	const update_box = document.getElementById("updateBtn");
 	const newdiv = document.createElement("div");
@@ -281,6 +313,7 @@ function userArticleList(articles, list_div) {
 	articles.forEach(async (article) => {
 		const newCard = document.createElement("div");
 		newCard.setAttribute("class", "card");
+		newCard.setAttribute("onclick", `articleDetail(${article.pk})`);
 		newCard.setAttribute("id", article.pk);
 		newCardBox.appendChild(newCard);
 
@@ -300,13 +333,19 @@ function userArticleList(articles, list_div) {
 
 		const newCardBody = document.createElement("div");
 		newCardBody.setAttribute("class", "card-body");
-		newCardBody.setAttribute("onclick", `articleDetail(${article.pk})`);
+
 		newCard.appendChild(newCardBody);
 
-		const newCardTile = document.createElement("h6");
-		newCardTile.setAttribute("class", "card-title");
-		newCardTile.innerText = article.title;
-		newCardBody.appendChild(newCardTile);
+		const newCardTitle = document.createElement("h6");
+		newCardTitle.setAttribute("class", "card-title");
+		const newStrong = document.createElement("strong");
+		if (article.title.length > 10) {
+			newStrong.innerText = `${article.title.substr(0, 10)} ···`;
+		} else {
+			newStrong.innerText = article.title;
+		}
+		newCardTitle.appendChild(newStrong);
+		newCardBody.appendChild(newCardTitle);
 
 		const newCardtime = document.createElement("p");
 		newCardtime.setAttribute("class", "card-text");
@@ -326,6 +365,7 @@ function userCommentList(comments, list_div) {
 		const newCard = document.createElement("div");
 		newCard.setAttribute("class", "card");
 		newCard.setAttribute("id", `comment-${comment.id}`);
+		newCard.setAttribute("onclick", `articleDetail(${comment.article})`);
 		newCardBox.appendChild(newCard);
 
 		const post = await getArticle(comment.article);
@@ -340,22 +380,26 @@ function userCommentList(comments, list_div) {
 				"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
 			);
 		}
-		articleImage.setAttribute("onclick", `uploadPhoto(${comment.article})`);
 		newCard.appendChild(articleImage);
 
 		const newCardBody = document.createElement("div");
 		newCardBody.setAttribute("class", "card-body");
-		newCardBody.setAttribute("onclick", `articleDetail(${comment.article})`);
 		newCard.appendChild(newCardBody);
 
-		const newCardTile = document.createElement("h6");
-		newCardTile.setAttribute("class", "card-title");
-		newCardTile.innerText = comment.comment;
-		newCardBody.appendChild(newCardTile);
+		const newCardTitle = document.createElement("h6");
+		newCardTitle.setAttribute("class", "card-title");
+		if (comment.comment.length > 10) {
+			newCardTitle.innerText = `${comment.comment.substr(0, 10)} ···`;
+		} else {
+			newCardTitle.innerText = comment.comment;
+		}
+		newCardBody.appendChild(newCardTitle);
 
 		const newCardlike = document.createElement("p");
 		newCardlike.setAttribute("class", "card-text");
-		newCardlike.innerText = `좋아요 ${comment.like_count}개`;
+		const newStrong = document.createElement("strong");
+		newStrong.innerText = `좋아요 ${comment.like_count}개`;
+		newCardlike.appendChild(newStrong);
 		newCardBody.appendChild(newCardlike);
 
 		list_div.appendChild(newCardBox);
@@ -374,6 +418,14 @@ async function goProfile(user_id) {
 		user_id = payload_parse.user_id;
 		window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
 	}
+}
+
+async function goFollowList() {
+	// 현재 프로필 페이지의 user_id를 읽어서 해당 팔로우 목록으로 이동
+	let getParams = window.location.search;
+	let userParams = getParams.split("=")[1];
+	const user_id = userParams;
+	window.location.href = `${frontend_base_url}/users/follow_list.html?user_id=${user_id}`;
 }
 
 // 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수

@@ -12,6 +12,12 @@ async function injectNavbar() {
 
 	const login_user = await getLoginUser();
 	if (login_user) {
+		if (login_user.avatar !== "") {
+			const introAvatar = document.getElementsByClassName("intro-avatar")[0];
+			console.log(login_user.avatar);
+			introAvatar.setAttribute("src", `${login_user.avatar}`);
+			introAvatar.style.visibility = "visible";
+		}
 		const intro = document.getElementById("intro");
 		intro.innerText = `${login_user.nickname}님 오셨군요!`;
 
@@ -108,6 +114,15 @@ async function putUser() {
 	const payload_parse = JSON.parse(payload);
 
 	if (msg === true) {
+		const updateBtn = document.getElementById("update-btn");
+		const updateBtnChildDiv = document.querySelector("#updateBtn div");
+		updateBtnChildDiv.innerText = "";
+		const span = document.createElement("span");
+		span.setAttribute("id", "spinner-span");
+		span.setAttribute("class", "spinner-border spinner-border-sm");
+		span.setAttribute("role", "status");
+		span.setAttribute("aria-hidden", "true");
+		updateBtnChildDiv.appendChild(span);
 		let token = localStorage.getItem("access");
 
 		update_body = {};

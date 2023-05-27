@@ -114,6 +114,5 @@ window.onload = async function () {
         articles = await getArticles()
     }
     articles.sort((x, y) => y.pk - x.pk)
-
     paginationView(articles)
 }

@@ -1,6 +1,5 @@
 console.log("articleDetail.js 로드됨");
 let article_id = new URLSearchParams(window.location.search).get("article_id");
-const token = localStorage.getItem("access");
 
 // 글 수정 페이지 이동
 function articleUpdate(article_id) {
@@ -8,9 +7,7 @@ function articleUpdate(article_id) {
 }
 
 async function loadComments(article_id) {
-	const response = await getArticleComments(article_id);
-	const payload = JSON.parse(localStorage.getItem("payload"));
-
+	const comments = await getArticleComments(article_id);
 	const commentsList = document.getElementById("comments-list");
 	commentsList.innerHTML = "";
 
@@ -30,7 +27,7 @@ async function loadComments(article_id) {
 		});
 	}
 
-	response.forEach(async (comment) => {
+	comments.forEach(async (comment) => {
 		let buttons = `
 		<div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap ">
 		<section class="like-i">
@@ -72,28 +69,39 @@ async function loadComments(article_id) {
 			comment_user_avatar = "../static/image/free-icon-music-6599985.png"
 		}
 
-		// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
-		if (payload.user_id === comment.user_id && response[0].user_id == comment.user_id) {
-			buttons += `           
+		let login_user = await getLoginUser();
+		if (login_user) {
+			// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
+			if (login_user.id === comment.user_id && comments[0].user_id == comment.user_id) {
+				buttons += `           
 			<div class="p-2" >
 				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
 				</div>
             `;
-		}
+			}
 
-		// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글이 아니면 수정, 삭제 버튼 보이게 하기
-		if (payload.user_id === comment.user_id && response[0] != comment) {
-			buttons = `
+			// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글이 아니면 수정, 삭제 버튼 보이게 하기
+			if (login_user.id === comment.user_id && comments[0] != comment) {
+				buttons = `
             <div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap">
                 <button type="button" class="btn btn-outline-secondary btn-sm" id="modifyBtn" onclick="modifyComment(${comment.id}, '${comment.comment}')">수정</button>	
 				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
             </div>
             `;
+			}
+
 		}
 
 		commentsList.innerHTML += `
         <li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
-		<img class="img-thumbnail rounded-circle" src=${comment_user_avatar} alt="profile img" width="50" style="height:50px!important">
+		<div class="img-thumbnail rounded-circle" width="50" 
+		style="height:50px!important; width: 50px;
+		height: 50px;
+		background-size: cover;
+		background-position: center;
+		background-image: url(${comment_user_avatar});
+		border: none;
+		"></div>
 		<div class="media-body">
 			<h6 class="mt-1 mb-1 ms-1 me-1" style="cursor:pointer; width: fit-content;" onclick="location.href='${frontend_base_url}/users/profile.html?user_id=${comment_user.id}'" >${comment.user}</h6>
 			<span class="mt-1 mb-1 ms-1 me-1" style="word-break: break-all; white-space: pre-line;">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
@@ -102,16 +110,20 @@ async function loadComments(article_id) {
         </li >
 			`;
 
-		const login_user = await getLoginUser();
 		//좋아요 하트색 세팅
 		let like = document.getElementById(`like-${comment.id}`)
 		let dislike = document.getElementById(`dislike-${comment.id}`)
-		login_user.like_comments.forEach((obj) => {
-			if (comment.id == obj.id) {
-				like.setAttribute("style", "display:flex;")
-				dislike.setAttribute("style", "display:none;")
-			}
-		});
+		if (login_user) {
+			login_user.like_comments.forEach((obj) => {
+				if (comment.id == obj.id) {
+					like.setAttribute("style", "display:flex;")
+					dislike.setAttribute("style", "display:none;")
+				}
+			})
+		} else {
+			like.setAttribute("style", "display:none;")
+			dislike.setAttribute("style", "display:none;")
+		}
 	});
 }
 
@@ -148,7 +160,7 @@ async function linkToIframe(ytVideoId) {
 
 // 게시글 상세보기 페이지가 로드될 때 실행되는 함수
 window.onload = async function () {
-	const login_user = await getLoginUser();
+	let login_user = await getLoginUser();
 	// 게시글 받아오기
 	const article = await getArticle(article_id);
 
@@ -176,54 +188,60 @@ window.onload = async function () {
 		);
 	}
 	document.getElementById("detail-img").append(imageBox);
-	if (login_user.id === article.owner.id) {
-		const articleButtons = document.getElementById("btns");
-		const updateButton = document.createElement("button");
-		const deleteButton = document.createElement("button");
 
-		updateButton.setAttribute("class", "btn");
-		updateButton.setAttribute("type", "button");
-		updateButton.innerText = "수정하기";
-		updateButton.setAttribute("onclick", `articleUpdate(article_id)`);
 
-		deleteButton.setAttribute("class", "btn p-0");
-		deleteButton.setAttribute("type", "button");
-		deleteButton.innerText = "삭제하기";
-		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
+	if (login_user) {
+		if (login_user.id === article.owner.id) {
+			const articleButtons = document.getElementById("btns");
+			const updateButton = document.createElement("button");
+			const deleteButton = document.createElement("button");
 
-		articleButtons.appendChild(updateButton);
-		articleButtons.appendChild(deleteButton);
-	} else if (login_user) {
-		const articleButtons = document.getElementById("btns");
-		const bookmarkButton = document.createElement("button");
-		const unbookmarkButton = document.createElement("button");
+			updateButton.setAttribute("class", "btn");
+			updateButton.setAttribute("type", "button");
+			updateButton.innerText = "수정하기";
+			updateButton.setAttribute("onclick", `articleUpdate(article_id)`);
 
-		bookmarkButton.setAttribute("class", "btn p-0");
-		bookmarkButton.setAttribute("type", "button");
-		bookmarkButton.setAttribute("id", `bookmark-${article_id}`);
-		bookmarkButton.innerText = "북마크 하기!";
-		bookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
+			deleteButton.setAttribute("class", "btn p-0");
+			deleteButton.setAttribute("type", "button");
+			deleteButton.innerText = "삭제하기";
+			deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
 
-		unbookmarkButton.setAttribute("class", "btn p-0");
-		unbookmarkButton.setAttribute("type", "button");
-		unbookmarkButton.setAttribute("id", `unbookmark-${article_id}`);
-		unbookmarkButton.setAttribute("style", "display:none;");
-		unbookmarkButton.innerText = "북마크 취소..";
-		unbookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
+			articleButtons.appendChild(updateButton);
+			articleButtons.appendChild(deleteButton);
+		} else {
+			const articleButtons = document.getElementById("btns");
+			const bookmarkButton = document.createElement("button");
+			const unbookmarkButton = document.createElement("button");
 
-		articleButtons.appendChild(bookmarkButton);
-		articleButtons.appendChild(unbookmarkButton);
-	}
+			bookmarkButton.setAttribute("class", "btn p-0");
+			bookmarkButton.setAttribute("type", "button");
+			bookmarkButton.setAttribute("id", `bookmark-${article_id}`);
+			bookmarkButton.innerText = "북마크 하기!";
+			bookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
 
-	// 북마크 버튼 세팅
-	let bookmark = document.getElementById(`bookmark-${article_id}`)
-	let unbookmark = document.getElementById(`unbookmark-${article_id}`)
-	login_user.bookmarks.forEach((obj) => {
-		if (article_id == obj.id) {
-			unbookmark.setAttribute("style", "display:flex;")
-			bookmark.setAttribute("style", "display:none;")
+			unbookmarkButton.setAttribute("class", "btn p-0");
+			unbookmarkButton.setAttribute("type", "button");
+			unbookmarkButton.setAttribute("id", `unbookmark-${article_id}`);
+			unbookmarkButton.setAttribute("style", "display:none;");
+			unbookmarkButton.innerText = "북마크 취소..";
+			unbookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
+
+			articleButtons.appendChild(bookmarkButton);
+			articleButtons.appendChild(unbookmarkButton);
 		}
-	});
+
+
+		// 북마크 버튼 세팅
+		let bookmark = document.getElementById(`bookmark-${article_id}`)
+		let unbookmark = document.getElementById(`unbookmark-${article_id}`)
+		login_user.bookmarks.forEach((obj) => {
+			if (article_id == obj.id) {
+				unbookmark.setAttribute("style", "display:flex;")
+				bookmark.setAttribute("style", "display:none;")
+			}
+		});
+
+	}
 
 	// 댓글을 화면에 표시하기
 	await loadComments(article_id);
@@ -231,9 +249,14 @@ window.onload = async function () {
 
 // 댓글 등록 버튼
 async function submitComment() {
+	let login_user = await getLoginUser();
 	const urlParams = new URLSearchParams(window.location.search);
 	const article_id = urlParams.get("article_id");
 	const commentElement = document.getElementById("new-comment")
+	console.log(login_user)
+	if (!login_user) {
+		commentElement.setAttribute("disabled", "true")
+	}
 	const newComment = commentElement.value
 	await createComment(article_id, newComment)
 	commentElement.value = ""

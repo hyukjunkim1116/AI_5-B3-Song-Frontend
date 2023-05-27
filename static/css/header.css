@@ -77,3 +77,10 @@ header {
 .hd-login-only {
     display: none;
 }
+
+@media(max-width: 995px) {
+    .hd-m-toggle {
+        display: none;
+    }
+
+}

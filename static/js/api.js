@@ -23,11 +23,12 @@ function checkNotLogin() {
 async function handleSignin() {
 	const email = document.getElementById("email").value;
 	const password = document.getElementById("password").value;
-	// const passwordCheck = document.getElementById("password-check").value
+	const passwordCheck = document.getElementById("password-check").value
 	const nickname = document.getElementById("nickname").value;
 	const gender = document.getElementById("gender").value;
 	const age = document.getElementById("age").value;
-
+	// 비밀번호 일치 판별
+	if (password === passwordCheck) {
 	const response = await fetch(`${backend_base_url}/api/users/signup/`, {
 		headers: {
 			"content-type": "application/json"
@@ -36,14 +37,15 @@ async function handleSignin() {
 		body: JSON.stringify({
 			email: email,
 			password: password,
-			// "password2": passwordCheck,
 			nickname: nickname,
 			gender: gender,
 			age: age
 		})
 	});
-
 	return response;
+	}else {
+		alert("비밀번호가 일치하지 않습니다.");
+	}
 }
 
 // 로그인
@@ -90,6 +92,22 @@ async function getAllUser() {
 	}
 }
 
+// 특정 유저 정보 조회
+async function getOtherUser(user_id) {
+	const response = await fetch(
+		`${backend_base_url}/api/users/profile/${user_id}/`,
+		{
+			method: "GET"
+		}
+	);
+	if (response.status == 200) {
+		response_json = await response.json();
+		return response_json;
+	} else {
+		alert(response.statusText);
+	}
+}
+
 // 로그인 한 로그인 한 유저 정보 조회
 async function getLoginUser() {
 	const payload = localStorage.getItem("payload");
@@ -103,58 +121,36 @@ async function getLoginUser() {
 		);
 		if (response.status == 200) {
 			response_json = await response.json();
-			console.log(response_json);
 			return response_json;
 		} else {
 			alert(response.statusText);
 		}
 	}
-
-// 로그인 한 유저 정보 수정
-async function putUser() {
-	const payload = localStorage.getItem("payload");
-	const payload_parse = JSON.parse(payload);
-	let token = localStorage.getItem("access");
-
-	update_body={}
-
-	const password = document.getElementById("password_update").value;
-	// const passwordCheck = document.getElementById("password-check").value
-	const nickname = document.getElementById("nickname_update").value;
-	const gender = document.getElementById("gender_update").value;
-	const age = document.getElementById("age_update").value;
-	// 변경사항이 있을 경우에만 추가
-	if (password){update_body["password"] = password;}
-	if (nickname){update_body["nickname"] = nickname;}
-	if (gender){update_body["gender"] = gender;}
-	if (age){update_body["age"] = age;}
-
-	const response = await fetch(
-		`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			method: "PUT",
-			body: JSON.stringify(update_body),
-		}
-	);
-	if (response.status == 200) {
-		response_json = await response.json();
-		console.log(response_json);
-		return response_json;
-	} else {
-		alert(response.statusText);
-	}
 }
 
 
-
-
+// 특정 유저 팔로잉 목록보기
+async function getFollowing(user_id) {
+    const response = await fetch(
+        `${backend_base_url}/api/users/follow/${user_id}/`,
+        {
+            method: "GET"
+        }
+    );
+    if (response.status == 200) {
+        response_json = await response.json();
+        return response_json;
+    } else {
+        alert(response.statusText);
+    }
+}
 
 // 특정 유저 팔로잉하기
-async function follow(user_id) {
+async function follow() {
 	let token = localStorage.getItem("access");
+	let getParams = window.location.search;
+	let userParams = getParams.split("=")[1];
+    const user_id = userParams;
 
 	const response = await fetch(
 		`${backend_base_url}/api/users/follow/${user_id}/`,
@@ -165,49 +161,20 @@ async function follow(user_id) {
 			method: "POST"
 		}
 	);
-	if (response.status == 200) {
-		response_json = await response.json();
-		console.log(response_json);
-		return response_json;
-	} else {
-		alert(response.statusText);
+	response_json = await response.json();
+
+	// 팔로우 버튼 변경
+	if (response_json == "follow") {
+		const followBtn = document.getElementById("followBtn")
+		followBtn.innerText.replace("팔로우 »","언팔로우 »")
+		window.location.reload()
+	} else if (response_json == "unfollow") {
+		const followBtn = document.getElementById("followBtn")
+		followBtn.innerText.replace("언팔로우 »","팔로우 »")
+		window.location.reload()
 	}
 }
 
-// 특정 유저 팔로잉 목록보기
-async function getFollowing(user_id) {
-	const response = await fetch(
-		`${backend_base_url}/api/users/follow/${user_id}/`,
-		{
-			method: "GET"
-		}
-	);
-	if (response.status == 200) {
-		response_json = await response.json();
-		console.log(response_json);
-		return response_json;
-	} else {
-		alert(response.statusText);
-	}
-}
-	if (payload) {
-		const payload_parse = JSON.parse(payload);
-		const response = await fetch(
-			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-			{
-				method: "GET"
-			}
-		);
-		if (response.status == 200) {
-			response_json = await response.json();
-			return response_json;
-		} else {
-			alert(response.statusText);
-		}
-	} else {
-		return;
-	}
-}
 
 
 // 아티클 사진 백엔드로 업로드
@@ -290,8 +257,14 @@ async function getArticle(article_id) {
 			method: "GET"
 		}
 	);
-	response_json = await response.json();
-	return response_json;
+	if (response.status == 200) {
+		response_json = await response.json();
+		return response_json;
+	} else if (response.status == 404) {
+		window.location.replace("/page_not_found.html");
+	} else {
+		alert(response.statusText)
+	}
 }
 
 // 아티클 삭제
@@ -316,6 +289,15 @@ async function articleDelete(article_id) {
 // 댓글 전체 목록 불러오기
 async function getComments() {
 	const response = await fetch(`${backend_base_url}/api/articles/comments/`, {
+		method: "GET"
+	});
+	response_json = await response.json();
+	return response_json;
+}
+
+// 특정 댓글 불러오기
+async function getComment(comment_id) {
+	const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
 		method: "GET"
 	});
 	response_json = await response.json();
@@ -350,7 +332,7 @@ async function createComment(article_id, comment) {
 	const response = await fetch(`${backend_base_url}/api/articles/${article_id}/comments/`, {
 		method: "POST",
 		headers: {
-		Authorization: `Bearer ${token}`
+			Authorization: `Bearer ${token}`
 		},
 		body: formdata
 	});
@@ -364,57 +346,135 @@ async function createComment(article_id, comment) {
 
 // 댓글 수정
 async function modifyComment(comment_id, currentComment) {
-    let newComment = prompt("수정할 댓글을 입력하세요.", currentComment); // 수행할 댓글 수정 내용을 입력 받고, 기존 댓글 내용을 보여줍니다.
+	let newComment = prompt("수정할 댓글을 입력하세요.", currentComment); // 수행할 댓글 수정 내용을 입력 받고, 기존 댓글 내용을 보여줍니다.
 
-    if (newComment !== null) { // 수정 내용이 null 이 아닌 경우
-        let token = localStorage.getItem("access");
+	if (newComment !== null) { // 수정 내용이 null 이 아닌 경우
+		let token = localStorage.getItem("access");
 
-        const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                "comment": newComment
-            })
-        });
+		const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
+			method: 'PUT',
+			headers: {
+				'content-type': 'application/json',
+				"Authorization": `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				"comment": newComment
+			})
+		});
 
-        if (response.status == 200) {
-            alert("댓글 수정이 완료되었습니다!");
-            loadComments(article_id); // 댓글 목록을 다시 로드합니다.
-        } else {
-            alert(response.statusText);
-        }
-    } else { // 수정 내용이 null 인 경우
-        loadComments(article_id);
-    }
+		if (response.status == 200) {
+			alert("댓글 수정이 완료되었습니다!");
+			loadComments(article_id); // 댓글 목록을 다시 로드합니다.
+		} else {
+			alert(response.statusText);
+		}
+	} else { // 수정 내용이 null 인 경우
+		loadComments(article_id);
+	}
 }
 
 
 //댓글 삭제
 async function deleteComment(comment_id) {
-    if (confirm("정말 삭제하시겠습니까?")) {
-        let token = localStorage.getItem("access")
+	if (confirm("정말 삭제하시겠습니까?")) {
+		let token = localStorage.getItem("access")
 
-        const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                "id": comment_id,
-            })
-        })
+		const response = await fetch(`${backend_base_url}/api/articles/comments/${comment_id}/`, {
+			method: 'DELETE',
+			headers: {
+				'content-type': 'application/json',
+				"Authorization": `Bearer ${token}`
+			},
+			body: JSON.stringify({
+				"id": comment_id,
+			})
+		})
 
-        if (response.status == 204) {
-            alert("댓글 삭제 완료!")
-            loadComments(article_id);
-        } else {
-            alert(response.statusText)
-        }
-    } else {
-        loadComments(article_id);
-    }
+		if (response.status == 204) {
+			alert("댓글 삭제 완료!")
+			loadComments(article_id);
+		} else {
+			alert(response.statusText)
+		}
+	} else {
+		loadComments(article_id);
+	}
+}
+
+// 좋아요 누르기
+async function likeClick(comment_id) {
+	const comment = await getComment(comment_id);
+
+	let token = localStorage.getItem("access")
+	let clickLike = document.getElementById(`like-${comment_id}`)
+	let clickDislike = document.getElementById(`dislike-${comment_id}`)
+
+	const response = await fetch(`${backend_base_url}/api/articles/like/${comment_id}/`, {
+		method: 'POST',
+		headers: {
+			"Authorization": `Bearer ${token}`
+		},
+	})
+	if (response.status == 401) {
+		alert("로그인한 사용자만 좋아요를 누를 수 있습니다")
+	}
+	const response_json = await response.json()
+
+	//좋아요 하트 색 및 개수 변경
+	if (response_json == "like") {
+		clickLike.setAttribute("style", "display:flex;")
+		clickDislike.setAttribute("style", "display:none;")
+	} else if (response_json == "dislike") {
+		clickLike.setAttribute("style", "display:none;")
+		clickDislike.setAttribute("style", "display:flex;")
+	}
+}
+
+// 북마크 누르기
+async function bookmarkClick(article_id) {
+	const article = await getArticle(article_id);
+
+	let token = localStorage.getItem("access")
+	let clickBookmark = document.getElementById(`bookmark-${article_id}`)
+	let clickUnbookmark = document.getElementById(`unbookmark-${article_id}`)
+
+	const response = await fetch(`${backend_base_url}/api/articles/bookmark/${article_id}/`, {
+		method: 'POST',
+		headers: {
+			"Authorization": `Bearer ${token}`
+		},
+	})
+	if (response.status == 401) {
+		alert("로그인한 사용자만 북마크 할 수 있습니다")
+	}
+	const response_json = await response.json()
+
+	// 북마크 버튼 변경
+	if (response_json == "bookmark") {
+		clickUnbookmark.setAttribute("style", "display:flex;")
+		clickBookmark.setAttribute("style", "display:none;")
+	} else if (response_json == "unbookmark") {
+		clickUnbookmark.setAttribute("style", "display:none;")
+		clickBookmark.setAttribute("style", "display:flex;")
+	}
+}
+
+/* 썸네일 미리보기 함수 */
+function setThumbnail(event) {
+    var reader = new FileReader();
+
+    reader.onload = function (event) {
+        var img = document.createElement("img");
+        img.setAttribute("src", event.target.result);
+		
+        // 썸네일 크기 조절
+        img.setAttribute("style", "max-height: 300px;"); // 높이 제한 300px
+        img.style.width = "200px"; // 너비 200px로 설정
+        img.style.height = "auto"; // 높이 자동 설정
+		// 썸네일 리셋 후 미리보기 보여주기
+		document.querySelector("div#image_container").innerHTML = "";
+        document.querySelector("div#image_container").appendChild(img);
+    };
+
+    reader.readAsDataURL(event.target.files[0]);
 }

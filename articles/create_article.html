@@ -16,7 +16,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
     crossorigin="anonymous"></script>
-  <title>Article Create</title>
+  <title>띵곡맛집 | 글쓰기</title>
 </head>
 
 <body>
@@ -26,15 +26,18 @@
     <form>
       <div class="input-group mb-3">
         <span class="input-group-text">제목</span>
-        <input name="" id="article_title" type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
+        <input name="" id="article_title" type="text" class="form-control"
+          aria-label="Amount (to the nearest dollar)" />
       </div>
       <div class="input-group mb-3">
         <span class="input-group-text ">글 내용</span>
-        <textarea name="" id="article_content" cols="30" rows="10" class="form-control" aria-label="With textarea"></textarea>
+        <textarea name="" id="article_content" cols="30" rows="10" class="form-control"
+          aria-label="With textarea"></textarea>
       </div>
       <div class="input-group mb-3">
-        <input name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+        <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
       </div>
+      <div id="image_container" style="margin: 0 auto 0 auto ;"></div>
       <button id="submit-btn" class="btn btn-secondary align-self-center" type="button" onclick="postArticle()">
         등록하기
       </button>
@@ -43,9 +46,6 @@
   <footer></footer>
   <script src="../static/js/api.js"></script>
   <script src="../static/js/loader.js"></script>
-  <script src="../static/js/index.js"></script>
-  <script src="../static/js/articleDetail.js"></script>
-  <script src="../static/js/articleUpdate.js"></script>
   <script src="../static/js/articleCreate.js"></script>
 </body>
 

@@ -16,8 +16,14 @@ async function loadComments(article_id) {
 		const urlRegex = /(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
 		return text.replace(urlRegex, function (url) {
 			const href = url.startsWith("http") ? url : "http://" + url;
-			const linkName = "🔗";
-			return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="custom-link">${linkName}</a>`;
+			console.log(href)
+			is_yt = youtubeLink(href)
+			if (is_yt) {
+				return `<img onclick="linkToIframe('${is_yt}')" class="mb-1 custom-link" style="width:20px;" src="../static/image/youtube.svg" alt="">`
+			}
+			else {
+				return `<span onclick="window.open('${href}', '_blank', 'noopener noreferrer')" class="custom-link">🔗</span>`;;
+			}
 		});
 	}
 
@@ -121,6 +127,37 @@ async function loadComments(article_id) {
 	});
 }
 
+function youtubeLink(link) {
+	const url = link
+	console.log(url);
+	const regex = /watch\?v=([^&]+)/;
+	const match = url.match(regex);
+
+	if (match) {
+		const videoId = match[1];
+		return videoId
+	} else {
+		return null
+	}
+}
+
+async function linkToIframe(ytVideoId) {
+	const url = `https://www.youtube.com/embed/${ytVideoId}`
+	const youtubeBox = document.getElementById("youtube-container");
+	console.log(youtubeBox);
+	console.log(url);
+	youtubeBox.innerHTML = ""
+	ytiframe = document.createElement("iframe");
+	ytiframe.setAttribute("width", "560");
+	ytiframe.setAttribute("height", "315");
+	ytiframe.setAttribute("frameborder", "0");
+	ytiframe.setAttribute("title", "YouTube video player");
+	ytiframe.setAttribute("src", `${url}`);
+	ytiframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share")
+	youtubeBox.appendChild(ytiframe);
+	youtubeBox.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 // 게시글 상세보기 페이지가 로드될 때 실행되는 함수
 window.onload = async function () {
 	let login_user = await getLoginUser();
@@ -128,11 +165,11 @@ window.onload = async function () {
 	const article = await getArticle(article_id);
 
 	// 내용 가져오기, 작성자 버튼 누르면 프로필페이지로 이동
-	document.getElementById("detail-title").innerText = "제목 " + article.title;
+	document.getElementById("detail-title").innerText = article.title;
 	document.getElementById("detail-user").innerText = "작성자 " + article.owner.nickname;
 	document.getElementById("detail-user").setAttribute("onclick", `location.href='${frontend_base_url}/users/profile.html?user_id=${article.owner.id}'`);
 	document.getElementById("detail-user").setAttribute("style", "cursor:pointer;");
-	document.getElementById("detail-time").innerText = "작성일 " + article.created_at.substr(
+	document.getElementById("detail-time").innerText = article.created_at.substr(
 		0,
 		10
 	);

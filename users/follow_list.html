@@ -31,6 +31,7 @@
 <body>
     <header></header>
     <main>
+        <div class="container_myo">
         <div class="container text-center mt-3">
             <h1>팔로잉</h1>
             <div class="card mb-4" id="articles-list">
@@ -42,6 +43,32 @@
                             <col width=10%>
                             <col width=10%>
                             <col width=10%>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>프로필</th>
+                                <th>닉네임</th>
+                                <th>게시글</th>
+                                <th>팔로잉</th>
+                                <th>팔로워</th>
+                            </tr>
+                        </thead>
+                        <tbody id="article-list-myo">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="buttons-myo"></div>
+        </div>
+        <div class="container text-center mt-3">
+            <h1>팔로워</h1>
+            <div class="card mb-4" id="articles-list">
+                <div class="card-body">
+                    <table class="table table-hover table-striped">
+                        <colgroup>
+                            <col width=5%>
+                            <col width=10%>
+                            <col width=10%>
                             <col width=10%>
                             <col width=10%>
                         </colgroup>
@@ -49,11 +76,9 @@
                             <tr>
                                 <th>프로필</th>
                                 <th>닉네임</th>
-                                <th>선호장르</th>
-                                <th>게시글 수</th>
-                                <th>댓글 수</th>
-                                <th>팔로잉 수</th>
-                                <th>팔로워 수</th>
+                                <th>게시글</th>
+                                <th>팔로잉</th>
+                                <th>팔로워</th>
                             </tr>
                         </thead>
                         <tbody id="article-list-kmj">
@@ -63,6 +88,7 @@
             </div>
             <div id="buttons-kmj"></div>
         </div>
+    </div>
     </main>
     <footer></footer>
 </body>

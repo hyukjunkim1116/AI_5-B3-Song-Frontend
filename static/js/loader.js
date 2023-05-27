@@ -38,16 +38,9 @@ async function userProfile(user, list_div) {
 			"https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
 	}
 
-	// 팔로잉 수 불러오기
-	const response = await fetch(
-		`${backend_base_url}/api/users/follow/${user.id}/`,
-		{
-			method: "GET"
-		}
-	);
-	response_json = await response.json();
-	let following = response_json.length;
-	follower = user.followings.length;
+	// 팔로잉,팔로워 수 불러오기
+	following = user.followings.length;
+	follower = user.followers.length;
 
     list_div.innerHTML = ""
     list_div.innerHTML += `<img class="profile_img" style="background-image: url(${user.avatar});">
@@ -91,7 +84,7 @@ async function userProfile(user, list_div) {
 		newdiv.setAttribute("style", "margin:15% 30% 0 35%;");
 		newdiv.setAttribute("onclick", "follow()");
 		newdiv.innerText = "팔로우 »";
-		user.followings.forEach((obj) => {
+		user.followers.forEach((obj) => {
 			if (login_user.id == obj) {
 				newdiv.innerText = "언팔로우 »";
 			}
@@ -119,10 +112,18 @@ async function putUser() {
 		const nickname = document.getElementById("nickname_update").value;
 		const gender = document.getElementById("gender_update").value;
 		const age = document.getElementById("age_update").value;
-		// 변경사항이 있을 경우에만 추가
-		if (password & (password === passwordCheck)) {
-			update_body["password"] = password;
+		console.log(payload_parse)
+		if (!password && payload_parse.login_type === "normal") {
+			return alert("비밀번호를 입력해주세요.");
 		}
+		// 변경사항이 있을 경우에만 추가
+		if (password) { 
+			if (password === passwordCheck) {
+			update_body["password"] = password;
+			}else{
+				return alert("비밀번호가 일치하지 않습니다.");
+			}
+			}
 		if (nickname) {
 			update_body["nickname"] = nickname;
 		}
@@ -199,16 +200,48 @@ function userProfileUpdate(user, list_div) {
 	}
 
 	list_div.innerHTML = "";
+	if (user.login_type == "normal"){
+	list_div.innerHTML += `
+	<div id="image_container"></div>
+	<input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+	<div class="mb-3">
+					<label for="Password" class="form-label">비밀번호</label>
+					<input type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
+				</div>
+				<div class="mb-3">
+					<label for="Password-check" class="form-label">비밀번호 확인</label>
+					<input type="password" class="form-control" name="password-check" id="password-check_update"
+						placeholder="비밀번호 확인">
+				</div>
+				<div class="mb-3">
+					<label for="Nickname" class="form-label">닉네임</label>
+					<input type="text" class="form-control" name="nickname" id="nickname_update" placeholder="닉네임">
+				</div>
+				<div class="mb-3">
+					<label for="Gender" class="form-label">성별</label>
+					<select class="form-select" name="gender" id="gender_update">
+						<option value="" disabled selected>성별을 선택하세요</option>
+						<option value="M">남자</option>
+						<option value="F">여자</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label for="Age" class="form-label">나이</label>
+					<input type="number" class="form-control" name="age" id="age_update" placeholder="나이">
+				</div>
+				<div id="updateBtn">
+				</div>`;			
+	}else{
 	list_div.innerHTML += `
     <div id="image_container"></div>
     <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
     <div class="mb-3">
                     <label for="Password" class="form-label">비밀번호</label>
-                    <input type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
+                    <input disabled type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
                 </div>
                 <div class="mb-3">
                     <label for="Password-check" class="form-label">비밀번호 확인</label>
-                    <input type="password" class="form-control" name="password-check" id="password-check_update"
+                    <input disabled type="password" class="form-control" name="password-check" id="password-check_update"
                         placeholder="비밀번호 확인">
                 </div>
                 <div class="mb-3">
@@ -229,6 +262,7 @@ function userProfileUpdate(user, list_div) {
                 </div>
                 <div id="updateBtn">
                 </div>`;
+	}
 
 	const update_box = document.getElementById("updateBtn");
 	const newdiv = document.createElement("div");

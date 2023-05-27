@@ -4,3 +4,12 @@
     background-size: cover;
     background-position: center;
 }
+
+td>text{
+    display: block;
+    margin: 10px 0 10px 0;
+}
+
+.container_myo{
+    display: flex;
+}

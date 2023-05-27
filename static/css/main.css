@@ -11,3 +11,19 @@ body {
 main {
     flex: 1;
 }
+.toast-img {
+    width: auto;
+    height: auto;
+    object-fit: cover;
+}
+.toast-container {
+    display: flex;
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    justify-self: center;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

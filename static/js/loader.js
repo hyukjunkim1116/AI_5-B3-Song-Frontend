@@ -9,6 +9,25 @@ async function injectNavbar() {
 	let footerHtml = await fetch("/footer.html");
 	let footerdata = await footerHtml.text();
 	document.querySelector("footer").innerHTML = footerdata;
+	const toastTrigger = document.getElementById("liveToastBtn");
+	const toastLiveExample = document.getElementById("liveToast");
+
+	if (toastTrigger) {
+		const toastBootstrap =
+			bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+		toastTrigger.addEventListener("click", () => {
+			toastBootstrap.show();
+		});
+		const toastFaqTrigger = document.getElementById("liveToastFaqBtn");
+		const toastLiveFaq = document.getElementById("liveToastFaq");
+
+		if (toastFaqTrigger) {
+			const toastFaq = bootstrap.Toast.getOrCreateInstance(toastLiveFaq);
+			toastFaqTrigger.addEventListener("click", () => {
+				toastFaq.show();
+			});
+		}
+	}
 
 	const login_user = await getLoginUser();
 	if (login_user) {

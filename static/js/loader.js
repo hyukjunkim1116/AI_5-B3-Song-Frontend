@@ -49,10 +49,10 @@ async function userProfile(user, list_div) {
 	let following = response_json.length;
 	follower = user.followings.length;
 
-	list_div.innerHTML = "";
-	list_div.innerHTML += `<img class="profile_img" src="${user.avatar}" alt="profile">
+    list_div.innerHTML = ""
+    list_div.innerHTML += `<img class="profile_img" style="background-image: url(${user.avatar});">
     <div class="profile_text" id="profile_nickname">${user.nickname}</div>
-    <div class="profile_text">
+    <div class="profile_text" onclick="goFollowList()" style="cursor:pointer;">
         <div id="following">팔로잉 ${following}명</div>
         <div id="follower">팔로워 ${follower}명</div>
     </div>
@@ -241,14 +241,15 @@ function userProfileUpdate(user, list_div) {
 
 // 유저 게시글 목록 UI
 function userArticleList(articles, list_div) {
-	list_div.innerHTML = "";
-	const newCardBox = document.createElement("div");
-	newCardBox.setAttribute("class", "card-box");
-	articles.forEach(async (article) => {
-		const newCard = document.createElement("div");
-		newCard.setAttribute("class", "card");
-		newCard.setAttribute("id", article.pk);
-		newCardBox.appendChild(newCard);
+    list_div.innerHTML = ""
+    const newCardBox = document.createElement("div")
+    newCardBox.setAttribute("class", "card-box")
+    articles.forEach(async article => {
+        const newCard = document.createElement("div")
+        newCard.setAttribute("class", "card")
+        newCard.setAttribute("onclick", `articleDetail(${article.pk})`)
+        newCard.setAttribute("id", article.pk)
+        newCardBox.appendChild(newCard)
 
 		const articlePhoto = article.photos[0]?.file;
 		const articleImage = document.createElement("img");
@@ -264,15 +265,21 @@ function userArticleList(articles, list_div) {
 		articleImage.setAttribute("onclick", `uploadPhoto(${article.pk})`);
 		newCard.appendChild(articleImage);
 
-		const newCardBody = document.createElement("div");
-		newCardBody.setAttribute("class", "card-body");
-		newCardBody.setAttribute("onclick", `articleDetail(${article.pk})`);
-		newCard.appendChild(newCardBody);
+        const newCardBody = document.createElement("div")
+        newCardBody.setAttribute("class", "card-body")
 
-		const newCardTile = document.createElement("h6");
-		newCardTile.setAttribute("class", "card-title");
-		newCardTile.innerText = article.title;
-		newCardBody.appendChild(newCardTile);
+        newCard.appendChild(newCardBody)
+
+        const newCardTitle = document.createElement("h6")
+        newCardTitle.setAttribute("class", "card-title")
+        const newStrong = document.createElement("strong");
+        if (article.title.length > 10) {
+            newStrong.innerText = `${article.title.substr(0, 10)} ···`;
+        } else {
+            newStrong.innerText = article.title
+        }
+        newCardTitle.appendChild(newStrong);
+        newCardBody.appendChild(newCardTitle)
 
 		const newCardtime = document.createElement("p");
 		newCardtime.setAttribute("class", "card-text");
@@ -314,10 +321,14 @@ function userCommentList(comments, list_div) {
 		newCardBody.setAttribute("onclick", `articleDetail(${comment.article})`);
 		newCard.appendChild(newCardBody);
 
-		const newCardTile = document.createElement("h6");
-		newCardTile.setAttribute("class", "card-title");
-		newCardTile.innerText = comment.comment;
-		newCardBody.appendChild(newCardTile);
+        const newCardTitle = document.createElement("h6");
+        newCardTitle.setAttribute("class", "card-title");
+        if (comment.comment.length > 10) {
+            newCardTitle.innerText = `${comment.comment.substr(0, 10)} ···`;
+        } else {
+            newCardTitle.innerText = comment.comment;
+        }
+        newCardBody.appendChild(newCardTitle);
 
 		const newCardlike = document.createElement("p");
 		newCardlike.setAttribute("class", "card-text");
@@ -328,19 +339,28 @@ function userCommentList(comments, list_div) {
 	});
 }
 
-async function goProfile(user_id) {
-	// 인자값이 존재한다면 해당 인자값의 유저 프로필로 이동
-	if (user_id) {
-		user_id = user_id;
-		window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
-	} else {
-		// 인자값이 없다면 현재 로그인한 유저의 프로필로 이동
-		const payload = localStorage.getItem("payload");
-		const payload_parse = JSON.parse(payload);
-		user_id = payload_parse.user_id;
-		window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
-	}
+
+async function goProfile(user_id){
+    // 인자값이 존재한다면 해당 인자값의 유저 프로필로 이동
+    if (user_id){
+        user_id = user_id
+        window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
+    }else{
+        // 인자값이 없다면 현재 로그인한 유저의 프로필로 이동
+        const payload = localStorage.getItem("payload");
+        const payload_parse = JSON.parse(payload);
+        user_id = payload_parse.user_id;
+        window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
+    }
 }
+
+async function goFollowList(){
+    // 현재 프로필 페이지의 user_id를 읽어서 해당 팔로우 목록으로 이동
+    let getParams = window.location.search;
+	let userParams = getParams.split("=")[1];
+    const user_id = userParams;
+    window.location.href = `${frontend_base_url}/users/follow_list.html?user_id=${user_id}`;
+    }
 
 // 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수
 function articleDetail(article_id) {

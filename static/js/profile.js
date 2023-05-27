@@ -28,7 +28,7 @@ async function getOtherUserArticles(user_id) {
 	);
 	if (response.status == 200) {
 		response_json = await response.json();
-		return response_json;
+		return (response_json);
 	} else {
 		alert(response.statusText);
 	}

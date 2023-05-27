@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/articleList.css">
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <!-- 페이지네이션에 쓰이는 icon 모듈 -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/loader.js"></script>
+    <script src="/static/js/followList.js"></script>
+
+    <link rel="stylesheet" href="/static/css/follow_list.css">
+
+    <title>띵곡맛집 | 팔로우 목록</title>
+</head>
+
+<body>
+    <header></header>
+    <main>
+        <div class="container text-center mt-3">
+            <h1>팔로잉</h1>
+            <div class="card mb-4" id="articles-list">
+                <div class="card-body">
+                    <table class="table table-hover table-striped">
+                        <colgroup>
+                            <col width=5%>
+                            <col width=10%>
+                            <col width=10%>
+                            <col width=10%>
+                            <col width=10%>
+                            <col width=10%>
+                            <col width=10%>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>프로필</th>
+                                <th>닉네임</th>
+                                <th>선호장르</th>
+                                <th>게시글 수</th>
+                                <th>댓글 수</th>
+                                <th>팔로잉 수</th>
+                                <th>팔로워 수</th>
+                            </tr>
+                        </thead>
+                        <tbody id="article-list-kmj">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="buttons-kmj"></div>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+
+</html>

@@ -23,7 +23,7 @@
 }
 
 .div-one{
-    margin-top: 3%;
+    margin: 3% 0 3% 0;
     display:flex;
     justify-content:center;
 }

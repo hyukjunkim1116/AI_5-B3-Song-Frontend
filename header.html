@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/static/css/header.css">
 <div class="header-wrap">
     <div class="header-box">
-        <div class="dropdown header-left">
+        <div class="dropdown header-items header-left">
             <button class="btn btn-secondary dropdown-toggle header-btn header-dropdown" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 <img class="header-dropdown-icon" src="/static/image/dropdown_white.svg">
@@ -22,11 +22,11 @@
             </button>
         </div>
         <div>
-            <button onclick="location.href='/'">
-                로고 들어갈 곳
+            <button style="background-color: transparent; border: none;" onclick="location.href='/'">
+                <img id="hd-logo" src="/static/image/mainlogo.svg" alt="">
             </button>
         </div>
-        <div style="display: flex;">
+        <div class="header-items" style="display: flex ;">
             <div id="intro" onclick="goProfile()" class="hd-m-toggle header-btn">
             </div>
             <button onclick="location.href='/users/login.html'" id="login-switch"

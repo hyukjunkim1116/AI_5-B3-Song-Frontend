@@ -82,6 +82,7 @@ header {
     align-items: center;
 }
 .intro-avatar {
+    cursor: pointer;
     visibility: hidden;
     border-radius: 50%;
     width: 40px;
@@ -99,9 +100,14 @@ header {
     display: none;
 }
 
-@media(max-width: 1180px) {
+@media(max-width: 1055px) {
     .hd-m-toggle {
         display: none;
     }
 
+}
+@media(max-width: 600px) {
+    .intro-avatar {
+        display: none;
+    }
 }

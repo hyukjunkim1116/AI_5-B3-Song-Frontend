@@ -80,6 +80,13 @@ function uploadPhoto(article_id) {
     window.location.href = `${frontend_base_url}/upload_photo.html?article_id=${article_id}`;
 }
 
+function handleSearchBtn(event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        handleSearch();
+    }
+}
+
 
 // 검색 버튼 클릭 시 검색어를 가지고 게시글 목록으로 이동하는 함수
 async function handleSearch() {

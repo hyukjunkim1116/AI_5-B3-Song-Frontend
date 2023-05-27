@@ -88,7 +88,11 @@
         margin: 1em auto;
     }
 
-    .dt-content-box>iframe {
+    #youtube-container {
+        width: 700px;
+    }
+
+    #youtube-container>iframe {
         width: 700px;
     }
 }
@@ -107,7 +111,11 @@
         width: 550px;
     }
 
-    .dt-content-box>iframe {
+    #yotube-container {
+        max-width: 500px;
+    }
+    
+    #youtube-container>iframe {
         max-width: 500px;
     }
 }
@@ -153,4 +161,8 @@
     width: 24;
 
     overflow: hidden;
+}
+
+.custom-link {
+    cursor: pointer;
 }

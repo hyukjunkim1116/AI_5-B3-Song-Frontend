@@ -1,5 +1,6 @@
 console.log("articleDetail.js 로드됨");
 let article_id = new URLSearchParams(window.location.search).get("article_id");
+const token = localStorage.getItem("access");
 
 // 글 수정 페이지 이동
 function articleUpdate(article_id) {
@@ -7,7 +8,9 @@ function articleUpdate(article_id) {
 }
 
 async function loadComments(article_id) {
-	const comments = await getArticleComments(article_id);
+	const response = await getArticleComments(article_id);
+	const payload = JSON.parse(localStorage.getItem("payload"));
+
 	const commentsList = document.getElementById("comments-list");
 	commentsList.innerHTML = "";
 
@@ -16,18 +19,12 @@ async function loadComments(article_id) {
 		const urlRegex = /(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
 		return text.replace(urlRegex, function (url) {
 			const href = url.startsWith("http") ? url : "http://" + url;
-			console.log(href)
-			is_yt = youtubeLink(href)
-			if (is_yt) {
-				return `<img onclick="linkToIframe('${is_yt}')" class="mb-1 custom-link" style="width:20px;" src="../static/image/youtube.svg" alt="">`
-			}
-			else {
-				return `<span onclick="window.open('${href}', '_blank', 'noopener noreferrer')" class="custom-link">🔗</span>`;;
-			}
+			const linkName = "🔗";
+			return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="custom-link">${linkName}</a>`;
 		});
 	}
 
-	comments.forEach(async (comment) => {
+	response.forEach(async (comment) => {
 		let buttons = `
 		<div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap ">
 		<section class="like-i">
@@ -68,30 +65,24 @@ async function loadComments(article_id) {
 		} else {
 			comment_user_avatar = "../static/image/free-icon-music-6599985.png"
 		}
-		console.log(comment_user)
-		console.log(comment_user_avatar)
 
-		let login_user = await getLoginUser();
-		if (login_user) {
-			// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
-			if (login_user.id === comment.user_id && comments[0].user_id == comment.user_id) {
-				buttons += `           
+		// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
+		if (payload.user_id === comment.user_id && response[0].user_id == comment.user_id) {
+			buttons += `           
 			<div class="p-2" >
 				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
 				</div>
             `;
-			}
+		}
 
-			// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글이 아니면 수정, 삭제 버튼 보이게 하기
-			if (login_user.id === comment.user_id && comments[0] != comment) {
-				buttons = `
+		// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글이 아니면 수정, 삭제 버튼 보이게 하기
+		if (payload.user_id === comment.user_id && response[0] != comment) {
+			buttons = `
             <div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap">
                 <button type="button" class="btn btn-outline-secondary btn-sm" id="modifyBtn" onclick="modifyComment(${comment.id}, '${comment.comment}')">수정</button>	
 				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
             </div>
             `;
-			}
-
 		}
 
 		commentsList.innerHTML += `
@@ -112,66 +103,31 @@ async function loadComments(article_id) {
         </li >
 			`;
 
+		const login_user = await getLoginUser();
 		//좋아요 하트색 세팅
 		let like = document.getElementById(`like-${comment.id}`)
 		let dislike = document.getElementById(`dislike-${comment.id}`)
-		if (login_user) {
-			login_user.like_comments.forEach((obj) => {
-				if (comment.id == obj.id) {
-					like.setAttribute("style", "display:flex;")
-					dislike.setAttribute("style", "display:none;")
-				}
-			})
-		} else {
-			like.setAttribute("style", "display:none;")
-			dislike.setAttribute("style", "display:none;")
-		}
+		login_user.like_comments.forEach((obj) => {
+			if (comment.id == obj.id) {
+				like.setAttribute("style", "display:flex;")
+				dislike.setAttribute("style", "display:none;")
+			}
+		});
 	});
-}
-
-function youtubeLink(link) {
-	const url = link
-	console.log(url);
-	const regex = /watch\?v=([^&]+)/;
-	const match = url.match(regex);
-
-	if (match) {
-		const videoId = match[1];
-		return videoId
-	} else {
-		return null
-	}
-}
-
-async function linkToIframe(ytVideoId) {
-	const url = `https://www.youtube.com/embed/${ytVideoId}`
-	const youtubeBox = document.getElementById("youtube-container");
-	console.log(youtubeBox);
-	console.log(url);
-	youtubeBox.innerHTML = ""
-	ytiframe = document.createElement("iframe");
-	ytiframe.setAttribute("width", "560");
-	ytiframe.setAttribute("height", "315");
-	ytiframe.setAttribute("frameborder", "0");
-	ytiframe.setAttribute("title", "YouTube video player");
-	ytiframe.setAttribute("src", `${url}`);
-	ytiframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share")
-	youtubeBox.appendChild(ytiframe);
-	youtubeBox.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 // 게시글 상세보기 페이지가 로드될 때 실행되는 함수
 window.onload = async function () {
-	let login_user = await getLoginUser();
+	const login_user = await getLoginUser();
 	// 게시글 받아오기
 	const article = await getArticle(article_id);
 
 	// 내용 가져오기, 작성자 버튼 누르면 프로필페이지로 이동
-	document.getElementById("detail-title").innerText = article.title;
+	document.getElementById("detail-title").innerText = "제목 " + article.title;
 	document.getElementById("detail-user").innerText = "작성자 " + article.owner.nickname;
 	document.getElementById("detail-user").setAttribute("onclick", `location.href='${frontend_base_url}/users/profile.html?user_id=${article.owner.id}'`);
 	document.getElementById("detail-user").setAttribute("style", "cursor:pointer;");
-	document.getElementById("detail-time").innerText = article.created_at.substr(
+	document.getElementById("detail-time").innerText = "작성일 " + article.created_at.substr(
 		0,
 		10
 	);
@@ -190,71 +146,57 @@ window.onload = async function () {
 		);
 	}
 	document.getElementById("detail-img").append(imageBox);
+	if (login_user.id === article.owner.id) {
+		const articleButtons = document.getElementById("btns");
+		const updateButton = document.createElement("button");
+		const deleteButton = document.createElement("button");
 
+		updateButton.setAttribute("class", "btn");
+		updateButton.setAttribute("type", "button");
+		updateButton.innerText = "수정하기";
+		updateButton.setAttribute("onclick", `articleUpdate(article_id)`);
 
-	if (login_user) {
-		if (login_user.id === article.owner.id) {
-			const articleButtons = document.getElementById("btns");
-			const updateButton = document.createElement("button");
-			const deleteButton = document.createElement("button");
+		deleteButton.setAttribute("class", "btn p-0");
+		deleteButton.setAttribute("type", "button");
+		deleteButton.innerText = "삭제하기";
+		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
 
-			updateButton.setAttribute("class", "btn");
-			updateButton.setAttribute("type", "button");
-			updateButton.innerText = "수정하기";
-			updateButton.setAttribute("onclick", `articleUpdate(article_id)`);
+		articleButtons.appendChild(updateButton);
+		articleButtons.appendChild(deleteButton);
+	} else if (login_user) {
+		const articleButtons = document.getElementById("btns");
+		const bookmarkButton = document.createElement("button");
+		const unbookmarkButton = document.createElement("button");
 
-			deleteButton.setAttribute("class", "btn p-0");
-			deleteButton.setAttribute("type", "button");
-			deleteButton.innerText = "삭제하기";
-			deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
+		bookmarkButton.setAttribute("class", "btn p-0");
+		bookmarkButton.setAttribute("type", "button");
+		bookmarkButton.setAttribute("id", `bookmark-${article_id}`);
+		bookmarkButton.innerText = "북마크 하기!";
+		bookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
 
-			articleButtons.appendChild(updateButton);
-			articleButtons.appendChild(deleteButton);
-		} else {
-			const articleButtons = document.getElementById("btns");
-			const bookmarkButton = document.createElement("button");
-			const unbookmarkButton = document.createElement("button");
+		unbookmarkButton.setAttribute("class", "btn p-0");
+		unbookmarkButton.setAttribute("type", "button");
+		unbookmarkButton.setAttribute("id", `unbookmark-${article_id}`);
+		unbookmarkButton.setAttribute("style", "display:none;");
+		unbookmarkButton.innerText = "북마크 취소..";
+		unbookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
 
-			bookmarkButton.setAttribute("class", "btn p-0");
-			bookmarkButton.setAttribute("type", "button");
-			bookmarkButton.setAttribute("id", `bookmark-${article_id}`);
-			bookmarkButton.innerText = "북마크 하기!";
-			bookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
-
-			unbookmarkButton.setAttribute("class", "btn p-0");
-			unbookmarkButton.setAttribute("type", "button");
-			unbookmarkButton.setAttribute("id", `unbookmark-${article_id}`);
-			unbookmarkButton.setAttribute("style", "display:none;");
-			unbookmarkButton.innerText = "북마크 취소..";
-			unbookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
-
-			articleButtons.appendChild(bookmarkButton);
-			articleButtons.appendChild(unbookmarkButton);
-		}
-
-
-		// 북마크 버튼 세팅
-		let bookmark = document.getElementById(`bookmark-${article_id}`)
-		let unbookmark = document.getElementById(`unbookmark-${article_id}`)
-		login_user.bookmarks.forEach((obj) => {
-			if (article_id == obj.id) {
-				unbookmark.setAttribute("style", "display:flex;")
-				bookmark.setAttribute("style", "display:none;")
-			}
-		});
-
+		articleButtons.appendChild(bookmarkButton);
+		articleButtons.appendChild(unbookmarkButton);
 	}
+
+	// 북마크 버튼 세팅
+	let bookmark = document.getElementById(`bookmark-${article_id}`)
+	let unbookmark = document.getElementById(`unbookmark-${article_id}`)
+	login_user.bookmarks.forEach((obj) => {
+		if (article_id == obj.id) {
+			unbookmark.setAttribute("style", "display:flex;")
+			bookmark.setAttribute("style", "display:none;")
+		}
+	});
 
 	// 댓글을 화면에 표시하기
 	await loadComments(article_id);
-	if (!login_user) {
-		const newComment = document.getElementById("new-comment")
-		newComment.setAttribute("disabled", "true")
-		newComment.setAttribute("placeholder", "로그인 하지 않으면 댓글을 작성할 수 없습니다!")
-
-		const registerComment = document.getElementById("register-comment")
-		registerComment.setAttribute("disabled", "true")
-	}
 };
 
 // 댓글 등록 버튼

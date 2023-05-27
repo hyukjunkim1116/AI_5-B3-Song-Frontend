@@ -44,9 +44,9 @@ async function userProfile(user, list_div) {
     }
 
 
-	// 팔로잉,팔로워 수 불러오기
-	following = user.followings.length;
-	follower = user.followers.length;
+    // 팔로잉,팔로워 수 불러오기
+    following = user.followings.length;
+    follower = user.followers.length;
 
     list_div.innerHTML = ""
     list_div.innerHTML += `<img class="profile_img" style="background-image: url(${user.avatar});">
@@ -72,31 +72,31 @@ async function userProfile(user, list_div) {
     const payload_parse = JSON.parse(payload);
     user_id = payload_parse.user_id;
 
-	// 자신의 프로필이라면 프로필 수정버튼 보이기
-	if (user.id === user_id) {
-		const update_box = document.getElementById("updateBtn");
-		const newdiv = document.createElement("div");
-		newdiv.setAttribute("class", "btn btn-secondary");
-		newdiv.setAttribute("style", "margin:15% 30% 0 35%;");
-		newdiv.setAttribute("onclick", "userUpdate()");
-		newdiv.innerText = "프로필 수정 »";
-		update_box.appendChild(newdiv);
-	} else {
-		const login_user = await getLoginUser();
-		const update_box = document.getElementById("updateBtn");
-		const newdiv = document.createElement("div");
-		newdiv.setAttribute("id", "followBtn");
-		newdiv.setAttribute("class", "btn btn-secondary");
-		newdiv.setAttribute("style", "margin:15% 30% 0 35%;");
-		newdiv.setAttribute("onclick", "follow()");
-		newdiv.innerText = "팔로우 »";
-		user.followers.forEach((obj) => {
-			if (login_user.id == obj) {
-				newdiv.innerText = "언팔로우 »";
-			}
-		});
-		update_box.appendChild(newdiv);
-	}
+    // 자신의 프로필이라면 프로필 수정버튼 보이기
+    if (user.id === user_id) {
+        const update_box = document.getElementById("updateBtn");
+        const newdiv = document.createElement("div");
+        newdiv.setAttribute("class", "btn btn-secondary");
+        newdiv.setAttribute("style", "margin:15% 30% 0 35%;");
+        newdiv.setAttribute("onclick", "userUpdate()");
+        newdiv.innerText = "프로필 수정 »";
+        update_box.appendChild(newdiv);
+    } else {
+        const login_user = await getLoginUser();
+        const update_box = document.getElementById("updateBtn");
+        const newdiv = document.createElement("div");
+        newdiv.setAttribute("id", "followBtn");
+        newdiv.setAttribute("class", "btn btn-secondary");
+        newdiv.setAttribute("style", "margin:15% 30% 0 35%;");
+        newdiv.setAttribute("onclick", "follow()");
+        newdiv.innerText = "팔로우 »";
+        user.followers.forEach((obj) => {
+            if (login_user.id == obj) {
+                newdiv.innerText = "언팔로우 »";
+            }
+        });
+        update_box.appendChild(newdiv);
+    }
 }
 
 // 로그인 한 유저 정보 수정
@@ -120,88 +120,88 @@ async function putUser() {
 
         update_body = {};
 
-		const password = document.getElementById("password_update").value;
-		const passwordCheck = document.getElementById(
-			"password-check_update"
-		).value;
-		const nickname = document.getElementById("nickname_update").value;
-		const gender = document.getElementById("gender_update").value;
-		const age = document.getElementById("age_update").value;
-		console.log(payload_parse)
-		if (!password && payload_parse.login_type === "normal") {
-			return alert("비밀번호를 입력해주세요.");
-		}
-		// 변경사항이 있을 경우에만 추가
-		if (password) { 
-			if (password === passwordCheck) {
-			update_body["password"] = password;
-			}else{
-				return alert("비밀번호가 일치하지 않습니다.");
-			}
-			}
-		if (nickname) {
-			update_body["nickname"] = nickname;
-		}
-		if (gender) {
-			update_body["gender"] = gender;
-		}
-		if (age) {
-			update_body["age"] = age;
-		}
-		const response = await fetch(
-			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"content-type": "application/json"
-				},
-				method: "PUT",
-				body: JSON.stringify(update_body)
-			}
-		);
-		//유저가 사진을 업로드했으면 아래 if문 실행(사진업데이트)
-		const avatar = document.getElementById("file").files[0];
-		if (avatar) {
-			const responseURL = await fetch(
-				`${backend_base_url}/api/medias/photos/get-url/`,
-				{
-					method: "POST"
-				}
-			);
-			const dataURL = await responseURL.json();
-			console.log(dataURL["uploadURL"]);
-			//실제로 클라우드플레어에 업로드
-			const formData = new FormData();
-			formData.append("file", avatar);
-			const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
-				body: formData,
-				method: "POST"
-			});
-			const results = await responseRealURL.json();
-			const realFileURL = results.result.variants[0];
-			// 유저 프로필 사진 백엔드로 업로드
-			const responseUpload = await fetch(
-				`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-				{
-					headers: {
-						// "X-CSRFToken": Cookie.get("csrftoken") || "",
-						Authorization: `Bearer ${token}`,
-						"content-type": "application/json"
-					},
-					body: JSON.stringify({
-						avatar: realFileURL
-					}),
-					method: "PUT"
-				}
-			);
-		}
-		if (response.status == 200) {
-			response_json = await response.json();
-		} else {
-			alert(response.statusText);
-		}
-		window.location = `${frontend_base_url}/users/profile.html?user_id=${payload_parse.user_id}`;
-	}
+        const password = document.getElementById("password_update").value;
+        const passwordCheck = document.getElementById(
+            "password-check_update"
+        ).value;
+        const nickname = document.getElementById("nickname_update").value;
+        const gender = document.getElementById("gender_update").value;
+        const age = document.getElementById("age_update").value;
+        console.log(payload_parse)
+        if (!password && payload_parse.login_type === "normal") {
+            return alert("비밀번호를 입력해주세요.");
+        }
+        // 변경사항이 있을 경우에만 추가
+        if (password) {
+            if (password === passwordCheck) {
+                update_body["password"] = password;
+            } else {
+                return alert("비밀번호가 일치하지 않습니다.");
+            }
+        }
+        if (nickname) {
+            update_body["nickname"] = nickname;
+        }
+        if (gender) {
+            update_body["gender"] = gender;
+        }
+        if (age) {
+            update_body["age"] = age;
+        }
+        const response = await fetch(
+            `${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "content-type": "application/json"
+                },
+                method: "PUT",
+                body: JSON.stringify(update_body)
+            }
+        );
+        //유저가 사진을 업로드했으면 아래 if문 실행(사진업데이트)
+        const avatar = document.getElementById("file").files[0];
+        if (avatar) {
+            const responseURL = await fetch(
+                `${backend_base_url}/api/medias/photos/get-url/`,
+                {
+                    method: "POST"
+                }
+            );
+            const dataURL = await responseURL.json();
+            console.log(dataURL["uploadURL"]);
+            //실제로 클라우드플레어에 업로드
+            const formData = new FormData();
+            formData.append("file", avatar);
+            const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
+                body: formData,
+                method: "POST"
+            });
+            const results = await responseRealURL.json();
+            const realFileURL = results.result.variants[0];
+            // 유저 프로필 사진 백엔드로 업로드
+            const responseUpload = await fetch(
+                `${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
+                {
+                    headers: {
+                        // "X-CSRFToken": Cookie.get("csrftoken") || "",
+                        Authorization: `Bearer ${token}`,
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        avatar: realFileURL
+                    }),
+                    method: "PUT"
+                }
+            );
+        }
+        if (response.status == 200) {
+            response_json = await response.json();
+        } else {
+            alert(response.statusText);
+        }
+        window.location = `${frontend_base_url}/users/profile.html?user_id=${payload_parse.user_id}`;
+    }
 }
 
 // 유저 프로필 정보 수정하기 - 미완성
@@ -211,12 +211,12 @@ function userProfileUpdate(user, list_div) {
         user.avatar = user.avatar;
     } else {
         user.avatar =
-            "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2";
+            "../static/image/free-icon-music-6599985.png";
     }
 
-	list_div.innerHTML = "";
-	if (user.login_type == "normal"){
-	list_div.innerHTML += `
+    list_div.innerHTML = "";
+    if (user.login_type == "normal") {
+        list_div.innerHTML += `
 	<div id="image_container"></div>
 	<input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
 	<div class="mb-3">
@@ -245,9 +245,9 @@ function userProfileUpdate(user, list_div) {
 					<input type="number" class="form-control" name="age" id="age_update" placeholder="나이">
 				</div>
 				<div id="updateBtn">
-				</div>`;			
-	}else{
-	list_div.innerHTML += `
+				</div>`;
+    } else {
+        list_div.innerHTML += `
     <div id="image_container"></div>
     <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
     <div class="mb-3">
@@ -277,7 +277,7 @@ function userProfileUpdate(user, list_div) {
                 </div>
                 <div id="updateBtn">
                 </div>`;
-	}
+    }
 
     const update_box = document.getElementById("updateBtn");
     const newdiv = document.createElement("div");
@@ -329,7 +329,7 @@ function userArticleList(articles, list_div) {
         }
         newCardTitle.appendChild(newStrong);
         newCardBody.appendChild(newCardTitle)
-      
+
         const newCardtime = document.createElement("p");
         newCardtime.setAttribute("class", "card-text");
         newCardtime.innerText = article.created_at;
@@ -348,6 +348,7 @@ function userCommentList(comments, list_div) {
         const newCard = document.createElement("div");
         newCard.setAttribute("class", "card");
         newCard.setAttribute("id", `comment-${comment.id}`);
+        newCard.setAttribute("onclick", `articleDetail(${comment.article})`);
         newCardBox.appendChild(newCard);
 
         const post = await getArticle(comment.article);
@@ -362,12 +363,10 @@ function userCommentList(comments, list_div) {
                 "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
             );
         }
-        articleImage.setAttribute("onclick", `uploadPhoto(${comment.article})`);
         newCard.appendChild(articleImage);
 
         const newCardBody = document.createElement("div");
         newCardBody.setAttribute("class", "card-body");
-        newCardBody.setAttribute("onclick", `articleDetail(${comment.article})`);
         newCard.appendChild(newCardBody);
 
         const newCardTitle = document.createElement("h6");
@@ -381,7 +380,9 @@ function userCommentList(comments, list_div) {
 
         const newCardlike = document.createElement("p");
         newCardlike.setAttribute("class", "card-text");
-        newCardlike.innerText = `좋아요 ${comment.like_count}개`;
+        const newStrong = document.createElement("strong");
+        newStrong.innerText = `좋아요 ${comment.like_count}개`;
+        newCardlike.appendChild(newStrong);
         newCardBody.appendChild(newCardlike);
 
         list_div.appendChild(newCardBox);
@@ -389,12 +390,12 @@ function userCommentList(comments, list_div) {
 }
 
 
-async function goProfile(user_id){
+async function goProfile(user_id) {
     // 인자값이 존재한다면 해당 인자값의 유저 프로필로 이동
-    if (user_id){
+    if (user_id) {
         user_id = user_id
         window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
-    }else{
+    } else {
         // 인자값이 없다면 현재 로그인한 유저의 프로필로 이동
         const payload = localStorage.getItem("payload");
         const payload_parse = JSON.parse(payload);
@@ -403,13 +404,13 @@ async function goProfile(user_id){
     }
 }
 
-async function goFollowList(){
+async function goFollowList() {
     // 현재 프로필 페이지의 user_id를 읽어서 해당 팔로우 목록으로 이동
     let getParams = window.location.search;
-	let userParams = getParams.split("=")[1];
+    let userParams = getParams.split("=")[1];
     const user_id = userParams;
     window.location.href = `${frontend_base_url}/users/follow_list.html?user_id=${user_id}`;
-    }
+}
 
 // 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수
 function articleDetail(article_id) {

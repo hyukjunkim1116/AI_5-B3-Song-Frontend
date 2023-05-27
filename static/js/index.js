@@ -167,6 +167,7 @@ function commentList(comments, list_div) {
 			"onclick",
 			`location.href='${frontend_base_url}/articles/article_detail.html?article_id=${comment.article}#comment-${comment.id}'`
 		);
+		newCard.style.cursor = "pointer";
 		newCardBox.appendChild(newCard);
 
 		const post = await getArticle(comment.article);

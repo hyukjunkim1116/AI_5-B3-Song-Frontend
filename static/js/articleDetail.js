@@ -68,6 +68,8 @@ async function loadComments(article_id) {
 		} else {
 			comment_user_avatar = "../static/image/free-icon-music-6599985.png"
 		}
+		console.log(comment_user)
+		console.log(comment_user_avatar)
 
 		let login_user = await getLoginUser();
 		if (login_user) {

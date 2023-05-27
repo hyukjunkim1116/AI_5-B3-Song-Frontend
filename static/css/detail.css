@@ -114,7 +114,7 @@
     #yotube-container {
         max-width: 500px;
     }
-    
+
     #youtube-container>iframe {
         max-width: 500px;
     }
@@ -165,4 +165,8 @@
 
 .custom-link {
     cursor: pointer;
+}
+
+.img-thumbnail {
+    object-fit: cover;
 }

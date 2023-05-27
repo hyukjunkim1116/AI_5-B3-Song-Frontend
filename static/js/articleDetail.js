@@ -153,11 +153,11 @@ window.onload = async function () {
 	const article = await getArticle(article_id);
 
 	// 내용 가져오기, 작성자 버튼 누르면 프로필페이지로 이동
-	document.getElementById("detail-title").innerText = "제목 " + article.title;
+	document.getElementById("detail-title").innerText = article.title;
 	document.getElementById("detail-user").innerText = "작성자 " + article.owner.nickname;
 	document.getElementById("detail-user").setAttribute("onclick", `location.href='${frontend_base_url}/users/profile.html?user_id=${article.owner.id}'`);
 	document.getElementById("detail-user").setAttribute("style", "cursor:pointer;");
-	document.getElementById("detail-time").innerText = "작성일 " + article.created_at.substr(
+	document.getElementById("detail-time").innerText = article.created_at.substr(
 		0,
 		10
 	);

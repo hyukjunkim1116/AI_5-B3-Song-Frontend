@@ -35,9 +35,9 @@
           aria-label="With textarea"></textarea>
       </div>
       <div class="input-group mb-3">
-        <input name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03"
-          aria-label="Upload">
+        <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
       </div>
+      <div id="image_container" style="margin: 0 auto 0 auto ;"></div>
       <button id="submit-btn" class="btn btn-secondary align-self-center" type="button" onclick="postArticle()">
         등록하기
       </button>

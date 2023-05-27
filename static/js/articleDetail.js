@@ -93,7 +93,7 @@ async function loadComments(article_id) {
         <li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
 		<img class="img-thumbnail rounded-circle" src=${comment_user_avatar} alt="profile img" width="50" style="height:50px!important">
 		<div class="media-body">
-			<h6 class="mt-1 mb-1 ms-1 me-1">${comment.user}</h6>
+			<h6 class="mt-1 mb-1 ms-1 me-1" style="cursor:pointer; width: fit-content;" onclick="location.href='${frontend_base_url}/users/profile.html?user_id=${comment_user.id}'" >${comment.user}</h6>
 			<span class="mt-1 mb-1 ms-1 me-1" style="word-break: break-all; white-space: pre-line;">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
 		</div>
             ${buttons}
@@ -119,9 +119,11 @@ window.onload = async function () {
 	// 게시글 받아오기
 	const article = await getArticle(article_id);
 
-	// 내용 가져오기
+	// 내용 가져오기, 작성자 버튼 누르면 프로필페이지로 이동
 	document.getElementById("detail-title").innerText = "제목 " + article.title;
 	document.getElementById("detail-user").innerText = "작성자 " + article.owner.nickname;
+	document.getElementById("detail-user").setAttribute("onclick",`location.href='${frontend_base_url}/users/profile.html?user_id=${article.owner.id}'`);
+	document.getElementById("detail-user").setAttribute("style","cursor:pointer;");
 	document.getElementById("detail-time").innerText = "작성일 " + article.created_at.substr(
 		0,
 		10

@@ -29,8 +29,9 @@ async function injectNavbar() {
 injectNavbar();
 
 
+
 // 유저 프로필 정보 UI
-function userProfile(user, list_div) {
+async function userProfile(user, list_div) {
     // 프로필이미지가 없다면 기본 이미지로
     if (user.avatar) {
         user.avatar = user.avatar
@@ -38,25 +39,162 @@ function userProfile(user, list_div) {
         user.avatar = "https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
     }
 
+    // 팔로잉 수 불러오기
+    const response = await fetch(
+        `${backend_base_url}/api/users/follow/${user.id}/`,
+        {
+            method: "GET"
+        }
+    );
+    response_json = await response.json();
+    let following = response_json.length
+    follower = user.followings.length
+
     list_div.innerHTML = ""
     list_div.innerHTML += `<img class="profile_img" src="${user.avatar}" alt="profile">
     <div class="profile_text" id="profile_nickname">${user.nickname}</div>
     <div class="profile_text">
-        <div id="following">팔로잉 ${user.followings.length}명</div>
-        <div id="follower">팔로워 N명</div>
+        <div id="following">팔로잉 ${following}명</div>
+        <div id="follower">팔로워 ${follower}명</div>
     </div>
     <div class="profile_text" id="genre">
-    </div>`
+    </div>
+    <div id="updateBtn">
+    </div>
+    `
     // 장르가 있다면 추가로 생성
     if (user.genre) {
         const genreBox = document.getElementById("genre")
-        user.genre.forEach(async genre => {
-            const newDiv = document.createElement("div")
-            newDiv.setAttribute("class", "genre")
-            genreBox.appendChild(newDiv)
-        }
-        )
+        const newDiv = document.createElement("div")
+        newDiv.setAttribute("class", "genre")
+        newDiv.innerText = user.genre
+        genreBox.appendChild(newDiv)
     }
+    const payload = localStorage.getItem("payload");
+    const payload_parse = JSON.parse(payload);
+    user_id = payload_parse.user_id;
+
+    // 자신의 프로필이라면 프로필 수정버튼 보이기
+    if (user.id === user_id){
+        const update_box = document.getElementById("updateBtn")
+        const newdiv = document.createElement("div")
+        newdiv.setAttribute("class", "btn btn-secondary")
+        newdiv.setAttribute("style", "margin:15% 30% 0 35%;")
+        newdiv.setAttribute("onclick", "userUpdate()")
+        newdiv.innerText = "프로필 수정 »"
+        update_box.appendChild(newdiv)
+    }else{
+        const login_user = await getLoginUser();
+        const update_box = document.getElementById("updateBtn")
+        const newdiv = document.createElement("div")
+        newdiv.setAttribute("id", "followBtn")
+        newdiv.setAttribute("class", "btn btn-secondary")
+        newdiv.setAttribute("style", "margin:15% 30% 0 35%;")
+        newdiv.setAttribute("onclick", "follow()")
+        newdiv.innerText = "팔로우 »"
+        user.followings.forEach((obj) => {
+            if (login_user.id == obj){
+                newdiv.innerText = "언팔로우 »"
+            }
+        })
+        update_box.appendChild(newdiv)
+    }
+
+}
+
+// 로그인 한 유저 정보 수정
+async function putUser() {
+	// 프로필 수정완료버튼 확인창 뜨기
+    msg = confirm("프로필을 수정하시겠습니까?");
+    const payload = localStorage.getItem("payload");
+    const payload_parse = JSON.parse(payload);
+    if (msg === true) {
+		let token = localStorage.getItem("access");
+
+		update_body={}
+
+		const password = document.getElementById("password_update").value;
+		const passwordCheck = document.getElementById("password-check_update").value
+		const nickname = document.getElementById("nickname_update").value;
+		const gender = document.getElementById("gender_update").value;
+		const age = document.getElementById("age_update").value;
+		// 변경사항이 있을 경우에만 추가
+		if (password & password === passwordCheck ){update_body["password"] = password;}
+		if (nickname){update_body["nickname"] = nickname;}
+		if (gender){update_body["gender"] = gender;}
+		if (age){update_body["age"] = age;}
+
+		const response = await fetch(
+			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+                    "content-type": "application/json",
+				},
+				method: "PUT",
+				body: JSON.stringify(update_body),
+			}
+		);
+		if (response.status == 200) {
+			response_json = await response.json();
+            window.location = `${frontend_base_url}/users/profile.html?user_id=${payload_parse.user_id}`
+		} else {
+			alert(response.statusText);
+		}
+	}else{
+		window.location = `${frontend_base_url}/users/profile.html?user_id=${payload_parse.user_id}`
+	}
+}
+
+// 유저 프로필 정보 수정하기 - 미완성
+function userProfileUpdate(user,list_div) {
+    // 프로필이미지가 없다면 기본 이미지로
+    if (user.avatar) {
+        user.avatar=user.avatar
+    } else {
+        user.avatar="https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2"
+    }
+    
+    list_div.innerHTML = ""
+    list_div.innerHTML += `
+    <div id="image_container"></div>
+    <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+    <div class="mb-3">
+                    <label for="Password" class="form-label">비밀번호</label>
+                    <input type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
+                </div>
+                <div class="mb-3">
+                    <label for="Password-check" class="form-label">비밀번호 확인</label>
+                    <input type="password" class="form-control" name="password-check" id="password-check_update"
+                        placeholder="비밀번호 확인">
+                </div>
+                <div class="mb-3">
+                    <label for="Nickname" class="form-label">닉네임</label>
+                    <input type="text" class="form-control" name="nickname" id="nickname_update" placeholder="닉네임">
+                </div>
+                <div class="mb-3">
+                    <label for="Gender" class="form-label">성별</label>
+                    <select class="form-select" name="gender" id="gender_update">
+                        <option value="" disabled selected>성별을 선택하세요</option>
+                        <option value="M">남자</option>
+                        <option value="F">여자</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="Age" class="form-label">나이</label>
+                    <input type="number" class="form-control" name="age" id="age_update" placeholder="나이">
+                </div>
+                <div id="updateBtn">
+                </div>`
+    
+    const update_box = document.getElementById("updateBtn")
+    const newdiv = document.createElement("div")
+    newdiv.setAttribute("class", "btn btn-secondary")
+    newdiv.setAttribute("style", "margin: 0 30% 0 35%;")
+    newdiv.setAttribute("onclick", "putUser()")
+    newdiv.innerText = "프로필 수정 »"
+    update_box.appendChild(newdiv)
+    
 }
 
 
@@ -145,6 +283,22 @@ function userCommentList(comments, list_div) {
 
         list_div.appendChild(newCardBox);
     })
+}
+
+
+async function goProfile(user_id){
+    // 인자값이 존재한다면 해당 인자값의 유저 프로필로 이동
+    if (user_id){
+        user_id = user_id
+        window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
+    }else{
+        // 인자값이 없다면 현재 로그인한 유저의 프로필로 이동
+        const payload = localStorage.getItem("payload");
+        const payload_parse = JSON.parse(payload);
+        user_id = payload_parse.user_id;
+        window.location.href = `${frontend_base_url}/users/profile.html?user_id=${user_id}`;
+    }
+
 }
 
 // 게시글 눌렀을 때 게시글 id 값을 가지고 상세페이지로 이동하는 함수

@@ -23,7 +23,7 @@
 }
 
 .div-one{
-    margin-top: 3%;
+    margin: 3% 0 3% 0;
     display:flex;
     justify-content:center;
 }
@@ -81,4 +81,9 @@
     margin: 0 10px 0 10px;
     /* 카드 사이 간격 */
     flex: none;
+}
+
+.card-img-top{
+    height: 8rem;
+    object-fit: cover;
 }

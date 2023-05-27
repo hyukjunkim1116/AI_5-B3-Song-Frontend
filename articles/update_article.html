@@ -36,11 +36,10 @@
             aria-label="With textarea"></textarea>
         </div>
         <div class="input-group mb-3">
-          <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon03"
-            onclick="articlePhotoDelete()">삭제</button>
-          <input name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03"
-            aria-label="Upload">
+          <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon03" onclick="articlePhotoDelete()">삭제</button>
+          <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
         </div>
+        <div id="image_container" style="margin: 0 auto 0 auto ;"></div>
         <button id="submit-btn" class="btn btn-secondary align-self-center" type="button" onclick="articleUpdate()">
           수정하기
         </button>

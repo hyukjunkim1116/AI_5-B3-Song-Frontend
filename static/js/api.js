@@ -23,11 +23,12 @@ function checkNotLogin() {
 async function handleSignin() {
 	const email = document.getElementById("email").value;
 	const password = document.getElementById("password").value;
-	// const passwordCheck = document.getElementById("password-check").value
+	const passwordCheck = document.getElementById("password-check").value
 	const nickname = document.getElementById("nickname").value;
 	const gender = document.getElementById("gender").value;
 	const age = document.getElementById("age").value;
-
+	// 비밀번호 일치 판별
+	if (password === passwordCheck) {
 	const response = await fetch(`${backend_base_url}/api/users/signup/`, {
 		headers: {
 			"content-type": "application/json"
@@ -36,14 +37,15 @@ async function handleSignin() {
 		body: JSON.stringify({
 			email: email,
 			password: password,
-			// "password2": passwordCheck,
 			nickname: nickname,
 			gender: gender,
 			age: age
 		})
 	});
-
 	return response;
+	}else {
+		alert("비밀번호가 일치하지 않습니다.");
+	}
 }
 
 // 로그인
@@ -125,43 +127,7 @@ async function getLoginUser() {
 		}
 	}
 
-	// 로그인 한 유저 정보 수정
-	async function putUser() {
-		const payload = localStorage.getItem("payload");
-		const payload_parse = JSON.parse(payload);
-		let token = localStorage.getItem("access");
 
-		update_body = {}
-
-		const password = document.getElementById("password_update").value;
-		// const passwordCheck = document.getElementById("password-check").value
-		const nickname = document.getElementById("nickname_update").value;
-		const gender = document.getElementById("gender_update").value;
-		const age = document.getElementById("age_update").value;
-		// 변경사항이 있을 경우에만 추가
-		if (password) { update_body["password"] = password; }
-		if (nickname) { update_body["nickname"] = nickname; }
-		if (gender) { update_body["gender"] = gender; }
-		if (age) { update_body["age"] = age; }
-
-		const response = await fetch(
-			`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				method: "PUT",
-				body: JSON.stringify(update_body),
-			}
-		);
-		if (response.status == 200) {
-			response_json = await response.json();
-			console.log(response_json);
-			return response_json;
-		} else {
-			alert(response.statusText);
-		}
-	}
 
 
 
@@ -505,4 +471,24 @@ async function bookmarkClick(article_id) {
 		clickUnbookmark.setAttribute("style", "display:none;")
 		clickBookmark.setAttribute("style", "display:flex;")
 	}
+}
+
+/* 썸네일 미리보기 함수 */
+function setThumbnail(event) {
+    var reader = new FileReader();
+
+    reader.onload = function (event) {
+        var img = document.createElement("img");
+        img.setAttribute("src", event.target.result);
+		
+        // 썸네일 크기 조절
+        img.setAttribute("style", "max-height: 300px;"); // 높이 제한 300px
+        img.style.width = "200px"; // 너비 200px로 설정
+        img.style.height = "auto"; // 높이 자동 설정
+		// 썸네일 리셋 후 미리보기 보여주기
+		document.querySelector("div#image_container").innerHTML = "";
+        document.querySelector("div#image_container").appendChild(img);
+    };
+
+    reader.readAsDataURL(event.target.files[0]);
 }

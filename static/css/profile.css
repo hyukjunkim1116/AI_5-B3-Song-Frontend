@@ -82,3 +82,8 @@
     /* 카드 사이 간격 */
     flex: none;
 }
+
+.card-img-top{
+    height: 8rem;
+    object-fit: cover;
+}

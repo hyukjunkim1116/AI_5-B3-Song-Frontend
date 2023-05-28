@@ -1,7 +1,8 @@
 console.log("api.js 연결됨");
 
 const frontend_base_url = "http://127.0.0.1:5500";
-const backend_base_url = "http://13.209.68.214:8000";
+const backend_base_url = "http://127.0.0.1:8000";
+// "http://13.209.68.214:8000";
 
 // 로그인 상태에서 로그인, 회원가입 페이지 접속 시 홈으로 이동하는 함수
 function checkLogin() {
@@ -171,65 +172,6 @@ async function follow() {
 	}
 }
 
-// 아티클 사진 백엔드로 업로드
-async function createArticlePhoto(realFileURL, article_id) {
-	const token = localStorage.getItem("access");
-	const response = await fetch(
-		`${backend_base_url}/api/articles/${article_id}/photos/`,
-		{
-			headers: {
-				// "X-CSRFToken": Cookie.get("csrftoken") || "",
-				Authorization: `Bearer ${token}`,
-				"content-type": "application/json"
-			},
-			body: JSON.stringify({
-				file: realFileURL
-			}),
-			method: "POST"
-		}
-	);
-	window.location.replace(`${frontend_base_url}/`);
-	return response;
-}
-
-//실제로 클라우드플레어에 업로드
-async function uploadArticlePhoto(data, article_id) {
-	const file = document.getElementById("file").files[0];
-	const formData = new FormData();
-	formData.append("file", file);
-	const response = await fetch(`${data["uploadURL"]}`, {
-		body: formData,
-		method: "POST"
-	});
-	const results = await response.json();
-	const realFileURL = results.result.variants[0];
-	console.log(article_id);
-	return createArticlePhoto(realFileURL, article_id);
-}
-
-// 1회용 URL얻기
-async function getArticleUploadURL(article_id) {
-	const response = await fetch(
-		`${backend_base_url}/api/medias/photos/get-url/`,
-		{
-			headers: {
-				// "X-CSRFToken": Cookie.get("csrftoken") || "",
-				// Authorization: `Bearer ${token}`
-			},
-			method: "POST"
-		}
-	);
-	const data = await response.json();
-	console.log(data["uploadURL"]);
-	return uploadArticlePhoto(data, article_id);
-}
-
-// 사진 업로드 버튼 누르면 1회용 URL얻는 함수 실행
-const handleArticlePhotoUploadBtn = () => {
-	let getParams = window.location.search;
-	let articleParams = getParams.split("=")[1];
-	getArticleUploadURL(articleParams);
-};
 function uploadPhoto(article_id) {
 	window.location.href = `${frontend_base_url}/upload_photo.html?article_id=${article_id}`;
 }
@@ -494,4 +436,3 @@ function setThumbnail(event) {
 
 	reader.readAsDataURL(event.target.files[0]);
 }
-

@@ -27,6 +27,7 @@ async function articlePhotoDelete() {
 }
 //아티클 업데이트 페이지 들어가면 실행되는 함수. file input은 설정 불가
 window.onload = async function loadUpdatePost() {
+	checkNotLogin();
 	const urlParams = new URLSearchParams(window.location.search);
 	const articleId = urlParams.get("article_id");
 	const exist_post = await getArticle(articleId);

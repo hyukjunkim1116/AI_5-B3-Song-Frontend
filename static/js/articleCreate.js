@@ -77,6 +77,7 @@ async function postArticle() {
 	}
 }
 
-window.onload = function() {
+
+window.onload = async function() {
 	checkNotLogin();
 }

@@ -1,6 +1,6 @@
 console.log("api.js 연결됨");
 
-const frontend_base_url = "http://127.0.0.1:5500";
+const frontend_base_url = "http://127.0.0.1:5501";
 const backend_base_url = "http://127.0.0.1:8000";
 // "http://13.209.68.214:8000";
 
@@ -74,6 +74,22 @@ function handleLogout() {
 	localStorage.removeItem("refresh");
 	localStorage.removeItem("payload");
 	window.location.replace(`${frontend_base_url}/`);
+}
+
+// 강제 로그아웃
+function forceLogout() {
+	const payload = localStorage.getItem("payload");
+	let current_time = new Date().getTime();
+	if (payload) {
+		const payload_parse = JSON.parse(payload);
+		if (payload_parse.exp < current_time) {
+			handleLogout();
+		}
+		else {
+			return
+		}
+
+	}
 }
 
 // 전체 유저 정보 조회 - 관리자용 (아직 권한제한 미구현)

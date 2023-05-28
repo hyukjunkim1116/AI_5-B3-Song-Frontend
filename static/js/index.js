@@ -210,6 +210,8 @@ function commentList(comments, list_div) {
 
 //메인페이지 좋아요순 댓글, 최신순 게시글 가져오기
 window.onload = async function () {
+	forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
+
 	const like_comments = await getComments();
 	like_comments.sort((x, y) => y.like_count - x.like_count);
 

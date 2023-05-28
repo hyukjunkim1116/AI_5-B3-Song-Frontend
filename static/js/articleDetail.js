@@ -85,8 +85,8 @@ async function loadComments(article_id) {
 		if (payload.user_id === comment.user_id && response[0] != comment) {
 			buttons = `
             <div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap">
-                <button type="button" class="btn btn-outline-secondary btn-sm" id="modifyBtn" onclick="modifyComment(${comment.id}, '${comment.comment}')">수정</button>	
-				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
+                <button type="button" class="comment-btn btn btn-outline-secondary btn-sm" id="modifyBtn" onclick="modifyComment(${comment.id}, '${comment.comment}')">수정</button>	
+				<button type="button" class="comment-btn btn btn-outline-secondary btn-sm" onclick="deleteComment(${comment.id})">삭제</button>
             </div>
             `;
 		}
@@ -189,12 +189,12 @@ window.onload = async function () {
 		const updateButton = document.createElement("button");
 		const deleteButton = document.createElement("button");
 
-		updateButton.setAttribute("class", "btn");
+		updateButton.setAttribute("class", "article-btn btn");
 		updateButton.setAttribute("type", "button");
 		updateButton.innerText = "수정하기";
 		updateButton.setAttribute("onclick", `articleUpdate(article_id)`);
 
-		deleteButton.setAttribute("class", "btn p-0");
+		deleteButton.setAttribute("class", "article-btn btn del-btn");
 		deleteButton.setAttribute("type", "button");
 		deleteButton.innerText = "삭제하기";
 		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
@@ -203,16 +203,18 @@ window.onload = async function () {
 		articleButtons.appendChild(deleteButton);
 	} else if (login_user) {
 		const articleButtons = document.getElementById("btns");
-		const bookmarkButton = document.createElement("button");
-		const unbookmarkButton = document.createElement("button");
+		const bookmarkButton = document.createElement("img");
+		const unbookmarkButton = document.createElement("img");
 
-		bookmarkButton.setAttribute("class", "btn p-0");
+		bookmarkButton.setAttribute("src", "../static/image/bookmark.svg");
+		bookmarkButton.setAttribute("class", "btn p-0 bookmarkbtn");
 		bookmarkButton.setAttribute("type", "button");
 		bookmarkButton.setAttribute("id", `bookmark-${article_id}`);
 		bookmarkButton.innerText = "북마크 하기!";
 		bookmarkButton.setAttribute("onclick", `bookmarkClick(${article_id})`);
 
-		unbookmarkButton.setAttribute("class", "btn p-0");
+		unbookmarkButton.setAttribute("src", "../static/image/bookmarked.svg");
+		unbookmarkButton.setAttribute("class", "btn p-0 bookmarkbtn");
 		unbookmarkButton.setAttribute("type", "button");
 		unbookmarkButton.setAttribute("id", `unbookmark-${article_id}`);
 		unbookmarkButton.setAttribute("style", "display:none;");
@@ -232,7 +234,6 @@ window.onload = async function () {
 			bookmark.setAttribute("style", "display:none;")
 		}
 	});
-
 	// 댓글을 화면에 표시하기
 	await loadComments(article_id);
 };

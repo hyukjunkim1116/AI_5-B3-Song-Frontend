@@ -1,6 +1,8 @@
 console.log("articleDetail.js 로드됨");
 let article_id = new URLSearchParams(window.location.search).get("article_id");
 const token = localStorage.getItem("access");
+const payload = JSON.parse(localStorage.getItem("payload"));
+
 
 // 글 수정 페이지 이동
 function articleUpdate(article_id) {
@@ -23,14 +25,15 @@ function linkify(text) {
 	});
 }
 
+
+// 댓글 목록 로드하기
 async function loadComments(article_id) {
 	const response = await getArticleComments(article_id);
-	const payload = JSON.parse(localStorage.getItem("payload"));
 	const login_user = await getLoginUser();
 	const commentsList = document.getElementById("comments-list");
 	commentsList.innerHTML = "";
 	response.forEach(async (comment) => {
-		let buttons = `<div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap ">
+		let buttons = `<div class="col d-grid gap-2 d-md-flex justify-content-end text-nowrap ">
 							<section class="like-i">
 							<span class="like-i2">
 								<button class="like-i3" id="like-button" type="button"
@@ -122,6 +125,7 @@ async function loadComments(article_id) {
 	});
 }
 
+
 // 유튜브 링크인지 확인하는 함수
 function youtubeLink(link) {
 	const url = link;
@@ -135,6 +139,7 @@ function youtubeLink(link) {
 		return null;
 	}
 }
+
 
 // 유튜브 영상을 누르면 iframe에 띄워주기
 async function linkToIframe(ytVideoId) {
@@ -154,9 +159,7 @@ async function linkToIframe(ytVideoId) {
 
 
 // 게시글 받아오기
-async function setArticle() {
-	const article = await getArticle(article_id);
-
+async function setArticle(article) {
 	// 내용 가져오기, 작성자 버튼 누르면 프로필페이지로 이동
 	document.getElementById("detail-title").innerText = article.title;
 	document.getElementById("detail-user").innerText = "작성자 " + article.owner.nickname;
@@ -180,15 +183,20 @@ async function setArticle() {
 	document.getElementById("detail-img").append(imageBox);
 }
 
+
 // 게시글 상세보기 페이지가 로드될 때 실행되는 함수
 window.onload = async function () {
+	const article = await getArticle(article_id);
 	// 게시글 로딩
-	setArticle();
+	setArticle(article);
 	// 댓글을 화면에 표시하기
 	loadComments(article_id);
-	setBookmarkBtn();
+
 	// 로그인 안한 유저 댓글 입력창 안보이게
-	if (!token) {
+	if (token) {
+		setBookmarkBtn(article);
+	}
+	else {
 		const writebox = document.querySelector(".comment-writebox");
 		writebox.style.display = "none"
 	}
@@ -196,7 +204,8 @@ window.onload = async function () {
 
 
 // 북마크 버튼 세팅
-function setBookmarkBtn() {
+async function setBookmarkBtn(article) {
+	const login_user = await getLoginUser();
 	if (login_user.id === article.owner.id) {
 		const articleButtons = document.getElementById("btns");
 		const updateButton = document.createElement("button");
@@ -205,16 +214,16 @@ function setBookmarkBtn() {
 		updateButton.setAttribute("class", "article-btn btn");
 		updateButton.setAttribute("type", "button");
 		updateButton.innerText = "수정하기";
-		updateButton.setAttribute("onclick", `articleUpdate(article_id)`);
+		updateButton.setAttribute("onclick", `articleUpdate(${article_id})`);
 
 		deleteButton.setAttribute("class", "article-btn btn del-btn");
 		deleteButton.setAttribute("type", "button");
 		deleteButton.innerText = "삭제하기";
-		deleteButton.setAttribute("onclick", `articleDelete(article_id)`);
+		deleteButton.setAttribute("onclick", `articleDelete(${article_id})`);
 
 		articleButtons.appendChild(updateButton);
 		articleButtons.appendChild(deleteButton);
-	} else if (login_user) {
+	} else if (token) {
 		const articleButtons = document.getElementById("btns");
 		const bookmarkButton = document.createElement("img");
 		const unbookmarkButton = document.createElement("img");
@@ -246,13 +255,15 @@ function setBookmarkBtn() {
 		});
 	}
 }
+
+
 // 댓글 등록 버튼
 async function submitComment() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const article_id = urlParams.get("article_id");
-	const commentElement = document.getElementById("new-comment")
-	const newComment = commentElement.value
-	await createComment(article_id, newComment)
-	commentElement.value = ""
-	loadComments(article_id)
+	const commentElement = document.getElementById("new-comment");
+	const newComment = commentElement.value;
+	await createComment(article_id, newComment);
+	commentElement.value = "";
+	loadComments(article_id);
 }

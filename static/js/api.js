@@ -1,6 +1,6 @@
 console.log("api.js 연결됨");
 
-const frontend_base_url = "http://127.0.0.1:5501";
+const frontend_base_url = "http://127.0.0.1:5500";
 const backend_base_url = "http://127.0.0.1:8000";
 // "http://13.209.68.214:8000";
 

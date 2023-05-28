@@ -76,3 +76,7 @@ async function postArticle() {
 		window.location.replace(`${frontend_base_url}/`);
 	}
 }
+
+window.onload = function() {
+	checkNotLogin();
+}

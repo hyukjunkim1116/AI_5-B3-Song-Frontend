@@ -29,8 +29,9 @@ async function loadComments(article_id) {
 			}
 		});
 	}
+	response.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-	response.forEach(async (comment) => {
+	for (const comment of response) {
 		let buttons = `
 		<div class="col d-grid gap-2 d-md-flex justify-content-end p-2 text-nowrap ">
 		<section class="like-i">
@@ -63,7 +64,6 @@ async function loadComments(article_id) {
 		</span>
 		</section>
 		</div>`;
-
 		// 프로필 사진 넣기 위한 부분(있으면 그대로 넣고 없으면 대체 이미지)
 		const comment_user = await getOtherUser(comment.user_id);
 		if (comment_user.avatar) {
@@ -127,7 +127,7 @@ async function loadComments(article_id) {
 				dislike.setAttribute("style", "display:none;");
 			}
 		});
-	});
+	}
 }
 
 function youtubeLink(link) {

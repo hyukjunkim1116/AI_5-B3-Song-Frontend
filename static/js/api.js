@@ -1,6 +1,6 @@
 console.log("api.js 연결됨");
 
-const frontend_base_url = "http://127.0.0.1:5500";
+const frontend_base_url = "goodminjeong.github.io/AI_5-B3-Song-Frontend";
 const backend_base_url = "http://43.201.23.98:8000";
 
 // 로그인 상태에서 로그인, 회원가입 페이지 접속 시 홈으로 이동하는 함수

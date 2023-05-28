@@ -10,20 +10,6 @@ function articleUpdate(article_id) {
 }
 
 
-// 댓글안에 링크찾아다가 하이퍼링크로 바꿔주기
-function linkify(text) {
-	const urlRegex = /(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
-	return text.replace(urlRegex, function (url) {
-		const href = url.startsWith("http") ? url : "http://" + url;
-		is_yt = youtubeLink(href)
-		if (is_yt) {
-			return `<img onclick="linkToIframe('${is_yt}')" class="mb-1 custom-link" style="width:20px;" src="../static/image/youtube.svg" alt="">`
-		}
-		else {
-			return `<span onclick="window.open('${href}', '_blank', 'noopener noreferrer')" class="custom-link">🔗</span>`;;
-		}
-	});
-}
 
 
 // 댓글 목록 로드하기
@@ -92,23 +78,17 @@ async function loadComments(article_id) {
             `;
 		}
 
-		commentsList.innerHTML += `
-        <li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
-		<div class="img-thumbnail rounded-circle" width="50" 
-		style="height:50px!important; width: 50px;
-		height: 50px;
-		background-size: cover;
-		background-position: center;
-		background-image: url(${comment_user_avatar});
-		border: none;
-		"></div>
-		<div class="media-body">
-			<h6 class="mt-1 mb-1 ms-1 me-1" style="cursor:pointer; width: fit-content;" onclick="location.href='${frontend_base_url}/users/profile.html?user_id=${comment.user_id}'" >${comment.user}</h6>
-			<span class="mt-1 mb-1 ms-1 me-1 cmt-text" style="word-break: break-all; white-space: pre-line;">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
-		</div>
-            ${buttons}
-        </li >
-			`;
+		commentsList.innerHTML += `<li class="media d-flex align-items-center mt-2 mb-2 mr-2 border border-dark rounded">
+										<div class="img-thumbnail rounded-circle" 
+											width="50" 
+											style="height:50px!important; width: 50px; height: 50px; background-size: cover; background-position: center; background-image: url(${comment_user_avatar}); border: none;">
+										</div>
+										<div class="media-body">
+											<h6 class="mt-1 mb-1 ms-1 me-1" style="cursor:pointer; width: fit-content;" onclick="location.href='${frontend_base_url}/users/profile.html?user_id=${comment.user_id}'" >${comment.user}</h6>
+											<span class="mt-1 mb-1 ms-1 me-1 cmt-text" style="word-break: break-all; white-space: pre-line;">${linkify(comment.comment)}</span> <!-- 이 부분을 수정하여 링크 변환을 반영 -->
+										</div>
+											${buttons}
+									</li >`;
 
 		//좋아요 하트색 세팅
 		if (token) {
@@ -122,8 +102,28 @@ async function loadComments(article_id) {
 			});
 		}
 	};
+	// 로드 후 댓글의 첫번째(혹은 가장 위의) 유튜브 링크를 실행시켜줌.(만약 있다면)
+	const ytfirst = document.querySelector(".yt-link")
+	const ytiframe = document.querySelector("iframe")
+	if (ytfirst && !ytiframe) {
+		ytfirst.onclick()
+	}
 }
 
+// 댓글안에 링크찾아다가 하이퍼링크로 바꿔주기
+function linkify(text) {
+	const urlRegex = /(((https?:\/\/)|www\.)[^\s]+(\([^\s]+\)|[^\s.,!?:;\"'<>()\[\]\\/]|\/))/gi;
+	return text.replace(urlRegex, function (url) {
+		const href = url.startsWith("http") ? url : "http://" + url;
+		is_yt = youtubeLink(href)
+		if (is_yt) {
+			return `<img onclick="linkToIframe('${is_yt}')" class="mb-1 custom-link yt-link" style="width:20px;" src="../static/image/youtube.svg" alt="">`
+		}
+		else {
+			return `<span onclick="window.open('${href}', '_blank', 'noopener noreferrer')" class="custom-link">🔗</span>`;;
+		}
+	});
+}
 
 // 유튜브 링크인지 확인하는 함수
 function youtubeLink(link) {
@@ -134,9 +134,7 @@ function youtubeLink(link) {
 	if (match) {
 		const videoId = match[1];
 		return videoId;
-		return videoId;
 	} else {
-		return null;
 		return null;
 	}
 }
@@ -196,14 +194,15 @@ window.onload = async function () {
 	// 댓글을 화면에 표시하기
 	loadComments(article_id);
 
-	// 로그인 안한 유저 댓글 입력창 안보이게
+	// 북마크 보여주기 & 로그인 안한 유저 댓글 입력창 안보이게
 	if (token) {
 		setBookmarkBtn(article);
 	}
 	else {
 		const writebox = document.querySelector(".comment-writebox");
 		writebox.style.display = "none"
-	}
+	};
+
 };
 
 
@@ -263,8 +262,6 @@ async function setBookmarkBtn(article) {
 
 // 댓글 등록 버튼
 async function submitComment() {
-	const urlParams = new URLSearchParams(window.location.search);
-	const article_id = urlParams.get("article_id");
 	const commentElement = document.getElementById("new-comment");
 	const newComment = commentElement.value;
 	await createComment(article_id, newComment);

@@ -32,7 +32,8 @@ async function loadComments(article_id) {
 	const login_user = await getLoginUser();
 	const commentsList = document.getElementById("comments-list");
 	commentsList.innerHTML = "";
-	response.forEach(async (comment) => {
+	response.sort((a, b) => new Date(a.date) - new Date(b.date));
+	for (const comment of response) {
 		let buttons = `<div class="col d-grid gap-2 d-md-flex justify-content-end text-nowrap ">
 							<section class="like-i">
 							<span class="like-i2">
@@ -66,11 +67,10 @@ async function loadComments(article_id) {
 						</div>`;
 
 		// 프로필 사진 넣기 위한 부분(있으면 그대로 넣고 없으면 대체 이미지)
-		// const comment_user = await getOtherUser(comment.user_id)
 		if (comment.user_avatar) {
 			comment_user_avatar = comment.user_avatar
 		} else {
-			comment_user_avatar = "../static/image/free-icon-music-6599985.png"
+			comment_user_avatar = "../static/image/free-icon-music-6599985.png";
 		}
 
 		// 로그인 한 유저와 댓글 작성자가 같고 첫 번째 댓글인 경우 하트에 삭제 버튼 추가
@@ -121,8 +121,7 @@ async function loadComments(article_id) {
 				}
 			});
 		}
-
-	});
+	};
 }
 
 
@@ -135,7 +134,9 @@ function youtubeLink(link) {
 	if (match) {
 		const videoId = match[1];
 		return videoId;
+		return videoId;
 	} else {
+		return null;
 		return null;
 	}
 }
@@ -143,16 +144,19 @@ function youtubeLink(link) {
 
 // 유튜브 영상을 누르면 iframe에 띄워주기
 async function linkToIframe(ytVideoId) {
-	const url = `https://www.youtube.com/embed/${ytVideoId}`
+	const url = `https://www.youtube.com/embed/${ytVideoId}`;
 	const youtubeBox = document.getElementById("youtube-container");
-	youtubeBox.innerHTML = ""
+	youtubeBox.innerHTML = "";
 	ytiframe = document.createElement("iframe");
 	ytiframe.setAttribute("width", "560");
 	ytiframe.setAttribute("height", "315");
 	ytiframe.setAttribute("frameborder", "0");
 	ytiframe.setAttribute("title", "YouTube video player");
 	ytiframe.setAttribute("src", `${url}`);
-	ytiframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share")
+	ytiframe.setAttribute(
+		"allow",
+		"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+	);
 	youtubeBox.appendChild(ytiframe);
 	youtubeBox.scrollIntoView({ behavior: "smooth", block: "center" });
 }

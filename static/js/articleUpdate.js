@@ -6,7 +6,7 @@ const articleId = urlParams.get("article_id");
 
 window.onload = async function loadUpdatePost() {
 	// 수정창에 기존 내용 보이게
-
+	checkNotLogin();
 	const exist_post = await getArticle(articleId);
 	const updateTitle = document.getElementById("article_title");
 	updateTitle.value = exist_post.title;

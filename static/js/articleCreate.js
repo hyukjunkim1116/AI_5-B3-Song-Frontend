@@ -11,9 +11,9 @@ async function postArticle() {
 	const token = localStorage.getItem("access");
 	const title = document.getElementById("article_title").value;
 	const content = document.getElementById("article_content").value;
+	const file = document.getElementById("file").files[0];
 
 	const formdata = new FormData();
-
 	formdata.append("title", title);
 	formdata.append("content", content);
 
@@ -26,22 +26,17 @@ async function postArticle() {
 	});
 	const responseData = await response.json();
 
-	const file = document.getElementById("file").files[0];
 	if (file) {
 		const responseURL = await fetch(
 			`${backend_base_url}/api/medias/photos/get-url/`,
 			{
-				headers: {
-					// "X-CSRFToken": Cookie.get("csrftoken") || "",
-					// Authorization: `Bearer ${token}`
-				},
 				method: "POST"
 			}
 		);
 		const dataURL = await responseURL.json();
 		console.log(dataURL["uploadURL"]);
-		//실제로 클라우드플레어에 업로드
 
+		//실제로 클라우드플레어에 업로드
 		const formData = new FormData();
 		formData.append("file", file);
 		const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
@@ -75,4 +70,9 @@ async function postArticle() {
 		alert("작성 실패!");
 		window.location.replace(`${frontend_base_url}/`);
 	}
+}
+
+
+window.onload = async function() {
+	checkNotLogin();
 }

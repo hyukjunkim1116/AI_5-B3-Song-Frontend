@@ -1,9 +1,22 @@
 //아티클 업데이트 하기
 console.log("articleUpdate.js 로드됨");
+
+const urlParams = new URLSearchParams(window.location.search);
+const articleId = urlParams.get("article_id");
+
+window.onload = async function loadUpdatePost() {
+	// 수정창에 기존 내용 보이게
+	checkNotLogin();
+	const exist_post = await getArticle(articleId);
+	const updateTitle = document.getElementById("article_title");
+	updateTitle.value = exist_post.title;
+
+	const updateContent = document.getElementById("article_content");
+	updateContent.value = exist_post.content;
+};
+
 // 아티클 사진 삭제
 async function articlePhotoDelete() {
-	const urlParams = new URLSearchParams(window.location.search);
-	const articleId = urlParams.get("article_id");
 	const exist_post = await getArticle(articleId);
 	if (exist_post.photos[0]) {
 		const response = await fetch(
@@ -25,18 +38,9 @@ async function articlePhotoDelete() {
 	}
 	location.reload();
 }
-//아티클 업데이트 페이지 들어가면 실행되는 함수. file input은 설정 불가
-window.onload = async function loadUpdatePost() {
-	const urlParams = new URLSearchParams(window.location.search);
-	const articleId = urlParams.get("article_id");
-	const exist_post = await getArticle(articleId);
-	// 수정창에 기존 내용 보이게
-	const updateTitle = document.getElementById("article_title");
-	updateTitle.value = exist_post.title;
 
-	const updateContent = document.getElementById("article_content");
-	updateContent.value = exist_post.content;
-};
+//아티클 업데이트 페이지 들어가면 실행되는 함수. file input은 설정 불가
+
 async function articleUpdate() {
 	const updateBtn = document.getElementById("submit-btn");
 	updateBtn.innerText = "";
@@ -47,15 +51,12 @@ async function articleUpdate() {
 	span.setAttribute("aria-hidden", "true");
 	updateBtn.appendChild(span);
 
-	const urlParams = new URLSearchParams(window.location.search);
-	const articleId = urlParams.get("article_id");
 	const exist_post = await getArticle(articleId);
-
 	const title = document.getElementById("article_title").value;
 	const content = document.getElementById("article_content").value;
+	const file = document.getElementById("file").files[0];
 
 	const formdata = new FormData();
-
 	formdata.append("title", title);
 	formdata.append("content", content);
 
@@ -69,7 +70,7 @@ async function articleUpdate() {
 			method: "PUT"
 		}
 	);
-	const file = document.getElementById("file").files[0];
+
 	if (file) {
 		const responseURL = await fetch(
 			`${backend_base_url}/api/medias/photos/get-url/`,
@@ -78,6 +79,7 @@ async function articleUpdate() {
 			}
 		);
 		const dataURL = await responseURL.json();
+
 		//실제로 클라우드플레어에 업로드
 		const formData = new FormData();
 		formData.append("file", file);
@@ -87,13 +89,13 @@ async function articleUpdate() {
 		});
 		const results = await responseRealURL.json();
 		const realFileURL = results.result.variants[0];
+
 		// 아티클 사진 백엔드로 업로드
 		if (exist_post.photos[0]) {
 			const responseUpload = await fetch(
 				`${backend_base_url}/api/medias/photos/${exist_post.photos[0].pk}/`,
 				{
 					headers: {
-						// "X-CSRFToken": Cookie.get("csrftoken") || "",
 						Authorization: `Bearer ${token}`,
 						"content-type": "application/json"
 					},
@@ -109,7 +111,6 @@ async function articleUpdate() {
 				`${backend_base_url}/api/articles/${article_id}/photos/`,
 				{
 					headers: {
-						// "X-CSRFToken": Cookie.get("csrftoken") || "",
 						Authorization: `Bearer ${token}`,
 						"content-type": "application/json"
 					},

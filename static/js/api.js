@@ -76,6 +76,22 @@ function handleLogout() {
 	window.location.replace(`${frontend_base_url}/`);
 }
 
+// 강제 로그아웃
+function forceLogout() {
+	const payload = localStorage.getItem("payload");
+	let current_time = new Date().getTime();
+	if (payload) {
+		const payload_parse = JSON.parse(payload);
+		if (payload_parse.exp < current_time) {
+			handleLogout();
+		}
+		else {
+			return
+		}
+
+	}
+}
+
 // 전체 유저 정보 조회 - 관리자용 (아직 권한제한 미구현)
 async function getAllUser() {
 	const response = await fetch(`${backend_base_url}/api/users/`, {

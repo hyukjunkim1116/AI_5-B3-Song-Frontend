@@ -73,6 +73,7 @@ async function postArticle() {
 }
 
 
-window.onload = async function() {
-	checkNotLogin();
+window.onload = async function () {
+	checkNotLogin(); // 로그인 한 사용자만 게시글 작성 가능
+	forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
 }

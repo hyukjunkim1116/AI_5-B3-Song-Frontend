@@ -1,12 +1,12 @@
 //아티클 업데이트 하기
-console.log("articleUpdate.js 로드됨");
-
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get("article_id");
 
 window.onload = async function loadUpdatePost() {
+	checkNotLogin(); // 로그인 한 사용자만 게시글 작성 가능
+	forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
+
 	// 수정창에 기존 내용 보이게
-	checkNotLogin();
 	const exist_post = await getArticle(articleId);
 	const updateTitle = document.getElementById("article_title");
 	updateTitle.value = exist_post.title;

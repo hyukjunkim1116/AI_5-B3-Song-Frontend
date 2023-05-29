@@ -1,5 +1,3 @@
-console.log("api.js 연결됨");
-
 const frontend_base_url = "http://127.0.0.1:5500";
 const backend_base_url = "http://127.0.0.1:8000";
 // "http://13.209.68.214:8000";
@@ -76,6 +74,21 @@ function handleLogout() {
 	window.location.replace(`${frontend_base_url}/`);
 }
 
+// 강제 로그아웃
+function forceLogout() {
+	const payload = localStorage.getItem("payload");
+	let current_time = String(new Date().getTime()).substring(0,10)
+	if (payload) {
+		const payload_parse = JSON.parse(payload).exp;
+		if (payload_parse < current_time) {
+			handleLogout();
+		}
+		else {
+			return
+		}
+	}
+}
+
 // 전체 유저 정보 조회 - 관리자용 (아직 권한제한 미구현)
 async function getAllUser() {
 	const response = await fetch(`${backend_base_url}/api/users/`, {
@@ -83,7 +96,6 @@ async function getAllUser() {
 	});
 	if (response.status == 200) {
 		response_json = await response.json();
-		console.log(response_json);
 		return response_json;
 	} else {
 		alert(response.statusText);

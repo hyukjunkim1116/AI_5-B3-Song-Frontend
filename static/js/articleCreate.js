@@ -34,7 +34,6 @@ async function postArticle() {
 			}
 		);
 		const dataURL = await responseURL.json();
-		console.log(dataURL["uploadURL"]);
 
 		//실제로 클라우드플레어에 업로드
 		const formData = new FormData();
@@ -73,6 +72,7 @@ async function postArticle() {
 }
 
 
-window.onload = async function() {
-	checkNotLogin();
+window.onload = async function () {
+	checkNotLogin(); // 로그인 한 사용자만 게시글 작성 가능
+	forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
 }

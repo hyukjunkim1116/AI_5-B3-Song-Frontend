@@ -1,5 +1,24 @@
-.container {
-    background: rgba(45, 176, 217, 0.3);
+main {
+    display: flex;
+}
+
+.container-login {
+    margin: auto;
+}
+
+.container-signup {
+    margin: 2em auto!important;
+    background-color: rgb(112, 167, 167);
+    border-radius: 1em;
+    padding: 2em;
+}
+
+.login-box {
+    background-color: rgb(156, 135, 109);
+    border:double 2px solid;
+    border-color: black;
+    border-radius: 1em;
+    padding: 2em;
 }
 
 select option[value=""][disabled] {
@@ -9,7 +28,7 @@ select option[value=""][disabled] {
 .social-login {
     display: flex;
     justify-content: space-around;
-    margin: 2em 2em;
+    margin: 2em;
 }
 
 .social-btn {
@@ -21,4 +40,10 @@ select option[value=""][disabled] {
     background-color: transparent;
     width: 50px;
     height: auto;
+}
+
+.sign-btn {
+    border-color: rgba(0, 0, 0, 0.6)!important;
+    color: rgba(0, 0, 0, 0.7)!important;
+    background-color: rgba(226, 226, 226, 0.37)!important;
 }

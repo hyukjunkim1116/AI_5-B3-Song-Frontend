@@ -155,8 +155,8 @@ function articleDetail(article_id) {
 }
 
 // 메인 댓글 목록 UI
-function commentList(comments, list_div) {
-	comments.forEach(async (comment) => {
+async function commentList(comments, list_div) {
+	for (const comment of comments) {
 		const newCardBox = document.createElement("li");
 		newCardBox.setAttribute("class", "card-box");
 
@@ -205,11 +205,13 @@ function commentList(comments, list_div) {
 		newCardBody.appendChild(newCardlike);
 
 		list_div.appendChild(newCardBox);
-	});
+	};
 }
 
 //메인페이지 좋아요순 댓글, 최신순 게시글 가져오기
 window.onload = async function () {
+	forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
+
 	const like_comments = await getComments();
 	like_comments.sort((x, y) => y.like_count - x.like_count);
 

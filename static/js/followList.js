@@ -1,6 +1,3 @@
-console.log("follow_list 로드됨")
-
-
 // 팔로잉 페이지네이션
 async function paginationView_following(following) {
     const contents = document.getElementById("article-list-myo");
@@ -12,7 +9,7 @@ async function paginationView_following(following) {
     const maxPage = Math.ceil(numOfContent / maxContent);
     let page = 1;
     const makeContent = (id) => {
-        if (!following[id].avatar){
+        if (!following[id].avatar) {
             following[id].avatar = "../static/image/free-icon-music-6599985.png"
         }
         const content_myo = document.createElement("tr");
@@ -113,7 +110,7 @@ async function paginationView_follower(follower) {
     let page = 1;
 
     const makeContent = (id) => {
-        if (!follower[id].avatar){
+        if (!follower[id].avatar) {
             follower[id].avatar = "../static/image/free-icon-music-6599985.png"
         }
         const content_kmj = document.createElement("tr");
@@ -204,14 +201,14 @@ async function paginationView_follower(follower) {
 // 글 목록 가져오기
 // 글목록 버튼을 누른 경우랑 검색 버튼을 누른 경우 결과값을 다르게 가져옴
 window.onload = async function () {
+    forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
+
     let getParams = window.location.search;
-	let userParams = getParams.split("=")[1];
+    let userParams = getParams.split("=")[1];
     const user_id = userParams;
     let user = await getOtherUser(user_id)
     following = user.followings;
     follower = user.followers;
-
-    console.log("확인하자",user)
     document.getElementById("user_myo")
 
     // 팔로잉 Json 배열로 만들기
@@ -220,7 +217,7 @@ window.onload = async function () {
         user = await getOtherUser(following[i]);
         following_users.push(user);
     }
-    
+
     // 팔로워 Json 배열로 만들기
     let follower_users = [];
     for (let i = 0; i < follower.length; i++) {

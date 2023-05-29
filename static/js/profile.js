@@ -77,6 +77,8 @@ async function userUpdate() {
 }
 
 window.onload = async function () {
+	forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
+
 	let getParams = window.location.search;
 	let userParams = getParams.split("=")[1];
 	const user_id = userParams;

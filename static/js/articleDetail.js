@@ -188,6 +188,8 @@ async function setArticle(article) {
 
 // 게시글 상세보기 페이지가 로드될 때 실행되는 함수
 window.onload = async function () {
+	forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
+
 	const article = await getArticle(article_id);
 	// 게시글 로딩
 	setArticle(article);

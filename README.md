@@ -6,8 +6,6 @@ AI로 노래를 추천 받고, 유저들 간에 서로 노래를 추천해주면
 
 ## 🕰️ 개발 기간
 * 23.05.22 - 23.05.29
-<br>
-<br>
 
 ### 🧑‍🤝‍🧑 팀원 구성 및 역할 분담
 - 팀장😄 <a href="https://guco.tistory.com/">구민정</a><br>[BE] 댓글 좋아요, 게시글 북마크, 검색 기능, 테스트코드 <br>[FE] 메인페이지, 게시글 목록, 댓글 좋아요, 게시글 북마크
@@ -15,8 +13,6 @@ AI로 노래를 추천 받고, 유저들 간에 서로 노래를 추천해주면
 - 팀원😄 <a href="https://codemte.tistory.com/">김광운</a><br>[BE] 유저 모델, 로그인(토큰 방식), 회원가입, 소셜 로그인 <br>[FE] 게시글 상세보기, 댓글 유튜브 iframe, Header, Footer, 소셜 로그인
 - 팀원😄 <a href="https://05-archives.tistory.com/">문영오</a><br>[BE] 유저 프로필(RUD), 팔로잉, 유저시리얼라이저   <br>[FE] 프로필페이지, 팔로잉 리스트, 유저 정보수정 
 - 팀원😄 <a href="https://woongpang.tistory.com/">이기웅</a><br>[BE] 댓글 모델(CRUD), OPENAI , YOUTUBE API 연동 <br>[FE] 댓글 CRUD, 수정&삭제 버튼 권한부여
-<br>
-<br>
 
 ## ⚙️ 개발 환경 (Tech Stack)
 - **Language** : `Python 3.11`
@@ -29,35 +25,19 @@ AI로 노래를 추천 받고, 유저들 간에 서로 노래를 추천해주면
 
 ## <b>🦊 BE 😼</b>
 
-<img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"> 
-<img src="https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white">
-<img src="https://img.shields.io/badge/poetry-60A5FA?style=for-the-badge&logo=poetry&logoColor=white"/>
-<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-<img src="https://img.shields.io/badge/openai-412991?style=for-the-badge&logo=openai&logoColor=white"/>
+<img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"><img src="https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white"><img src="https://img.shields.io/badge/poetry-60A5FA?style=for-the-badge&logo=poetry&logoColor=white"/><img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/openai-412991?style=for-the-badge&logo=openai&logoColor=white"/>
 <br>
 <br>
 
 ## <b>😈 FE 👽</b>
 
-<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
-<img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
-<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> 
-<img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white">
-<img src="https://img.shields.io/badge/ionicons-3880FF?style=for-the-badge&logo=ionic&logoColor=white"/>
-<img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
+<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"><img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"><img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"><img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white"><img src="https://img.shields.io/badge/ionicons-3880FF?style=for-the-badge&logo=ionic&logoColor=white"/><img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
 <br>
 <br>
 
 ## <b>🦝ETC🦄</b>
 
-<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-<img src="https://img.shields.io/badge/cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white"/>
-<img src="https://img.shields.io/badge/gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white">
-<img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=nginx&logoColor=white"/>
-<img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"/>
-<img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"/>
-<img src="https://img.shields.io/badge/visualstudiocode-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"/>
-
+<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"><img src="https://img.shields.io/badge/cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white"/><img src="https://img.shields.io/badge/gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white"><img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=nginx&logoColor=white"/><img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"/><img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"/><img src="https://img.shields.io/badge/visualstudiocode-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"/>
 <br>
 <br>
 

@@ -37,7 +37,6 @@ async function kakaoLoginBtn() {
 }
 
 async function googleLoginBtn() {
-    console.log("google")
     const response = await fetch(`${backend_base_url}/api/users/google/`, { method: 'GET' })
     const google_id = await response.json()
     const redirect_uri = `${frontend_base_url}/index.html`

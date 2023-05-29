@@ -1,4 +1,3 @@
-console.log("articleDetail.js 로드됨");
 let article_id = new URLSearchParams(window.location.search).get("article_id");
 const token = localStorage.getItem("access");
 const payload = JSON.parse(localStorage.getItem("payload"));

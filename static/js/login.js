@@ -1,5 +1,3 @@
-console.log("login.js 연결됨")
-
 checkLogin();
 
 // 로그인 폼 다 쓰고 로그인 눌렀을 때 실행되는 함수
@@ -48,7 +46,6 @@ async function googleLoginBtn() {
 async function naverLoginBtn() {
     const response = await fetch(`${backend_base_url}/api/users/naver/`, { method: 'GET' });
     const naver_id = await response.json();
-    console.log(naver_id)
     const redirect_uri = `${frontend_base_url}/index.html`;
     const state = new Date().getTime().toString(36);
     window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naver_id}&redirect_uri=${redirect_uri}&state=${state}`;

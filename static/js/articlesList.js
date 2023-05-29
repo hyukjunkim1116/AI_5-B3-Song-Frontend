@@ -1,5 +1,3 @@
-console.log("articles_list 연결됨")
-
 // 페이지네이션
 async function paginationView(articles) {
     const contents = document.getElementById("article-list-kmj");

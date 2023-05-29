@@ -1,4 +1,3 @@
-console.log("loader.js 로드됨");
 // navbar.html을 가져옴
 // 로그인 되지 않은 상태에서는 글쓰기가 안 보이고, 로그인 된 상태라면 로그인이 안 보이고 로그아웃 버튼이 생김
 async function injectNavbar() {
@@ -145,7 +144,6 @@ async function putUser() {
 		const nickname = document.getElementById("nickname_update").value;
 		const gender = document.getElementById("gender_update").value;
 		const age = document.getElementById("age_update").value;
-		console.log(payload_parse);
 		if (!password && payload_parse.login_type === "normal") {
 			return alert("비밀번호를 입력해주세요.");
 		}
@@ -187,7 +185,6 @@ async function putUser() {
 				}
 			);
 			const dataURL = await responseURL.json();
-			console.log(dataURL["uploadURL"]);
 			//실제로 클라우드플레어에 업로드
 			const formData = new FormData();
 			formData.append("file", avatar);

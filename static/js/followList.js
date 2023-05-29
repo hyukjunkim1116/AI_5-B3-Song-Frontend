@@ -1,6 +1,3 @@
-console.log("follow_list 로드됨")
-
-
 // 팔로잉 페이지네이션
 async function paginationView_following(following) {
     const contents = document.getElementById("article-list-myo");
@@ -212,8 +209,6 @@ window.onload = async function () {
     let user = await getOtherUser(user_id)
     following = user.followings;
     follower = user.followers;
-
-    console.log("확인하자", user)
     document.getElementById("user_myo")
 
     // 팔로잉 Json 배열로 만들기

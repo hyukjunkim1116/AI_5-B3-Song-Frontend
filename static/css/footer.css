@@ -67,3 +67,24 @@ footer {
         display: none;
     }
 }
+
+.supportbtn {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.toast-img {
+    width: auto;
+    height: auto;
+    object-fit: cover;
+}
+
+.toast-container {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    justify-content: center;
+    align-items: center;
+}

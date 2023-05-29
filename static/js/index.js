@@ -155,8 +155,8 @@ function articleDetail(article_id) {
 }
 
 // 메인 댓글 목록 UI
-function commentList(comments, list_div) {
-	comments.forEach(async (comment) => {
+async function commentList(comments, list_div) {
+	for (const comment of comments) {
 		const newCardBox = document.createElement("li");
 		newCardBox.setAttribute("class", "card-box");
 
@@ -205,7 +205,7 @@ function commentList(comments, list_div) {
 		newCardBody.appendChild(newCardlike);
 
 		list_div.appendChild(newCardBox);
-	});
+	};
 }
 
 //메인페이지 좋아요순 댓글, 최신순 게시글 가져오기

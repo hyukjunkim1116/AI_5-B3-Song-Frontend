@@ -1,6 +1,4 @@
 //아티클 업데이트 하기
-console.log("articleUpdate.js 로드됨");
-
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get("article_id");
 

@@ -17,9 +17,6 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 
-        <script src="/static/js/api.js"></script>
-        <script src="/static/js/loader.js"></script>
-    <script src="/static/js/signup.js"></script>
 
     <title>띵곡맛집 | 회원가입</title>
 </head>
@@ -27,10 +24,9 @@
 <body>
     <header></header>
     <main>
-
-        <div class="container w-50 mt-3">
+        <div class="container container-signup w-50">
             <form>
-                <h2 class="text-center">SIGN UP</h2>
+                <h2 class="text-center">회원가입</h2>
                 <div class="mb-3">
                     <label for="Email" class="form-label">이메일</label>
                     <input type="email" class="form-control" name="email" id="email" placeholder="이메일">
@@ -61,15 +57,19 @@
                     <input type="number" class="form-control" name="age" id="age" placeholder="나이">
                 </div>
                 <div class="text-center mb-3">
-                    <a href="/users/login.html" class="link-primary">이미 계정이 있다면?</a>
+                    <a href="/users/login.html" style="text-decoration: none;" class="link-primary">이미 계정이 있다면?</a>
                 </div>
                 <div class="text-center">
-                    <button class="btn btn-outline-primary" type="button" onclick="handleSignupBtn()">가입하기</button>
+                    <button class="sign-btn btn btn-outline-primary" type="button"
+                        onclick="handleSignupBtn()">가입하기</button>
                 </div>
             </form>
         </div>
     </main>
     <footer></footer>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/loader.js"></script>
+    <script src="/static/js/signup.js"></script>
 </body>
 
 </html>

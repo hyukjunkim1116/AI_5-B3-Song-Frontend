@@ -124,7 +124,7 @@ async function putUser() {
 	const payload_parse = JSON.parse(payload);
 
 	if (msg === true) {
-		const updateBtn = document.getElementById("update-btn");
+		// 로딩 수정버튼 붙이기 
 		const updateBtnChildDiv = document.querySelector("#updateBtn div");
 		updateBtnChildDiv.innerText = "";
 		const span = document.createElement("span");
@@ -133,28 +133,51 @@ async function putUser() {
 		span.setAttribute("role", "status");
 		span.setAttribute("aria-hidden", "true");
 		updateBtnChildDiv.appendChild(span);
+
 		let token = localStorage.getItem("access");
 
 		update_body = {};
 
+		//유저가 사진을 업로드했으면 아래 if문 실행(사진업데이트)
+		const avatar = document.getElementById("file").files[0];
+		if (avatar) {
+			const responseURL = await fetch(
+				`${backend_base_url}/api/medias/photos/get-url/`,
+				{
+					method: "POST"
+				}
+			);
+			const dataURL = await responseURL.json();
+			console.log(dataURL["uploadURL"]);
+			//실제로 클라우드플레어에 업로드
+			const formData = new FormData();
+			formData.append("file", avatar);
+			const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
+				body: formData,
+				method: "POST"
+			});
+			const results = await responseRealURL.json();
+			const realFileURL = results.result.variants[0];
+			update_body["avatar"] = realFileURL;
+		}
+
 		const password = document.getElementById("password_update").value;
-		const passwordCheck = document.getElementById(
-			"password-check_update"
-		).value;
+		const passwordCheck = document.getElementById("password-check_update").value;
 		const nickname = document.getElementById("nickname_update").value;
 		const gender = document.getElementById("gender_update").value;
 		const age = document.getElementById("age_update").value;
+		// 일반 유저가 비밀번호를 입력하지 않았을 경우 입력안내
 		if (!password && payload_parse.login_type === "normal") {
 			return alert("비밀번호를 입력해주세요.");
 		}
-		// 변경사항이 있을 경우에만 추가
-		if (password) {
+		if (password) { 
 			if (password === passwordCheck) {
 				update_body["password"] = password;
-			} else {
+			}else{
 				return alert("비밀번호가 일치하지 않습니다.");
 			}
 		}
+		// 변경사항이 있을 경우에만 추가
 		if (nickname) {
 			update_body["nickname"] = nickname;
 		}
@@ -175,41 +198,7 @@ async function putUser() {
 				body: JSON.stringify(update_body)
 			}
 		);
-		//유저가 사진을 업로드했으면 아래 if문 실행(사진업데이트)
-		const avatar = document.getElementById("file").files[0];
-		if (avatar) {
-			const responseURL = await fetch(
-				`${backend_base_url}/api/medias/photos/get-url/`,
-				{
-					method: "POST"
-				}
-			);
-			const dataURL = await responseURL.json();
-			//실제로 클라우드플레어에 업로드
-			const formData = new FormData();
-			formData.append("file", avatar);
-			const responseRealURL = await fetch(`${dataURL["uploadURL"]}`, {
-				body: formData,
-				method: "POST"
-			});
-			const results = await responseRealURL.json();
-			const realFileURL = results.result.variants[0];
-			// 유저 프로필 사진 백엔드로 업로드
-			const responseUpload = await fetch(
-				`${backend_base_url}/api/users/profile/${payload_parse.user_id}/`,
-				{
-					headers: {
-						// "X-CSRFToken": Cookie.get("csrftoken") || "",
-						Authorization: `Bearer ${token}`,
-						"content-type": "application/json"
-					},
-					body: JSON.stringify({
-						avatar: realFileURL
-					}),
-					method: "PUT"
-				}
-			);
-		}
+
 		if (response.status == 200) {
 			response_json = await response.json();
 		} else {
@@ -219,7 +208,7 @@ async function putUser() {
 	}
 }
 
-// 유저 프로필 정보 수정하기 - 미완성
+// 유저 프로필 정보 수정하기
 function userProfileUpdate(user, list_div) {
 	// 프로필이미지가 없다면 기본 이미지로
 	if (user.avatar) {
@@ -235,12 +224,12 @@ function userProfileUpdate(user, list_div) {
 	<input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
 	<div class="mb-3">
 					<label for="Password" class="form-label">비밀번호</label>
-					<input type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
+					<input type="password" class="form-control" name="password" id="password_update" placeholder="*비밀번호">
 				</div>
 				<div class="mb-3">
 					<label for="Password-check" class="form-label">비밀번호 확인</label>
 					<input type="password" class="form-control" name="password-check" id="password-check_update"
-						placeholder="비밀번호 확인">
+						placeholder="*비밀번호 확인">
 				</div>
 				<div class="mb-3">
 					<label for="Nickname" class="form-label">닉네임</label>
@@ -264,11 +253,11 @@ function userProfileUpdate(user, list_div) {
 		list_div.innerHTML += `
     <div id="image_container"></div>
     <input onchange="setThumbnail(event);" name="file" type="file" class="form-control" id="file" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
-    <div class="mb-3">
+    <div style="display:none;" class="mb-3">
                     <label for="Password" class="form-label">비밀번호</label>
                     <input disabled type="password" class="form-control" name="password" id="password_update" placeholder="비밀번호">
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display:none;" >
                     <label for="Password-check" class="form-label">비밀번호 확인</label>
                     <input disabled type="password" class="form-control" name="password-check" id="password-check_update"
                         placeholder="비밀번호 확인">
@@ -307,7 +296,7 @@ function userArticleList(articles, list_div) {
 	list_div.innerHTML = "";
 	const newCardBox = document.createElement("div");
 	newCardBox.setAttribute("class", "card-box");
-	articles.forEach(async (article) => {
+	for (const article of articles) {
 		const newCard = document.createElement("div");
 		newCard.setAttribute("class", "card");
 		newCard.setAttribute("onclick", `articleDetail(${article.pk})`);
@@ -350,7 +339,7 @@ function userArticleList(articles, list_div) {
 		newCardBody.appendChild(newCardtime);
 
 		list_div.appendChild(newCardBox);
-	});
+	};
 }
 
 // 유저 댓글 목록 UI

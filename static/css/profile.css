@@ -1,11 +1,12 @@
 .box1 {
     border:5px ridge;
-    background-color: aquamarine;
+    background-color:rgb(112, 167, 167);
     max-width: 450px;
     max-height: 900px;
-    width: 40vw;
-    height: 81vh;
+    width: 30vw;
+    height: 84vh;
     text-align: center;
+    border-radius: 20px;
 }
 
 .box4{
@@ -14,12 +15,13 @@
 
 .box4>div{
     border:5px ridge;
-    background-color: rgb(238, 151, 180);
-    max-width: 800px;
+    background-color:  rgb(156, 135, 109);
+    max-width: 1000px;
     max-height: 300px;
     width: 50vw;
-    height: 27vh;
-
+    height: 28vh;
+    border-radius: 20px;
+    
 }
 
 .div-one{
@@ -37,6 +39,7 @@
     margin-top: 30px;
     background-position: center;
     background-size: cover;
+    border-radius: 4%;
 
 }
 
@@ -69,6 +72,7 @@
     display:flex;
     flex-direction: row;
     margin-bottom: 2rem;
+    margin: 0 2% 0 2%;
     width: 96%;
     /* 카드 2단 배치 */
     padding: 0 1rem;
@@ -76,19 +80,38 @@
     max-height: 200px;
     overflow-x: auto;
 }
-.card-box::-webkit-scrollbar{
-    display: none;
+
+/* 아래의 모든 코드는 영역::코드로 사용 */
+.card-box::-webkit-scrollbar {
+    height: 20px;  /* 스크롤바의 너비 */
 }
 
+.card-box::-webkit-scrollbar-thumb {
+    width: 20px; /* 스크롤바의 길이 */
+    background:rgb(112, 167, 167); /* 스크롤바의 색상 */
+    background-image: url(https://cdn-icons-png.flaticon.com/512/1705/1705200.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+}
+
+.card-box::-webkit-scrollbar-track {
+    background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+}
+
+/* .card-box::-webkit-scrollbar{
+    display: none;
+} */
+
 .card{
-    width: 33%;
-    height: 100%;
+    width: 12rem;
     margin: 0 10px 0 10px;
     /* 카드 사이 간격 */
     flex: none;
 }
 
 .card-img-top{
-    height: 8rem;
+    height: 6rem;
     object-fit: cover;
 }

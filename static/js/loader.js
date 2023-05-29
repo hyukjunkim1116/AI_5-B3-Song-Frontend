@@ -296,7 +296,7 @@ function userArticleList(articles, list_div) {
 	list_div.innerHTML = "";
 	const newCardBox = document.createElement("div");
 	newCardBox.setAttribute("class", "card-box");
-	articles.forEach(async (article) => {
+	for (const article of articles) {
 		const newCard = document.createElement("div");
 		newCard.setAttribute("class", "card");
 		newCard.setAttribute("onclick", `articleDetail(${article.pk})`);
@@ -339,7 +339,7 @@ function userArticleList(articles, list_div) {
 		newCardBody.appendChild(newCardtime);
 
 		list_div.appendChild(newCardBox);
-	});
+	};
 }
 
 // 유저 댓글 목록 UI

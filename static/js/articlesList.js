@@ -99,6 +99,8 @@ async function paginationView(articles) {
 // 글 목록 가져오기
 // 글목록 버튼을 누른 경우랑 검색 버튼을 누른 경우 결과값을 다르게 가져옴
 window.onload = async function () {
+    forceLogout();  // 로그아웃은 안 했지만 토큰이 만료된 경우 강제 로그아웃
+
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get("query");
 

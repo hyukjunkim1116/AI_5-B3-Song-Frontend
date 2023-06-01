@@ -1,0 +1,22 @@
+name: deploy
+on:
+  push:
+    branches:
+      - feature/deploy
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source code.
+        uses: actions/checkout@feature/deploy
+      - name: Sync Bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          aws s3 sync \
+            --region ap-northeast-2 \
+            build s3://dding-song-front \
+            --delete
+        working-directory: ./AI_5-B3-Song-Frontend

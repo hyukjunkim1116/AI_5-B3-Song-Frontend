@@ -19,7 +19,7 @@ jobs:
               env:
                   AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
               run: |
-                aws s3 cp --recursive --region ap-northeast-2 AI_5-B3-Song-Frontend s3://${{ secrets.BUCKET_NAME }}
+                aws s3 cp --recursive --region ap-northeast-2 ./ s3://${{ secrets.BUCKET_NAME }}
             #   uses: jakejarvis/s3-sync-action@master
             #   with:
             #     args: --acl public-read --exclude '*' --recursive --include 'index.html'

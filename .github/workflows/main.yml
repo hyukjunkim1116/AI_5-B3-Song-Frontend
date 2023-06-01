@@ -13,17 +13,17 @@ jobs:
 
         steps:
             - name: Checkout source code.
-              uses: actions/checkout@feature/deploy
+              uses: actions/checkout@origin/feature/deploy
 
             - name: Upload binary to S3 Bucket
-              uses: jakejarvis/s3-sync-action@feature/deploy
+              uses: jakejarvis/s3-sync-action@origin/feature/deploy
               with:
                 args: --acl public-read --exclude '*' --include 'index.html'
               env:
                 AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
 
             - name: Invalidate cache CloudFront
-              uses: chetan/invalidate-cloudfront-action@feature/deploy
+              uses: chetan/invalidate-cloudfront-action@origin/feature/deploy
               env:
                 DISTRIBUTION: ${{ secrets.DISTRIBUTION_ID }}
                 PATHS: '/index.html'

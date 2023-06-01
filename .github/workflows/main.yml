@@ -18,14 +18,17 @@ jobs:
                 repository: 'feature/deploy'
 
             - name: Upload binary to S3 Bucket
-              uses: jakejarvis/s3-sync-action@origin/feature/deploy
+              uses: jakejarvis/s3-sync-action@v3
               with:
+                repository: 'feature/deploy'
                 args: --acl public-read --exclude '*' --include 'index.html'
               env:
                 AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
 
             - name: Invalidate cache CloudFront
-              uses: chetan/invalidate-cloudfront-action@origin/feature/deploy
+              uses: chetan/invalidate-cloudfront-action@v3
+              with:
+                repository: 'feature/deploy'
               env:
                 DISTRIBUTION: ${{ secrets.DISTRIBUTION_ID }}
                 PATHS: '/index.html'

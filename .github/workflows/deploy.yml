@@ -1,0 +1,23 @@
+# master-deploy-work.yml
+name: dding-song
+
+on:
+  push:
+    branches:
+      - feature/deploy    # master 브랜치에서 push 이벤트가 일어났을 때 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@feature/deploy
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp \
+            --recursive \
+            --region ap-northeast-2 \
+            dist s3://프로젝트이름

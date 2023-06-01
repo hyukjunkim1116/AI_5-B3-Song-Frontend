@@ -13,17 +13,17 @@ jobs:
 
         steps:
             - name: Checkout source code.
-              uses: actions/checkout@master
+              uses: actions/checkout@main
 
             - name: Upload binary to S3 Bucket
-              uses: jakejarvis/s3-sync-action@master
+              uses: jakejarvis/s3-sync-action@main
               with:
                 args: --acl public-read --exclude '*' --include 'index.html'
               env:
                 AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
 
             - name: Invalidate cache CloudFront
-              uses: chetan/invalidate-cloudfront-action@master
+              uses: chetan/invalidate-cloudfront-action@main
               env:
                 DISTRIBUTION: ${{ secrets.DISTRIBUTION_ID }}
                 PATHS: '/index.html'

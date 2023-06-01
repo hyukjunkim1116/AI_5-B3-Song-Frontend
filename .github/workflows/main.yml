@@ -22,7 +22,7 @@ jobs:
             #     aws s3 cp --recursive --region ap-northeast-2 ./* s3://${{ secrets.BUCKET_NAME }}
               uses: jakejarvis/s3-sync-action@master
               with:
-                args: --acl public-read '*'
+                args: --acl public-read
             #   env:
             #     AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
 

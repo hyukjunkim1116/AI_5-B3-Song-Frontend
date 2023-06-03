@@ -33,10 +33,10 @@ async function handleSignin() {
 	if (password === passwordCheck) {
 		const response = await fetch(`${backend_base_url}/api/users/signup/`, {
 			headers: {
-				"content-type": "application/json",
-				"Access-Control-Allow-Origin":
-					"https://www.backend.drinkdrinkdrink.xyz",
-				"Access-Control-Allow-Credentials": "true"
+				"content-type": "application/json"
+				// "Access-Control-Allow-Origin":
+				// 	"https://www.backend.drinkdrinkdrink.xyz",
+				// "Access-Control-Allow-Credentials": "true"
 			},
 			method: "POST",
 			body: JSON.stringify({
@@ -60,9 +60,9 @@ async function handleLogin() {
 
 	const response = await fetch(`${backend_base_url}/api/users/login/`, {
 		headers: {
-			"content-type": "application/json",
-			"Access-Control-Allow-Origin": "https://www.backend.drinkdrinkdrink.xyz",
-			"Access-Control-Allow-Credentials": "true"
+			"content-type": "application/json"
+			// "Access-Control-Allow-Origin": "https://www.backend.drinkdrinkdrink.xyz",
+			// "Access-Control-Allow-Credentials": "true"
 		},
 		method: "POST",
 		body: JSON.stringify({
@@ -256,11 +256,11 @@ async function getComment(comment_id) {
 	const response = await fetch(
 		`${backend_base_url}/api/articles/comments/${comment_id}/`,
 		{
-			headers: {
-				"Access-Control-Allow-Origin":
-					"https://www.backend.drinkdrinkdrink.xyz",
-				"Access-Control-Allow-Credentials": "true"
-			},
+			// headers: {
+			// 	"Access-Control-Allow-Origin":
+			// 		"https://www.backend.drinkdrinkdrink.xyz",
+			// 	"Access-Control-Allow-Credentials": "true"
+			// },
 			method: "GET"
 		}
 	);

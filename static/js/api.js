@@ -239,6 +239,7 @@ async function articleDelete(article_id) {
 // 댓글 전체 목록 불러오기
 async function getComments() {
 	const response = await fetch(`${backend_base_url}/api/articles/comments/`, {
+		headers: {},
 		method: "GET"
 	});
 	response_json = await response.json();
@@ -250,6 +251,10 @@ async function getComment(comment_id) {
 	const response = await fetch(
 		`${backend_base_url}/api/articles/comments/${comment_id}/`,
 		{
+			headers: {
+				"Access-Control-Allow-Origin": "https://backend.drinkdrinkdrink.xyz",
+				"Access-Control-Allow-Credentials": "true"
+			},
 			method: "GET"
 		}
 	);

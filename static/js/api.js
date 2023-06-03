@@ -33,7 +33,9 @@ async function handleSignin() {
 	if (password === passwordCheck) {
 		const response = await fetch(`${backend_base_url}/api/users/signup/`, {
 			headers: {
-				"content-type": "application/json"
+				"content-type": "application/json",
+				"Access-Control-Allow-Origin": "https://backend.drinkdrinkdrink.xyz",
+				"Access-Control-Allow-Credentials": "true"
 			},
 			method: "POST",
 			body: JSON.stringify({
@@ -57,7 +59,9 @@ async function handleLogin() {
 
 	const response = await fetch(`${backend_base_url}/api/users/login/`, {
 		headers: {
-			"content-type": "application/json"
+			"content-type": "application/json",
+			"Access-Control-Allow-Origin": "https://backend.drinkdrinkdrink.xyz",
+			"Access-Control-Allow-Credentials": "true"
 		},
 		method: "POST",
 		body: JSON.stringify({
